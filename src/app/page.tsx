@@ -1,5 +1,6 @@
 import { Hero } from "@/components/blocks/hero";
 import { Features } from "@/components/blocks/features";
+import { Journey } from "@/components/blocks/journey";
 import { Portfolio } from "@/components/blocks/portfolio";
 import { Contact } from "@/components/blocks/contact";
 import { Navbar } from "@/components/layout/navbar";
@@ -12,6 +13,7 @@ export default function Home() {
       <main className="flex-1">
         <Hero />
         <Features />
+        <Journey />
         <Portfolio />
         <Contact />
       </main>

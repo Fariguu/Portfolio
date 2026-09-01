@@ -12,6 +12,7 @@ export function Navbar() {
     const navigations = [
         { title: "Home", href: "/" },
         { title: "Competenze", href: "#competenze" },
+        { title: "Percorso", href: "#percorso" },
         { title: "Progetti", href: "#progetti" },
         { title: "Contatti", href: "#contatti" },
     ];
