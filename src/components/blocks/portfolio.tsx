@@ -50,12 +50,12 @@ export function Portfolio() {
     return (
         <section id="progetti" className="w-full py-24 bg-background">
             <div className="container px-4 md:px-6 mx-auto">
-                <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
-                    <h2 className="text-base font-semibold tracking-wide text-primary">Progetti</h2>
-                    <h3 className="text-3xl font-bold tracking-tight sm:text-5xl text-foreground">
+                <div className="mx-auto max-w-2xl text-center space-y-4 mb-16">
+                    <h2 className="text-base font-semibold leading-7 text-primary">Progetti</h2>
+                    <p className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
                         I Miei Lavori e Progetti
-                    </h3>
-                    <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                    </p>
+                    <p className="max-w-2xl text-base sm:text-lg leading-relaxed text-muted-foreground mx-auto">
                         Una panoramica delle applicazioni che ho sviluppato: architetture reali, database relazionali, logica client-side e serverless.
                     </p>
                 </div>
