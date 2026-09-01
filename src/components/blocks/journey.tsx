@@ -1,11 +1,14 @@
-import { GraduationCap, Award, BookOpen, Sparkles, ExternalLink, Calendar } from "lucide-react";
+import { GraduationCap, Award, BookOpen, ExternalLink, Calendar } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
 
-export interface TimelineItem {
+export interface TimelineItemDisplay {
+    id?: string;
     period: string;
     title: string;
     institution: string;
     description: string;
-    type?: "education" | "certification" | "milestone" | "current";
+    type?: "education" | "certification" | "milestone";
+    isCurrent?: boolean;
     tags?: string[];
     link?: {
         label: string;
@@ -13,13 +16,14 @@ export interface TimelineItem {
     };
 }
 
-const timelineData: TimelineItem[] = [
+const fallbackTimeline: TimelineItemDisplay[] = [
     {
-        period: "2019 - 2024",
+        period: "2019 — 2024",
         title: "Diploma di Scuola Secondaria di Secondo Grado — Sistemi Informativi Aziendali (SIA)",
         institution: "I.I.S.S. \"Pertini - Anelli - Pinto\"",
         description: "Diploma conseguito con specializzazione in Sistemi Informativi Aziendali (SIA). Formazione incentrata su programmazione e sviluppo software gestionale, progettazione e modellazione di database relazionali (SQL), reti informatiche, sicurezza dei dati aziendali ed economia d'impresa.",
         type: "education",
+        isCurrent: false,
         tags: [
             "Sistemi Informativi Aziendali",
             "Database SQL",
@@ -33,11 +37,12 @@ const timelineData: TimelineItem[] = [
         },
     },
     {
-        period: "2024 - Presente",
+        period: "2024 — Presente",
         title: "Laurea in Informatica e Tecnologie per la Produzione del Software (ITPS)",
         institution: "Università degli Studi di Bari Aldo Moro — Dipartimento di Informatica",
         description: "Percorso accademico focalizzato sui fondamenti teorici e metodologici della programmazione, dell'algoritmica e dell'ingegneria del software. Approfondimento dei modelli e tecniche per la produzione, verifica e manutenzione di sistemi software affidabili, gestione di basi di dati e sviluppo di interfacce utente efficaci.",
-        type: "current",
+        type: "education",
+        isCurrent: true,
         tags: [
             "Ingegneria del Software",
             "Algoritmi e Strutture Dati",
@@ -53,7 +58,53 @@ const timelineData: TimelineItem[] = [
     },
 ];
 
-export function Journey() {
+function formatPeriod(startDateStr: string, endDateStr: string | null): string {
+    try {
+        const startYear = new Date(startDateStr).getFullYear();
+        if (!endDateStr) {
+            return `${startYear} — Presente`;
+        }
+        const endYear = new Date(endDateStr).getFullYear();
+        return `${startYear} — ${endYear}`;
+    } catch {
+        return startDateStr;
+    }
+}
+
+export async function Journey() {
+    let timelineData: TimelineItemDisplay[] = fallbackTimeline;
+
+    try {
+        const supabase = await createClient();
+        const { data, error } = await supabase
+            .from("journey_items")
+            .select("*")
+            .eq("visible", true)
+            .order("start_date", { ascending: true })
+            .order("sort_order", { ascending: true });
+
+        if (!error && data && data.length > 0) {
+            timelineData = data.map((item) => ({
+                id: item.id,
+                period: formatPeriod(item.start_date, item.end_date),
+                title: item.title,
+                institution: item.institution,
+                description: item.description,
+                type: item.type as any,
+                isCurrent: !item.end_date,
+                tags: item.tags || [],
+                link: item.link_url
+                    ? {
+                          label: item.link_label || "Vedi Dettagli",
+                          url: item.link_url,
+                      }
+                    : undefined,
+            }));
+        }
+    } catch {
+        // Fallback to default timeline if DB is not reachable
+    }
+
     return (
         <section id="percorso" className="w-full py-24 bg-background relative overflow-hidden">
             <div className="container px-4 md:px-6 mx-auto">
@@ -72,10 +123,10 @@ export function Journey() {
                 <div className="max-w-3xl mx-auto">
                     <div className="relative pl-6 sm:pl-8 border-l-2 border-border/80 space-y-12">
                         {timelineData.map((item, index) => {
-                            const isCurrent = item.type === "current";
+                            const isCurrent = item.isCurrent;
 
                             return (
-                                <div key={index} className="relative group">
+                                <div key={item.id || index} className="relative group">
                                     {/* Bullet point / Dot */}
                                     <div
                                         className={`absolute -left-[31px] sm:-left-[39px] top-1.5 h-4 w-4 rounded-full border-2 border-background transition-all duration-300 ${isCurrent

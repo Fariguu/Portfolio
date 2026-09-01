@@ -2,8 +2,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Github, Lock } from "lucide-react";
 import Image from "next/image";
+import { createClient } from "@/lib/supabase/server";
 
-interface Project {
+interface ProjectDisplay {
+    id?: string;
     title: string;
     description: string;
     image: string;
@@ -13,9 +15,10 @@ interface Project {
     github?: string;
     githubLabel?: string;
     isPrivate?: boolean;
+    featured?: boolean;
 }
 
-const projects: Project[] = [
+const fallbackProjects: ProjectDisplay[] = [
     {
         title: "Impresa Edile",
         statusBadge: "In Evidenza",
@@ -25,6 +28,7 @@ const projects: Project[] = [
         github: "https://github.com/Fariguu/Impresa-Edile",
         githubLabel: "Codice GitHub",
         isPrivate: true,
+        featured: true,
     },
     {
         title: "EduBook",
@@ -35,6 +39,7 @@ const projects: Project[] = [
         github: "https://github.com/Fariguu/Educational-Booking-WebSite",
         githubLabel: "Bozza Architettura",
         isPrivate: true,
+        featured: false,
     },
     {
         title: "QR-Code Creator",
@@ -43,10 +48,41 @@ const projects: Project[] = [
         tags: ["JavaScript ES6+", "HTML5", "CSS3", "Canvas API", "SVG Export"],
         github: "https://github.com/Fariguu/QR-Code-Creator",
         githubLabel: "Codice GitHub",
+        isPrivate: false,
+        featured: false,
     },
 ];
 
-export function Portfolio() {
+export async function Portfolio() {
+    let projects: ProjectDisplay[] = fallbackProjects;
+
+    try {
+        const supabase = await createClient();
+        const { data, error } = await supabase
+            .from("projects")
+            .select("*")
+            .eq("visible", true)
+            .order("sort_order", { ascending: true });
+
+        if (!error && data && data.length > 0) {
+            projects = data.map((p: any) => ({
+                id: p.id,
+                title: p.title,
+                description: p.description,
+                image: p.image_url,
+                tags: p.tags || [],
+                statusBadge: p.status_badge || undefined,
+                demo: p.demo_url || undefined,
+                github: p.github_url || undefined,
+                githubLabel: p.github_label || "Codice",
+                isPrivate: p.is_private,
+                featured: p.featured,
+            }));
+        }
+    } catch {
+        // Fallback to default projects if DB is not reachable
+    }
+
     return (
         <section id="progetti" className="w-full py-24 bg-background">
             <div className="container px-4 md:px-6 mx-auto">
@@ -62,7 +98,7 @@ export function Portfolio() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {projects.map((project, index) => (
-                        <Card key={index} className="overflow-hidden flex flex-col h-full bg-card group border-border/50 hover:border-primary/50 transition-colors">
+                        <Card key={project.id || index} className="overflow-hidden flex flex-col h-full bg-card group border-border/50 hover:border-primary/50 transition-colors">
                             <div className="relative w-full h-48 overflow-hidden">
                                 <Image
                                     src={project.image}
