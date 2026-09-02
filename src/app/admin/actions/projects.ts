@@ -17,7 +17,7 @@ async function uploadImageIfPresent(file: File | null, existingUrl?: string): Pr
   const { error: uploadError } = await supabase.storage
     .from('portfolio-media')
     .upload(fileName, buffer, {
-      contentType: file.type,
+      contentType: file.type || 'image/png',
       upsert: true,
     })
 
