@@ -1,23 +1,63 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle2, Linkedin, Mail, MapPin, Phone } from "lucide-react";
+import { CheckCircle2, Linkedin, Mail, MapPin, Phone, Loader2, AlertCircle, Send } from "lucide-react";
+import { sendContactEmail } from "@/app/actions/contact";
+import { Turnstile } from "@marsidev/react-turnstile";
+import Link from "next/link";
 
 export function Contact() {
     const [firstName, setFirstName] = React.useState("");
     const [lastName, setLastName] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [message, setMessage] = React.useState("");
+    const [turnstileToken, setTurnstileToken] = React.useState<string>("");
+    const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [isSubmitted, setIsSubmitted] = React.useState(false);
+    const [submittedEmail, setSubmittedEmail] = React.useState("");
+    const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const turnstileSiteKey = process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY;
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const subject = encodeURIComponent(`Contatto Portfolio da ${firstName} ${lastName}`);
-        const body = encodeURIComponent(`Nome: ${firstName} ${lastName}\nEmail: ${email}\n\nMessaggio:\n${message}`);
-        window.location.href = `mailto:farigugabriele@gmail.com?subject=${subject}&body=${body}`;
-        setIsSubmitted(true);
+        setIsSubmitting(true);
+        setErrorMessage(null);
+
+        try {
+            const result = await sendContactEmail({
+                firstName,
+                lastName,
+                email,
+                message,
+                turnstileToken,
+            });
+
+            if (!result.success) {
+                setErrorMessage(result.error || "Impossibile inviare il messaggio. Riprova.");
+                setIsSubmitting(false);
+                return;
+            }
+
+            setSubmittedEmail(email);
+            setIsSubmitted(true);
+        } catch (err: any) {
+            setErrorMessage(err.message || "Si è verificato un errore imprevisto. Riprova.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleReset = () => {
+        setIsSubmitted(false);
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setMessage("");
+        setTurnstileToken("");
+        setErrorMessage(null);
     };
 
     return (
@@ -31,7 +71,7 @@ export function Contact() {
                                 Mettiamoci in Contatto
                             </h2>
                             <p className="text-base sm:text-lg leading-relaxed text-muted-foreground">
-                                Hai una proposta, un progetto da discutere o vuoi semplicemente scambiare due chiacchiere? Scrivimi pure.
+                                Hai una proposta, un progetto da discutere o vuoi semplicemente scambiare due chiacchiere? Compila il modulo o scrivimi direttamente.
                             </p>
                         </div>
 
@@ -93,53 +133,63 @@ export function Contact() {
                         <CardHeader>
                             <CardTitle>Invia un messaggio</CardTitle>
                             <CardDescription>
-                                Compila i campi per scrivermi direttamente via email.
+                                Compila i campi sottostanti. Riceverai un&apos;email automatica di conferma e ti ricontatterò al più presto.
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
                             {isSubmitted ? (
-                                <div className="p-6 rounded-lg bg-primary/10 border border-primary/20 text-center space-y-3">
+                                <div className="p-8 rounded-xl bg-primary/5 border border-primary/20 text-center space-y-4 animate-fade-in">
                                     <div className="flex justify-center">
-                                        <CheckCircle2 className="h-10 w-10 text-primary" />
+                                        <div className="h-16 w-16 rounded-full bg-emerald-500/10 flex items-center justify-center">
+                                            <CheckCircle2 className="h-10 w-10 text-emerald-500" />
+                                        </div>
                                     </div>
-                                    <h4 className="font-semibold text-foreground text-lg">Client email aperto!</h4>
-                                    <p className="text-sm text-muted-foreground">
-                                        Il tuo programma di posta è stato aperto con il messaggio pronto per l&apos;invio a <strong>farigugabriele@gmail.com</strong>.
-                                    </p>
-                                    <Button 
-                                        variant="outline" 
-                                        size="sm" 
-                                        onClick={() => {
-                                            setIsSubmitted(false);
-                                            setFirstName("");
-                                            setLastName("");
-                                            setEmail("");
-                                            setMessage("");
-                                        }}
-                                    >
-                                        Scrivi un altro messaggio
-                                    </Button>
+                                    <div className="space-y-1">
+                                        <h4 className="font-bold text-foreground text-xl">Messaggio Inviato!</h4>
+                                        <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
+                                            Grazie per avermi scritto! Ho preso in carico la tua richiesta e ti risponderò a breve all&apos;indirizzo <strong>{submittedEmail}</strong>.
+                                        </p>
+                                    </div>
+                                    <div className="pt-2">
+                                        <Button 
+                                            variant="outline" 
+                                            size="sm" 
+                                            onClick={handleReset}
+                                            className="rounded-full"
+                                        >
+                                            Invia un altro messaggio
+                                        </Button>
+                                    </div>
                                 </div>
                             ) : (
                                 <form className="space-y-4" onSubmit={handleSubmit}>
+                                    {errorMessage && (
+                                        <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm flex items-start gap-2 animate-fade-in">
+                                            <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
+                                            <span>{errorMessage}</span>
+                                        </div>
+                                    )}
+
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="space-y-2">
-                                            <label htmlFor="first-name" className="text-sm font-medium leading-none text-foreground">Nome</label>
+                                            <label htmlFor="first-name" className="text-sm font-medium leading-none text-foreground">Nome *</label>
                                             <input
                                                 id="first-name"
                                                 value={firstName}
                                                 onChange={(e) => setFirstName(e.target.value)}
+                                                disabled={isSubmitting}
                                                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                                 placeholder="Mario"
                                                 required
                                             />
                                         </div>
                                         <div className="space-y-2">
-                                            <label htmlFor="last-name" className="text-sm font-medium leading-none text-foreground">Cognome</label>
+                                            <label htmlFor="last-name" className="text-sm font-medium leading-none text-foreground">Cognome *</label>
                                             <input
                                                 id="last-name"
                                                 value={lastName}
                                                 onChange={(e) => setLastName(e.target.value)}
+                                                disabled={isSubmitting}
                                                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                                 placeholder="Rossi"
                                                 required
@@ -147,31 +197,68 @@ export function Contact() {
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <label htmlFor="email" className="text-sm font-medium leading-none text-foreground">Email</label>
+                                        <label htmlFor="email" className="text-sm font-medium leading-none text-foreground">Email *</label>
                                         <input
                                             id="email"
                                             type="email"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
+                                            disabled={isSubmitting}
                                             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                             placeholder="mario@esempio.it"
                                             required
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label htmlFor="message" className="text-sm font-medium leading-none text-foreground">Messaggio</label>
+                                        <label htmlFor="message" className="text-sm font-medium leading-none text-foreground">Messaggio *</label>
                                         <textarea
                                             id="message"
                                             value={message}
                                             onChange={(e) => setMessage(e.target.value)}
-                                            className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                            placeholder="Raccontami del tuo progetto o della tua richiesta..."
+                                            disabled={isSubmitting}
+                                            rows={4}
+                                            className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-y"
+                                            placeholder="Descrivi brevemente la tua richiesta o proposta..."
                                             required
                                         />
                                     </div>
-                                    <Button type="submit" className="w-full">
-                                        Invia Messaggio via Email
+
+                                    {/* Cloudflare Turnstile anti-bot widget (attivo se site key presente) */}
+                                    {turnstileSiteKey && (
+                                        <div className="pt-1 flex justify-center sm:justify-start">
+                                            <Turnstile
+                                                siteKey={turnstileSiteKey}
+                                                onSuccess={(token) => setTurnstileToken(token)}
+                                                onError={() => setErrorMessage("Errore di caricamento del controllo anti-bot. Ricarica la pagina.")}
+                                                onExpire={() => setTurnstileToken("")}
+                                                options={{
+                                                    theme: "auto",
+                                                    size: "flexible",
+                                                }}
+                                            />
+                                        </div>
+                                    )}
+
+                                    <Button type="submit" className="w-full h-11 font-medium" disabled={isSubmitting}>
+                                        {isSubmitting ? (
+                                            <>
+                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                Invio del messaggio in corso...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Send className="mr-2 h-4 w-4" />
+                                                Invia Messaggio
+                                            </>
+                                        )}
                                     </Button>
+
+                                    <p className="text-xs text-muted-foreground text-center pt-1">
+                                        Inviando il messaggio accetti il trattamento dei dati personali per la gestione della richiesta. Leggi la{" "}
+                                        <Link href="/privacy" className="underline hover:text-primary transition-colors">
+                                            Privacy Policy
+                                        </Link>.
+                                    </p>
                                 </form>
                             )}
                         </CardContent>
