@@ -9,10 +9,17 @@
 export function getBaseUrl(): string {
   if (process.env.NEXT_PUBLIC_SITE_URL) {
     let url = process.env.NEXT_PUBLIC_SITE_URL.trim();
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      url = `https://${url}`;
+    if (url && !url.includes('localhost')) {
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = `https://${url}`;
+      }
+      return url.replace(/\/+$/, '');
     }
-    return url.replace(/\/+$/, '');
+  }
+
+  // Dominio ufficiale di produzione per sitemap, robots, metadata e OpenGraph
+  if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
+    return 'https://gabrielefarigu.com';
   }
 
   if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
