@@ -46,10 +46,10 @@ export async function Features() {
         <section id="competenze" className="w-full py-24 bg-muted/40 relative">
             <div className="container px-4 md:px-6 mx-auto">
                 <div className="mx-auto max-w-2xl text-center space-y-4">
-                    <h2 className="text-base font-semibold leading-7 text-primary">Competenze</h2>
-                    <p className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
+                    <p className="text-base font-semibold leading-7 text-primary">Competenze</p>
+                    <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
                         Tecnologie e Metodo di Lavoro
-                    </p>
+                    </h2>
                     <p className="max-w-2xl text-base sm:text-lg leading-relaxed text-muted-foreground mx-auto">
                         Gli strumenti e i principi che applico quotidianamente nello sviluppo dei miei progetti web e software.
                     </p>

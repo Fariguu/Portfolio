@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ExternalLink, Github, Lock } from "lucide-react";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
+import type { Project } from "@/lib/database.types";
 
 interface ProjectDisplay {
     id?: string;
@@ -65,7 +66,7 @@ export async function Portfolio() {
             .order("sort_order", { ascending: true });
 
         if (!error && data && data.length > 0) {
-            projects = data.map((p: any) => ({
+            projects = (data as Project[]).map((p) => ({
                 id: p.id,
                 title: p.title,
                 description: p.description,
@@ -87,10 +88,10 @@ export async function Portfolio() {
         <section id="progetti" className="w-full py-24 bg-background">
             <div className="container px-4 md:px-6 mx-auto">
                 <div className="mx-auto max-w-2xl text-center space-y-4 mb-16">
-                    <h2 className="text-base font-semibold leading-7 text-primary">Progetti</h2>
-                    <p className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
+                    <p className="text-base font-semibold leading-7 text-primary">Progetti</p>
+                    <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
                         I Miei Lavori e Progetti
-                    </p>
+                    </h2>
                     <p className="max-w-2xl text-base sm:text-lg leading-relaxed text-muted-foreground mx-auto">
                         Una panoramica delle applicazioni che ho sviluppato: architetture reali, database relazionali, logica client-side e serverless.
                     </p>
@@ -102,8 +103,10 @@ export async function Portfolio() {
                             <div className="relative w-full h-48 overflow-hidden">
                                 <Image
                                     src={project.image}
-                                    alt={project.title}
+                                    alt={`Anteprima del progetto ${project.title}`}
                                     fill
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                    priority={index === 0}
                                     className="object-cover transition-transform duration-300 group-hover:scale-105"
                                 />
                                 {project.statusBadge && (
@@ -137,7 +140,7 @@ export async function Portfolio() {
                             <CardFooter className="flex items-center justify-between border-t border-border/50 pt-4 mt-auto">
                                 {project.github ? (
                                     <Button variant="outline" size="sm" asChild>
-                                        <a href={project.github} target="_blank" rel="noreferrer">
+                                        <a href={project.github} target="_blank" rel="noopener noreferrer">
                                             <Github className="mr-2 h-4 w-4" />
                                             {project.githubLabel || "Codice"}
                                         </a>
@@ -147,7 +150,7 @@ export async function Portfolio() {
                                 )}
                                 {project.demo && (
                                     <Button size="sm" asChild>
-                                        <a href={project.demo} target="_blank" rel="noreferrer">
+                                        <a href={project.demo} target="_blank" rel="noopener noreferrer">
                                             <ExternalLink className="mr-2 h-4 w-4" />
                                             Demo Live
                                         </a>
@@ -159,7 +162,7 @@ export async function Portfolio() {
                 </div>
                 <div className="mt-12 text-center">
                     <Button variant="secondary" size="lg" className="rounded-full shadow-sm" asChild>
-                        <a href="https://github.com/Fariguu?tab=repositories" target="_blank" rel="noreferrer">
+                        <a href="https://github.com/Fariguu?tab=repositories" target="_blank" rel="noopener noreferrer">
                             <Github className="mr-2 h-4 w-4" />
                             Esplora tutti i progetti su GitHub
                         </a>

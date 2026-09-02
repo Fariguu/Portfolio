@@ -12,9 +12,16 @@ import {
 import { signOutAction } from '@/app/admin/actions/auth'
 import { Button } from '@/components/ui/button'
 
-export const metadata = {
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
   title: 'Admin Dashboard | Gabriele Farigu',
+  robots: {
+    index: false,
+    follow: false,
+  },
 }
+
 
 export default async function AdminLayout({
   children,

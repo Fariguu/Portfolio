@@ -12,11 +12,11 @@ export function Footer() {
                     </div>
 
                     <div className="flex justify-center space-x-4">
-                        <Link href="https://github.com/Fariguu" target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                        <Link href="https://github.com/Fariguu" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                             <Github className="h-5 w-5" />
                             <span className="sr-only">GitHub</span>
                         </Link>
-                        <Link href="https://www.linkedin.com/in/gabriele-farigu-3863b1312/" target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                        <Link href="https://www.linkedin.com/in/gabriele-farigu-3863b1312/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                             <Linkedin className="h-5 w-5" />
                             <span className="sr-only">LinkedIn</span>
                         </Link>

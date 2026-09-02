@@ -90,7 +90,7 @@ export async function Journey() {
                 title: item.title,
                 institution: item.institution,
                 description: item.description,
-                type: item.type as any,
+                type: item.type as TimelineItemDisplay["type"],
                 isCurrent: !item.end_date,
                 tags: item.tags || [],
                 link: item.link_url
@@ -110,10 +110,10 @@ export async function Journey() {
             <div className="container px-4 md:px-6 mx-auto">
                 {/* Header */}
                 <div className="mx-auto max-w-2xl text-center space-y-4 mb-16">
-                    <h2 className="text-base font-semibold leading-7 text-primary">Percorso</h2>
-                    <p className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
+                    <p className="text-base font-semibold leading-7 text-primary">Percorso</p>
+                    <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
                         Formazione & Traguardi
-                    </p>
+                    </h2>
                     <p className="max-w-2xl text-base sm:text-lg leading-relaxed text-muted-foreground mx-auto">
                         Come ho costruito le mie competenze: il percorso scolastico, gli studi universitari e le tappe fondamentali della mia crescita.
                     </p>
@@ -187,7 +187,7 @@ export async function Journey() {
                                                 <a
                                                     href={item.link.url}
                                                     target="_blank"
-                                                    rel="noreferrer"
+                                                    rel="noopener noreferrer"
                                                     className="inline-flex items-center text-xs font-semibold text-primary hover:underline"
                                                 >
                                                     {item.link.label}
