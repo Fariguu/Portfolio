@@ -1,6 +1,7 @@
 "use server"
 
 import { createAdminClient } from '@/lib/supabase/admin'
+import { verifyAdminSession } from '@/lib/auth-guard'
 import { revalidatePath } from 'next/cache'
 
 async function uploadImageIfPresent(file: File | null, existingUrl?: string): Promise<string> {
@@ -34,6 +35,11 @@ async function uploadImageIfPresent(file: File | null, existingUrl?: string): Pr
 
 export async function createProject(formData: FormData) {
   try {
+    const authCheck = await verifyAdminSession()
+    if (!authCheck.authorized) {
+      return { error: authCheck.error || 'Non autorizzato' }
+    }
+
     const title = formData.get('title') as string
     const description = formData.get('description') as string
     const imageFile = formData.get('image_file') as File | null
@@ -98,6 +104,11 @@ export async function createProject(formData: FormData) {
 
 export async function updateProject(id: string, formData: FormData) {
   try {
+    const authCheck = await verifyAdminSession()
+    if (!authCheck.authorized) {
+      return { error: authCheck.error || 'Non autorizzato' }
+    }
+
     const title = formData.get('title') as string
     const description = formData.get('description') as string
     const imageFile = formData.get('image_file') as File | null
@@ -168,6 +179,11 @@ export async function updateProject(id: string, formData: FormData) {
 }
 
 export async function deleteProject(id: string) {
+  const authCheck = await verifyAdminSession()
+  if (!authCheck.authorized) {
+    return { error: authCheck.error || 'Non autorizzato' }
+  }
+
   const supabase = createAdminClient()
   const { error } = await supabase.from('projects').delete().eq('id', id)
 
@@ -182,6 +198,11 @@ export async function deleteProject(id: string) {
 }
 
 export async function toggleProjectVisibility(id: string, currentVisible: boolean) {
+  const authCheck = await verifyAdminSession()
+  if (!authCheck.authorized) {
+    return { error: authCheck.error || 'Non autorizzato' }
+  }
+
   const supabase = createAdminClient()
   const { error } = await supabase
     .from('projects')
@@ -198,6 +219,11 @@ export async function toggleProjectVisibility(id: string, currentVisible: boolea
 }
 
 export async function toggleProjectFeatured(id: string, currentFeatured: boolean) {
+  const authCheck = await verifyAdminSession()
+  if (!authCheck.authorized) {
+    return { error: authCheck.error || 'Non autorizzato' }
+  }
+
   const supabase = createAdminClient()
   const { error } = await supabase
     .from('projects')

@@ -1,9 +1,15 @@
 "use server"
 
 import { createAdminClient } from '@/lib/supabase/admin'
+import { verifyAdminSession } from '@/lib/auth-guard'
 import { revalidatePath } from 'next/cache'
 
 export async function createSkill(formData: FormData) {
+  const authCheck = await verifyAdminSession()
+  if (!authCheck.authorized) {
+    return { error: authCheck.error || 'Non autorizzato' }
+  }
+
   const name = formData.get('name') as string
   const description = formData.get('description') as string
   const icon_name = (formData.get('icon_name') as string) || 'MonitorSmartphone'
@@ -34,6 +40,11 @@ export async function createSkill(formData: FormData) {
 }
 
 export async function updateSkill(id: string, formData: FormData) {
+  const authCheck = await verifyAdminSession()
+  if (!authCheck.authorized) {
+    return { error: authCheck.error || 'Non autorizzato' }
+  }
+
   const name = formData.get('name') as string
   const description = formData.get('description') as string
   const icon_name = (formData.get('icon_name') as string) || 'MonitorSmartphone'
@@ -68,6 +79,11 @@ export async function updateSkill(id: string, formData: FormData) {
 }
 
 export async function deleteSkill(id: string) {
+  const authCheck = await verifyAdminSession()
+  if (!authCheck.authorized) {
+    return { error: authCheck.error || 'Non autorizzato' }
+  }
+
   const supabase = createAdminClient()
   const { error } = await supabase.from('skills').delete().eq('id', id)
 
@@ -82,6 +98,11 @@ export async function deleteSkill(id: string) {
 }
 
 export async function toggleSkillVisibility(id: string, currentVisible: boolean) {
+  const authCheck = await verifyAdminSession()
+  if (!authCheck.authorized) {
+    return { error: authCheck.error || 'Non autorizzato' }
+  }
+
   const supabase = createAdminClient()
   const { error } = await supabase
     .from('skills')

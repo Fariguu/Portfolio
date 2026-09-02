@@ -1,9 +1,15 @@
 "use server"
 
 import { createAdminClient } from '@/lib/supabase/admin'
+import { verifyAdminSession } from '@/lib/auth-guard'
 import { revalidatePath } from 'next/cache'
 
 export async function createJourneyItem(formData: FormData) {
+  const authCheck = await verifyAdminSession()
+  if (!authCheck.authorized) {
+    return { error: authCheck.error || 'Non autorizzato' }
+  }
+
   const title = formData.get('title') as string
   const institution = formData.get('institution') as string
   const description = formData.get('description') as string
@@ -54,6 +60,11 @@ export async function createJourneyItem(formData: FormData) {
 }
 
 export async function updateJourneyItem(id: string, formData: FormData) {
+  const authCheck = await verifyAdminSession()
+  if (!authCheck.authorized) {
+    return { error: authCheck.error || 'Non autorizzato' }
+  }
+
   const title = formData.get('title') as string
   const institution = formData.get('institution') as string
   const description = formData.get('description') as string
@@ -108,6 +119,11 @@ export async function updateJourneyItem(id: string, formData: FormData) {
 }
 
 export async function deleteJourneyItem(id: string) {
+  const authCheck = await verifyAdminSession()
+  if (!authCheck.authorized) {
+    return { error: authCheck.error || 'Non autorizzato' }
+  }
+
   const supabase = createAdminClient()
   const { error } = await supabase.from('journey_items').delete().eq('id', id)
 
@@ -122,6 +138,11 @@ export async function deleteJourneyItem(id: string) {
 }
 
 export async function toggleJourneyVisibility(id: string, currentVisible: boolean) {
+  const authCheck = await verifyAdminSession()
+  if (!authCheck.authorized) {
+    return { error: authCheck.error || 'Non autorizzato' }
+  }
+
   const supabase = createAdminClient()
   const { error } = await supabase
     .from('journey_items')
