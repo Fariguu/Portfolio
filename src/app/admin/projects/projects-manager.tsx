@@ -130,7 +130,6 @@ export function ProjectsManager({ initialProjects }: ProjectsManagerProps) {
       setLoading(false)
       return
     }
-
     const formData = new FormData()
     formData.append('title', title)
     formData.append('description', description)
