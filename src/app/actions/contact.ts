@@ -1,4 +1,4 @@
-﻿"use server";
+"use server";
 
 import { Resend } from "resend";
 import { contactFormSchema } from "@/lib/contact-schema";
@@ -102,7 +102,7 @@ export async function sendContactEmail(
     // Racchiuso in try/catch separato: se Resend è in test mode (onboarding@resend.dev),
     // l'invio a domini esterni non verificati potrebbe essere bloccato, ma la notifica a Gabriele è già partita con successo.
     try {
-      await resend.emails.send({
+      const { error: autoReplyError } = await resend.emails.send({
         from: sender,
         to: [email],
         subject: `Ho ricevuto il tuo messaggio — Gabriele Farigu`,
@@ -129,21 +129,29 @@ export async function sendContactEmail(
           </div>
         `,
       });
+
+      if (autoReplyError) {
+        console.warn(
+          "[Resend] Auto-responder non inviato dall'API:",
+          autoReplyError.message || autoReplyError
+        );
+      }
     } catch (autoReplyErr) {
       console.warn(
-        "[Resend] Auto-responder non inviato (normale se il dominio non è ancora verificato su Resend):",
+        "[Resend] Eccezione durante l'invio dell'auto-responder:",
         autoReplyErr
       );
     }
 
     return { success: true };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("[Contact Action] Eccezione non gestita:", err);
     return {
       success: false,
       error:
-        err.message ||
-        "Si è verificato un errore imprevisto durante l'invio. Riprova più tardi.",
+        err instanceof Error
+          ? err.message
+          : "Si è verificato un errore imprevisto durante l'invio. Riprova più tardi.",
     };
   }
 }
