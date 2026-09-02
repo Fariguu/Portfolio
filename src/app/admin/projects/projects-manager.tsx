@@ -107,6 +107,14 @@ export function ProjectsManager({ initialProjects }: ProjectsManagerProps) {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      if (file.size > 8 * 1024 * 1024) {
+        setErrorMsg('Il file selezionato supera gli 8MB. Seleziona un\'immagine più leggera.')
+        if (fileInputRef.current) fileInputRef.current.value = ''
+        setImageFile(null)
+        setImagePreview(editingProject?.image_url || '')
+        return
+      }
+      setErrorMsg(null)
       setImageFile(file)
       setImagePreview(URL.createObjectURL(file))
     }
@@ -116,6 +124,12 @@ export function ProjectsManager({ initialProjects }: ProjectsManagerProps) {
     e.preventDefault()
     setLoading(true)
     setErrorMsg(null)
+
+    if (imageFile && imageFile.size > 8 * 1024 * 1024) {
+      setErrorMsg('Il file selezionato supera gli 8MB.')
+      setLoading(false)
+      return
+    }
 
     const formData = new FormData()
     formData.append('title', title)
@@ -149,7 +163,12 @@ export function ProjectsManager({ initialProjects }: ProjectsManagerProps) {
       }
       handleClose()
     } catch (err: any) {
-      setErrorMsg(err.message || 'Si è verificato un errore')
+      const msg = err.message || ''
+      if (msg.toLowerCase().includes('unexpected response') || msg.toLowerCase().includes('failed to fetch')) {
+        setErrorMsg('Errore di comunicazione con il server. La sessione potrebbe essere scaduta o il file selezionato è troppo grande. Riprova ad accedere o seleziona un file più leggero.')
+      } else {
+        setErrorMsg(msg || 'Si è verificato un errore durante il salvataggio')
+      }
     } finally {
       setLoading(false)
     }
@@ -307,7 +326,7 @@ export function ProjectsManager({ initialProjects }: ProjectsManagerProps) {
                       <Upload className="h-4 w-4" /> Carica file dal computer
                     </Button>
                     <p className="text-xs text-muted-foreground mt-1">
-                      PNG, JPG, WebP fino a 5MB (salvato su Supabase Storage)
+                      PNG, JPG, WebP fino a 8MB (salvato su Supabase Storage)
                     </p>
                   </div>
 
