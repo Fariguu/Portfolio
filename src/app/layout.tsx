@@ -61,6 +61,10 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     creator: siteConfig.creator,
   },
+  other: {
+    "publish-date": "2026-09-02T00:00:00.000Z",
+    "article:published_time": "2026-09-02T00:00:00.000Z",
+  },
   robots: {
     index: true,
     follow: true,

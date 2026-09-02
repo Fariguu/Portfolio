@@ -74,6 +74,7 @@ export function JsonLd() {
       '@id': `${baseUrl}/#person`,
     },
     inLanguage: 'it-IT',
+    datePublished: '2026-09-02T00:00:00.000Z',
     dateModified: new Date().toISOString().split('T')[0],
   };
 
