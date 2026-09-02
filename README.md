@@ -1,36 +1,24 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ciao, sono Gabriele Farigu 👋
 
-## Getting Started
+Benvenuto nel repository del mio portfolio personale!  
+Questo sito rappresenta il mio spazio sul web dove raccolgo il mio percorso, le competenze acquisite e i progetti su cui lavoro.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### 👨‍💻 Chi sono
+Sono uno sviluppatore web e software con la passione per la creazione di applicazioni moderne, reattive e performanti. Mi piace curare sia l'esperienza utente che la solidità dell'architettura sottostante, con un focus su codice pulito e buone pratiche.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 🌟 Cosa trovi nel portfolio
+- **I miei Progetti:** Applicazioni web, strumenti e progetti a cui ho lavorato, con link al codice e alle demo live.
+- **Competenze:** Le tecnologie e gli strumenti che utilizzo quotidianamente nello sviluppo (Next.js, React, TypeScript, database relazionali, Python e altro).
+- **Il mio Percorso:** Le tappe della mia formazione accademica, certificazioni ed esperienze.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 📫 Contatti e Profili
+Se vuoi metterti in contatto con me per collaborazioni, idee o opportunità:
 
-## Learn More
+- **LinkedIn:** [linkedin.com/in/gabriele-farigu-3863b1312](https://www.linkedin.com/in/gabriele-farigu-3863b1312/)
+- **GitHub:** [@Fariguu](https://github.com/Fariguu)
+- **Email:** [farigugabriele@gmail.com](mailto:farigugabriele@gmail.com)
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
