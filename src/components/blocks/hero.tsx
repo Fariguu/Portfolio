@@ -19,7 +19,7 @@ export function Hero() {
                 <div className="flex flex-col items-center justify-center text-center space-y-8">
                     <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-medium text-primary transition-colors hover:bg-primary/20 backdrop-blur-sm cursor-pointer animate-fade-in">
                         <span className="flex h-2 w-2 rounded-full bg-primary mr-2"></span>
-                        Studente & Sviluppatore Web
+                        Disponibile per nuovi progetti
                     </div>
 
                     <div className="space-y-4 max-w-4xl animate-fade-in-up">
@@ -27,7 +27,7 @@ export function Hero() {
                            <br className="hidden sm:block" /> Gabriele Farigu
                         </h1>
                         <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                            Sviluppatore web con la passione per le tecnologie moderne. Creo applicazioni full-stack reattive e funzionali con Next.js, React, TypeScript e Supabase, focalizzandomi su codice pulito, privacy e buone performance.
+                            Progetto e realizzo soluzioni web moderne, veloci e su misura. Aiuto progetti e attività a trasformare esigenze concrete in prodotti digitali intuitivi, affidabili e curati in ogni dettaglio.
                         </p>
                     </div>
 
