@@ -26,10 +26,13 @@ export function Footer() {
                         </Link>
                     </div>
 
-                    <div className="flex justify-start md:justify-end">
+                    <div className="flex flex-col md:items-end space-y-1">
                         <p className="text-sm text-muted-foreground">
                             © {new Date().getFullYear()} Gabriele Farigu. Realizzato con Next.js e Tailwind CSS.
                         </p>
+                        <Link href="/privacy" className="text-xs text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline">
+                            Informativa sulla Privacy
+                        </Link>
                     </div>
                 </div>
             </div>
