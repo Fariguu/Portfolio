@@ -26,10 +26,10 @@ export function Contact() {
                 <div className="grid gap-12 lg:grid-cols-2 items-start">
                     <div className="space-y-6">
                         <div className="space-y-4">
-                            <h2 className="text-base font-semibold leading-7 text-primary">Contatti</h2>
-                            <p className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
+                            <p className="text-base font-semibold leading-7 text-primary">Contatti</p>
+                            <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
                                 Mettiamoci in Contatto
-                            </p>
+                            </h2>
                             <p className="text-base sm:text-lg leading-relaxed text-muted-foreground">
                                 Hai una proposta, un progetto da discutere o vuoi semplicemente scambiare due chiacchiere? Scrivimi pure.
                             </p>
@@ -69,7 +69,7 @@ export function Contact() {
                                     <a 
                                         href="https://www.linkedin.com/in/gabriele-farigu-3863b1312/" 
                                         target="_blank" 
-                                        rel="noreferrer" 
+                                        rel="noopener noreferrer" 
                                         className="text-muted-foreground hover:text-primary transition-colors"
                                     >
                                         linkedin.com/in/gabriele-farigu

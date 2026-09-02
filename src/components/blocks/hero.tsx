@@ -44,11 +44,11 @@ export function Hero() {
                     </div>
 
                     <div className="flex items-center gap-6 pt-8 text-muted-foreground animate-fade-in-up animation-delay-300">
-                        <a href="https://github.com/Fariguu" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors">
+                        <a href="https://github.com/Fariguu" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
                             <Github className="h-6 w-6" />
                             <span className="sr-only">GitHub</span>
                         </a>
-                        <a href="https://www.linkedin.com/in/gabriele-farigu-3863b1312/" target="_blank" rel="noreferrer" className="hover:text-primary transition-colors">
+                        <a href="https://www.linkedin.com/in/gabriele-farigu-3863b1312/" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
                             <Linkedin className="h-6 w-6" />
                             <span className="sr-only">LinkedIn</span>
                         </a>
