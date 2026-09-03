@@ -1,4 +1,4 @@
-﻿import { z } from "zod";
+import { z } from "zod";
 
 export const contactFormSchema = z.object({
   firstName: z
@@ -22,6 +22,7 @@ export const contactFormSchema = z.object({
     .min(10, { message: "Il messaggio deve contenere almeno 10 caratteri" })
     .max(3000, { message: "Il messaggio non può superare 3000 caratteri" }),
   turnstileToken: z.string().optional(),
+  locale: z.string().optional(),
 });
 
 export type ContactFormData = z.infer<typeof contactFormSchema>;

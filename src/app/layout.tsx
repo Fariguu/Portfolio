@@ -1,10 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { headers } from "next/headers";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { getBaseUrl } from "@/lib/url";
 import { siteConfig } from "@/lib/seo.config";
 import { JsonLd } from "@/components/seo/json-ld";
+import { defaultLocale, isValidLocale, type Locale } from "@/lib/i18n/config";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import "./globals.css";
 
@@ -45,27 +47,6 @@ export const metadata: Metadata = {
     address: true,
     telephone: true,
   },
-  alternates: {
-    canonical: "/",
-  },
-  openGraph: {
-    type: "website",
-    locale: siteConfig.locale,
-    url: "/",
-    siteName: siteConfig.name,
-    title: siteConfig.title.default,
-    description: siteConfig.description,
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: siteConfig.title.default,
-    description: siteConfig.description,
-    creator: siteConfig.creator,
-  },
-  other: {
-    "publish-date": "2026-09-02T00:00:00.000Z",
-    "article:published_time": "2026-09-02T00:00:00.000Z",
-  },
   robots: {
     index: true,
     follow: true,
@@ -79,13 +60,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = await headers();
+  const rawLocale = headersList.get("x-locale") || defaultLocale;
+  const locale: Locale = isValidLocale(rawLocale) ? rawLocale : defaultLocale;
+
   return (
-    <html lang="it" className="scroll-smooth" suppressHydrationWarning>
+    <html lang={locale} className="scroll-smooth" suppressHydrationWarning>
       <head>
         {/* Google tag (gtag.js) */}
         <script
@@ -113,7 +98,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <JsonLd />
+          <JsonLd locale={locale} />
           {children}
           <Analytics />
           <SpeedInsights />

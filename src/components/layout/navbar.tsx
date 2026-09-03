@@ -2,82 +2,99 @@
 
 import * as React from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Code2 } from "lucide-react";
+import { LanguageSwitcher } from "./language-switcher";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
+import type { Dictionary } from "@/lib/i18n/types";
+import type { Locale } from "@/lib/i18n/config";
 
-export function Navbar() {
-    const [isOpen, setIsOpen] = React.useState(false);
+const MobileMenu = dynamic(
+  () => import("./mobile-menu").then((mod) => mod.MobileMenu),
+  {
+    ssr: false,
+    loading: () => (
+      <Button
+        variant="ghost"
+        className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+        aria-label="Menu"
+      >
+        <Menu className="h-6 w-6" />
+      </Button>
+    ),
+  }
+);
 
-    const navigations = [
-        { title: "Home", href: "/" },
-        { title: "Competenze", href: "#competenze" },
-        { title: "Percorso", href: "#percorso" },
-        { title: "Progetti", href: "#progetti" },
-        { title: "Contatti", href: "#contatti" },
-    ];
+interface NavbarProps {
+  dict: Dictionary;
+  locale: Locale;
+}
 
-    return (
-        <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="container flex h-16 items-center justify-between px-4 md:px-6 mx-auto">
-                <div className="flex items-center gap-2">
-                    <Link href="/" className="flex items-center space-x-2">
-                        <Code2 className="h-6 w-6 text-brand-accent transition-colors" />
-                        <span className="font-bold inline-block">Gabriele Farigu</span>
-                    </Link>
-                </div>
+export function Navbar({ dict, locale }: NavbarProps) {
+  const homeHref = locale === "en" ? "/en" : "/";
 
-                {/* Desktop Nav */}
-                <nav className="hidden md:flex flex-1 items-center justify-center space-x-8 text-sm font-medium">
-                    {navigations.map((item) => (
-                        <Link
-                            key={item.title}
-                            href={item.href}
-                            className="transition-colors hover:text-brand-accent text-muted-foreground"
-                        >
-                            {item.title}
-                        </Link>
-                    ))}
-                </nav>
+  const navigations = [
+    { title: dict.nav.home, href: homeHref },
+    { title: dict.nav.skills, href: "#competenze" },
+    { title: dict.nav.journey, href: "#percorso" },
+    { title: dict.nav.projects, href: "#progetti" },
+    { title: dict.nav.contact, href: "#contatti" },
+  ];
 
-                <div className="hidden md:flex items-center space-x-3">
-                    <ThemeToggle />
-                    <Button asChild variant="default" className="rounded-full">
-                        <Link href="#contatti">Contattami</Link>
-                    </Button>
-                </div>
+  return (
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container relative flex h-16 items-center justify-between px-4 md:px-6 mx-auto">
+        {/* Left: Brand Logo & Name */}
+        <div className="flex items-center gap-2 z-10">
+          <Link href={homeHref} className="flex items-center space-x-2">
+            <Code2 className="h-6 w-6 text-brand-accent transition-colors" />
+            <span className="font-bold inline-block">Gabriele Farigu</span>
+          </Link>
+        </div>
 
-                {/* Mobile Nav */}
-                <div className="flex md:hidden items-center space-x-2">
-                    <ThemeToggle />
-                    <Sheet open={isOpen} onOpenChange={setIsOpen}>
-                        <SheetTrigger asChild>
-                            <Button variant="ghost" className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0">
-                                <Menu className="h-6 w-6" />
-                                <span className="sr-only">Toggle Menu</span>
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent side="right" className="w-[300px] pr-0">
-                            <div className="flex flex-col gap-6 pt-8 px-4 text-lg font-medium">
-                                {navigations.map((item) => (
-                                    <Link
-                                        key={item.title}
-                                        href={item.href}
-                                        onClick={() => setIsOpen(false)}
-                                        className="hover:text-brand-accent transition-colors"
-                                    >
-                                        {item.title}
-                                    </Link>
-                                ))}
-                                <Button className="mt-4 w-full rounded-full" asChild onClick={() => setIsOpen(false)}>
-                                    <Link href="#contatti">Contattami</Link>
-                                </Button>
-                            </div>
-                        </SheetContent>
-                    </Sheet>
-                </div>
-            </div>
-        </header>
-    );
+        {/* Center: Desktop Nav - Absolute center relative to the entire page */}
+        <nav
+          aria-label="Desktop Navigation"
+          className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center justify-center text-sm font-medium select-none pointer-events-auto"
+        >
+          <div className="flex items-center space-x-1">
+            {navigations.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="w-[94px] text-center py-1.5 transition-colors hover:text-brand-accent text-muted-foreground whitespace-nowrap"
+              >
+                {item.title}
+              </Link>
+            ))}
+          </div>
+        </nav>
+
+        {/* Right: Actions with fixed dimensions to guarantee zero layout shift */}
+        <div className="hidden md:flex items-center justify-end space-x-3 z-10 min-w-[240px]">
+          <ThemeToggle />
+          <LanguageSwitcher currentLocale={locale} />
+          <Button
+            asChild
+            variant="default"
+            className="rounded-full w-[120px] justify-center text-center font-medium"
+          >
+            <Link href="#contatti">{dict.nav.contactCta}</Link>
+          </Button>
+        </div>
+
+        {/* Mobile Nav */}
+        <div className="flex md:hidden items-center gap-2">
+          <ThemeToggle />
+          <LanguageSwitcher currentLocale={locale} />
+          <MobileMenu
+            navigations={navigations}
+            contactCta={dict.nav.contactCta}
+            toggleMenuLabel={dict.nav.toggleMenu}
+          />
+        </div>
+      </div>
+    </header>
+  );
 }

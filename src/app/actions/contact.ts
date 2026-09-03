@@ -27,7 +27,7 @@ export async function sendContactEmail(
     };
   }
 
-  const { firstName, lastName, email, message, turnstileToken } =
+  const { firstName, lastName, email, message, turnstileToken, locale } =
     validation.data;
 
   // 2. Verifica token Cloudflare Turnstile
@@ -35,7 +35,7 @@ export async function sendContactEmail(
   if (!turnstileCheck.success) {
     return {
       success: false,
-      error: turnstileCheck.error || "Verifica di sicurezza non superata.",
+      error: turnstileCheck.error || (locale === "en" ? "Security check failed." : "Verifica di sicurezza non superata."),
     };
   }
 
@@ -46,7 +46,7 @@ export async function sendContactEmail(
   if (!resendApiKey) {
     console.warn(
       "[Contact Action] RESEND_API_KEY non trovata nelle variabili d'ambiente. Simulazione invio riuscito in locale:",
-      { firstName, lastName, email, messagePreview: message.slice(0, 80) }
+      { firstName, lastName, email, locale, messagePreview: message.slice(0, 80) }
     );
     return { success: true };
   }
@@ -58,17 +58,19 @@ export async function sendContactEmail(
       process.env.CONTACT_EMAIL_FROM ||
       "Portfolio Gabriele Farigu <onboarding@resend.dev>";
 
+    const langTag = locale === "en" ? " [EN]" : " [IT]";
+
     // Invia email di notifica a Gabriele
     const { error: notificationError } = await resend.emails.send({
       from: sender,
       to: [adminEmail],
       replyTo: `${firstName} ${lastName} <${email}>`,
-      subject: `Nuovo messaggio da ${firstName} ${lastName} — Portfolio`,
-      text: `Nuovo messaggio ricevuto dal form contatti del Portfolio:\n\nMittente: ${firstName} ${lastName}\nEmail: ${email}\n\nMessaggio:\n${message}\n\n---\nPuoi rispondere direttamente a questa email per contattare ${firstName}.`,
+      subject: `Nuovo messaggio da ${firstName} ${lastName}${langTag} — Portfolio`,
+      text: `Nuovo messaggio ricevuto dal form contatti del Portfolio:\n\nMittente: ${firstName} ${lastName}\nEmail: ${email}\nLingua: ${locale || "it"}\n\nMessaggio:\n${message}\n\n---\nPuoi rispondere direttamente a questa email per contattare ${firstName}.`,
       html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #18181b; background-color: #ffffff; border: 1px solid #e4e4e7; border-radius: 12px;">
           <h2 style="color: #09090b; margin-top: 0; font-size: 20px; border-bottom: 2px solid #f4f4f5; padding-bottom: 12px;">
-            📩 Nuovo messaggio dal Portfolio
+            📩 Nuovo messaggio dal Portfolio (${(locale || "it").toUpperCase()})
           </h2>
           <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
             <tr>
@@ -78,6 +80,10 @@ export async function sendContactEmail(
             <tr>
               <td style="padding: 6px 0; color: #71717a; font-size: 14px;"><strong>Email:</strong></td>
               <td style="padding: 6px 0; color: #18181b; font-size: 14px;"><a href="mailto:${email}" style="color: #2563eb; text-decoration: none;">${email}</a></td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 0; color: #71717a; font-size: 14px;"><strong>Lingua:</strong></td>
+              <td style="padding: 6px 0; color: #18181b; font-size: 14px;">${locale === "en" ? "Inglese" : "Italiano"}</td>
             </tr>
           </table>
           <div style="background-color: #f4f4f5; padding: 16px; border-radius: 8px; border-left: 4px solid #18181b; margin-bottom: 24px;">
@@ -94,33 +100,57 @@ export async function sendContactEmail(
       console.error("[Resend] Errore invio notifica:", notificationError);
       return {
         success: false,
-        error: "Errore durante l'invio dell'email. Riprova tra qualche minuto.",
+        error:
+          locale === "en"
+            ? "Error sending email. Please try again in a few moments."
+            : "Errore durante l'invio dell'email. Riprova tra qualche minuto.",
       };
     }
 
     // Invia email di cortesia / conferma automatica al mittente (auto-responder)
-    // Racchiuso in try/catch separato: se Resend è in test mode (onboarding@resend.dev),
-    // l'invio a domini esterni non verificati potrebbe essere bloccato, ma la notifica a Gabriele è già partita con successo.
     try {
+      const isEn = locale === "en";
+      const subject = isEn
+        ? "Thank you for reaching out — Gabriele Farigu"
+        : "Ho ricevuto il tuo messaggio — Gabriele Farigu";
+
+      const text = isEn
+        ? `Hi ${firstName},\n\nThank you for reaching out through my portfolio!\n\nI have received your message and will get back to you as soon as possible.\n\nBest regards,\nGabriele Farigu\nhttps://github.com/Fariguu`
+        : `Ciao ${firstName},\n\ngrazie per avermi contattato tramite il mio portfolio!\n\nHo ricevuto la tua richiesta e ti risponderò il prima possibile.\n\nA presto,\nGabriele Farigu\nhttps://github.com/Fariguu`;
+
+      const title = isEn
+        ? `Thank you for your message, ${firstName}! 👋`
+        : `Grazie per il tuo messaggio, ${firstName}! 👋`;
+
+      const body1 = isEn
+        ? "I have successfully received your inquiry submitted via my portfolio."
+        : "Ho ricevuto correttamente la tua richiesta tramite il modulo contatti del mio portfolio.";
+
+      const body2 = isEn
+        ? "I will carefully review your message and reply to this email address shortly."
+        : "Leggerò con cura quanto mi hai scritto e mi metterò in contatto con te a questo indirizzo email il prima possibile.";
+
+      const role = isEn ? "Web & Software Developer" : "Sviluppatore Web & Software";
+
       const { error: autoReplyError } = await resend.emails.send({
         from: sender,
         to: [email],
-        subject: `Ho ricevuto il tuo messaggio — Gabriele Farigu`,
-        text: `Ciao ${firstName},\n\ngrazie per avermi contattato tramite il mio portfolio!\n\nHo ricevuto la tua richiesta e ti risponderò il prima possibile.\n\nA presto,\nGabriele Farigu\nhttps://github.com/Fariguu`,
+        subject,
+        text,
         html: `
           <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #18181b; background-color: #ffffff; border: 1px solid #e4e4e7; border-radius: 12px;">
             <h2 style="color: #09090b; margin-top: 0; font-size: 20px;">
-              Grazie per il tuo messaggio, ${firstName}! 👋
+              ${title}
             </h2>
             <p style="font-size: 15px; line-height: 1.6; color: #3f3f46;">
-              Ho ricevuto correttamente la tua richiesta tramite il modulo contatti del mio portfolio.
+              ${body1}
             </p>
             <p style="font-size: 15px; line-height: 1.6; color: #3f3f46;">
-              Leggerò con cura quanto mi hai scritto e mi metterò in contatto con te a questo indirizzo email il prima possibile.
+              ${body2}
             </p>
             <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #f4f4f5; font-size: 14px; color: #71717a;">
               <p style="margin: 0; font-weight: 600; color: #18181b;">Gabriele Farigu</p>
-              <p style="margin: 4px 0 0 0; font-size: 13px;">Sviluppatore Web & Software</p>
+              <p style="margin: 4px 0 0 0; font-size: 13px;">${role}</p>
               <p style="margin: 8px 0 0 0; font-size: 12px;">
                 <a href="https://github.com/Fariguu" style="color: #2563eb; text-decoration: none;">GitHub</a> • 
                 <a href="https://www.linkedin.com/in/gabriele-farigu-3863b1312/" style="color: #2563eb; text-decoration: none;">LinkedIn</a>
