@@ -7,6 +7,7 @@ import { siteConfig } from '@/lib/seo.config';
  */
 export function JsonLd() {
   const baseUrl = getBaseUrl();
+  const ogImageUrl = `${baseUrl}/opengraph-image.png`;
 
   const websiteSchema = {
     '@context': 'https://schema.org',
@@ -15,11 +16,13 @@ export function JsonLd() {
     name: siteConfig.name,
     url: baseUrl,
     description: siteConfig.description,
+    image: ogImageUrl,
     inLanguage: 'it-IT',
     publisher: {
       '@type': 'Person',
       '@id': `${baseUrl}/#person`,
       name: siteConfig.name,
+      image: ogImageUrl,
     },
   };
 
@@ -29,6 +32,7 @@ export function JsonLd() {
     '@id': `${baseUrl}/#person`,
     name: siteConfig.name,
     url: baseUrl,
+    image: ogImageUrl,
     email: `mailto:${siteConfig.socials.email}`,
     jobTitle: 'Sviluppatore Web & Software',
     sameAs: [
@@ -65,6 +69,16 @@ export function JsonLd() {
     url: baseUrl,
     name: siteConfig.title.default,
     description: siteConfig.description,
+    primaryImageOfPage: {
+      '@type': 'ImageObject',
+      '@id': `${baseUrl}/#primaryimage`,
+      url: ogImageUrl,
+      contentUrl: ogImageUrl,
+      width: 1200,
+      height: 630,
+      caption: siteConfig.name,
+    },
+    image: ogImageUrl,
     isPartOf: {
       '@type': 'WebSite',
       '@id': `${baseUrl}/#website`,
