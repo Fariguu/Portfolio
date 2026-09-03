@@ -136,7 +136,12 @@ export async function Portfolio({ dict, locale }: PortfolioProps) {
               </CardContent>
               <CardFooter className="flex items-center justify-between border-t border-border/50 pt-4 mt-auto">
                 {project.github ? (
-                  <Button variant="outline" size="sm" asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="min-w-[100px] justify-center"
+                    asChild
+                  >
                     <a
                       href={project.github}
                       target="_blank"
@@ -152,7 +157,11 @@ export async function Portfolio({ dict, locale }: PortfolioProps) {
                   </span>
                 )}
                 {project.demo && (
-                  <Button size="sm" asChild>
+                  <Button
+                    size="sm"
+                    className="min-w-[105px] justify-center"
+                    asChild
+                  >
                     <a
                       href={project.demo}
                       target="_blank"
@@ -171,7 +180,7 @@ export async function Portfolio({ dict, locale }: PortfolioProps) {
           <Button
             variant="secondary"
             size="lg"
-            className="rounded-full shadow-xs"
+            className="rounded-full shadow-xs min-w-[280px] justify-center"
             asChild
           >
             <a

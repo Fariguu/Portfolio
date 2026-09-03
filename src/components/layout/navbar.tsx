@@ -29,30 +29,41 @@ export function Navbar({ dict, locale }: NavbarProps) {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between px-4 md:px-6 mx-auto">
-        <div className="flex items-center gap-2">
+      <div className="container relative flex h-16 items-center justify-between px-4 md:px-6 mx-auto">
+        {/* Left: Brand Logo & Name */}
+        <div className="flex items-center gap-2 z-10">
           <Link href={homeHref} className="flex items-center space-x-2">
             <Code2 className="h-6 w-6 text-primary" />
             <span className="font-bold inline-block">Gabriele Farigu</span>
           </Link>
         </div>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex flex-1 items-center justify-center space-x-8 text-sm font-medium">
-          {navigations.map((item) => (
-            <Link
-              key={item.title}
-              href={item.href}
-              className="transition-colors hover:text-primary text-muted-foreground"
-            >
-              {item.title}
-            </Link>
-          ))}
+        {/* Center: Desktop Nav - Absolute center relative to the entire page */}
+        <nav
+          aria-label="Desktop Navigation"
+          className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center justify-center text-sm font-medium select-none pointer-events-auto"
+        >
+          <div className="flex items-center space-x-1">
+            {navigations.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="w-[94px] text-center py-1.5 transition-colors hover:text-primary text-muted-foreground whitespace-nowrap"
+              >
+                {item.title}
+              </Link>
+            ))}
+          </div>
         </nav>
 
-        <div className="hidden md:flex items-center space-x-4">
+        {/* Right: Actions with fixed dimensions to guarantee zero layout shift */}
+        <div className="hidden md:flex items-center justify-end space-x-3 z-10 w-[220px]">
           <LanguageSwitcher currentLocale={locale} />
-          <Button asChild variant="default" className="rounded-full">
+          <Button
+            asChild
+            variant="default"
+            className="rounded-full w-[120px] justify-center text-center font-medium"
+          >
             <Link href="#contatti">{dict.nav.contactCta}</Link>
           </Button>
         </div>
@@ -74,7 +85,7 @@ export function Navbar({ dict, locale }: NavbarProps) {
               <div className="flex flex-col gap-6 pt-8 px-4 text-lg font-medium">
                 {navigations.map((item) => (
                   <Link
-                    key={item.title}
+                    key={item.href}
                     href={item.href}
                     onClick={() => setIsOpen(false)}
                     className="hover:text-primary transition-colors"

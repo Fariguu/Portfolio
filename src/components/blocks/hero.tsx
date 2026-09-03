@@ -36,21 +36,22 @@ export function Hero({ dict }: HeroProps) {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-4 animate-fade-in-up animation-delay-200">
+          {/* CTA Buttons with fixed desktop dimensions to prevent button shifting during language change */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up animation-delay-200">
             <Button
               size="lg"
-              className="rounded-full shadow-lg h-12 px-8 group font-medium"
+              className="rounded-full shadow-lg h-12 w-full sm:w-[230px] justify-center group font-medium"
               asChild
             >
               <a href="#progetti">
-                {dict.hero.ctaProjects}
+                <span>{dict.hero.ctaProjects}</span>
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </a>
             </Button>
             <Button
               size="lg"
               variant="outline"
-              className="rounded-full h-12 px-8 font-medium bg-background/50 backdrop-blur-sm"
+              className="rounded-full h-12 w-full sm:w-[150px] justify-center font-medium bg-background/50 backdrop-blur-sm"
               asChild
             >
               <a href="#contatti">{dict.hero.ctaContact}</a>

@@ -83,7 +83,7 @@ export function LanguageSwitcher({
       onMouseEnter={() => router.prefetch(targetUrl)}
       aria-label={ariaLabel}
       title={titleTooltip}
-      className={`group relative inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-muted/40 p-1 text-xs font-medium backdrop-blur-sm transition-all duration-200 hover:border-primary/50 hover:bg-muted/70 active:scale-95 cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${className}`}
+      className={`group relative inline-flex items-center justify-between w-[86px] rounded-full border border-border/60 bg-muted/40 p-1 text-xs font-medium backdrop-blur-sm transition-all duration-200 hover:border-primary/50 hover:bg-muted/70 active:scale-95 cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${className}`}
     >
       <div
         className="flex items-center pl-1 text-muted-foreground group-hover:text-primary transition-colors"
