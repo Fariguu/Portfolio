@@ -11,7 +11,7 @@ async function uploadImageIfPresent(file: File | null, existingUrl?: string): Pr
 
   const supabase = createAdminClient()
   const fileExt = file.name.split('.').pop() || 'png'
-  const fileName = `projects/${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${fileExt}`
+  const fileName = `projects/${Date.now()}_${crypto.randomUUID()}.${fileExt}`
   const arrayBuffer = await file.arrayBuffer()
   const buffer = Buffer.from(arrayBuffer)
 
@@ -67,7 +67,7 @@ export async function createProject(formData: FormData) {
     const is_private = formData.get('is_private') === 'true' || formData.get('is_private') === 'on'
     const featured = formData.get('featured') === 'true' || formData.get('featured') === 'on'
     const visible = formData.get('visible') === 'true' || formData.get('visible') === 'on'
-    const sort_order = parseInt((formData.get('sort_order') as string) || '0', 10)
+    const sort_order = Number.parseInt((formData.get('sort_order') as string) || '0', 10)
 
     if (!title || !description) {
       return { error: 'Titolo e descrizione sono obbligatori' }
@@ -139,7 +139,7 @@ export async function updateProject(id: string, formData: FormData) {
     const is_private = formData.get('is_private') === 'true' || formData.get('is_private') === 'on'
     const featured = formData.get('featured') === 'true' || formData.get('featured') === 'on'
     const visible = formData.get('visible') === 'true' || formData.get('visible') === 'on'
-    const sort_order = parseInt((formData.get('sort_order') as string) || '0', 10)
+    const sort_order = Number.parseInt((formData.get('sort_order') as string) || '0', 10)
 
     if (!title || !description) {
       return { error: 'Titolo e descrizione sono obbligatori' }

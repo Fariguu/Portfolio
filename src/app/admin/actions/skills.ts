@@ -13,7 +13,7 @@ export async function createSkill(formData: FormData) {
   const name = formData.get('name') as string
   const description = formData.get('description') as string
   const icon_name = (formData.get('icon_name') as string) || 'MonitorSmartphone'
-  const sort_order = parseInt((formData.get('sort_order') as string) || '0', 10)
+  const sort_order = Number.parseInt((formData.get('sort_order') as string) || '0', 10)
   const visible = formData.get('visible') === 'true' || formData.get('visible') === 'on'
 
   if (!name || !description) {
@@ -48,7 +48,7 @@ export async function updateSkill(id: string, formData: FormData) {
   const name = formData.get('name') as string
   const description = formData.get('description') as string
   const icon_name = (formData.get('icon_name') as string) || 'MonitorSmartphone'
-  const sort_order = parseInt((formData.get('sort_order') as string) || '0', 10)
+  const sort_order = Number.parseInt((formData.get('sort_order') as string) || '0', 10)
   const visible = formData.get('visible') === 'true' || formData.get('visible') === 'on'
 
   if (!name || !description) {
