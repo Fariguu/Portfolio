@@ -25,27 +25,17 @@ export function LanguageSwitcher({
     setActiveLocale(currentLocale);
   }, [currentLocale]);
 
-  // Calcolo del percorso di destinazione
+  // Calcolo deterministico del percorso senza accedere a window durante il rendering
   const getTargetUrl = React.useCallback(
     (targetLocale: Locale) => {
-      let newPath = pathname;
-
       if (targetLocale === "en") {
-        if (pathname === "/") {
-          newPath = "/en";
-        } else if (!pathname.startsWith("/en")) {
-          newPath = `/en${pathname}`;
-        }
+        if (pathname === "/") return "/en";
+        if (!pathname.startsWith("/en")) return `/en${pathname}`;
       } else {
-        if (pathname === "/en") {
-          newPath = "/";
-        } else if (pathname.startsWith("/en/")) {
-          newPath = pathname.replace(/^\/en/, "") || "/";
-        }
+        if (pathname === "/en") return "/";
+        if (pathname.startsWith("/en/")) return pathname.replace(/^\/en/, "") || "/";
       }
-
-      const hash = typeof window !== "undefined" ? window.location.hash : "";
-      return hash ? `${newPath}${hash}` : newPath;
+      return pathname;
     },
     [pathname]
   );
@@ -72,9 +62,13 @@ export function LanguageSwitcher({
     // 2. Persistenza preferenza cookie
     document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000; SameSite=Lax`;
 
-    // 3. Navigazione immediata fluida senza sfarfallio della pagina
+    // 3. Recupera l'hash solo a runtime nell'event handler
+    const hash = typeof window !== "undefined" ? window.location.hash : "";
+    const finalUrl = hash ? `${targetUrl}${hash}` : targetUrl;
+
+    // 4. Navigazione immediata fluida senza sfarfallio
     React.startTransition(() => {
-      router.push(targetUrl);
+      router.push(finalUrl);
     });
   };
 

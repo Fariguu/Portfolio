@@ -16,6 +16,11 @@ interface NavbarProps {
 
 export function Navbar({ dict, locale }: NavbarProps) {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const homeHref = locale === "en" ? "/en" : "/";
 
@@ -71,38 +76,49 @@ export function Navbar({ dict, locale }: NavbarProps) {
         {/* Mobile Nav */}
         <div className="flex md:hidden items-center gap-2">
           <LanguageSwitcher currentLocale={locale} />
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
-              >
-                <Menu className="h-6 w-6" />
-                <span className="sr-only">{dict.nav.toggleMenu}</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] pr-0">
-              <div className="flex flex-col gap-6 pt-8 px-4 text-lg font-medium">
-                {navigations.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setIsOpen(false)}
-                    className="hover:text-primary transition-colors"
-                  >
-                    {item.title}
-                  </Link>
-                ))}
+          {isMounted ? (
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
                 <Button
-                  className="mt-4 w-full rounded-full"
-                  asChild
-                  onClick={() => setIsOpen(false)}
+                  variant="ghost"
+                  className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
                 >
-                  <Link href="#contatti">{dict.nav.contactCta}</Link>
+                  <Menu className="h-6 w-6" />
+                  <span className="sr-only">{dict.nav.toggleMenu}</span>
                 </Button>
-              </div>
-            </SheetContent>
-          </Sheet>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] pr-0">
+                <div className="flex flex-col gap-6 pt-8 px-4 text-lg font-medium">
+                  {navigations.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setIsOpen(false)}
+                      className="hover:text-primary transition-colors"
+                    >
+                      {item.title}
+                    </Link>
+                  ))}
+                  <Button
+                    className="mt-4 w-full rounded-full"
+                    asChild
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Link href="#contatti">{dict.nav.contactCta}</Link>
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
+          ) : (
+            <Button
+              variant="ghost"
+              className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+              aria-label={dict.nav.toggleMenu}
+            >
+              <Menu className="h-6 w-6" />
+              <span className="sr-only">{dict.nav.toggleMenu}</span>
+            </Button>
+          )}
         </div>
       </div>
     </header>
