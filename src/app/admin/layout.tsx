@@ -24,11 +24,13 @@ export const metadata: Metadata = {
 }
 
 
+interface AdminLayoutProps {
+  readonly children: React.ReactNode
+}
+
 export default async function AdminLayout({
   children,
-}: {
-  children: React.ReactNode
-}) {
+}: Readonly<AdminLayoutProps>) {
   const supabase = await createClient()
   const {
     data: { user },
