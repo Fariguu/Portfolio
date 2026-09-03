@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import * as React from "react";
 import { Button } from "@/components/ui/button";
@@ -77,32 +77,32 @@ export function Contact() {
 
                         <div className="space-y-4 pt-4">
                             <div className="flex items-center gap-4">
-                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                                    <Mail className="h-6 w-6 text-primary" />
+                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-accent/10 dark:bg-brand-accent/15">
+                                    <Mail className="h-6 w-6 text-brand-accent" />
                                 </div>
                                 <div>
                                     <h3 className="font-semibold text-foreground">Email</h3>
-                                    <a href="mailto:farigugabriele@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">
+                                    <a href="mailto:farigugabriele@gmail.com" className="text-muted-foreground hover:text-brand-accent transition-colors">
                                         farigugabriele@gmail.com
                                     </a>
                                 </div>
                             </div>
 
                             <div className="flex items-center gap-4">
-                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                                    <Phone className="h-6 w-6 text-primary" />
+                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-accent/10 dark:bg-brand-accent/15">
+                                    <Phone className="h-6 w-6 text-brand-accent" />
                                 </div>
                                 <div>
                                     <h3 className="font-semibold text-foreground">Telefono</h3>
-                                    <a href="tel:+393701157596" className="text-muted-foreground hover:text-primary transition-colors">
+                                    <a href="tel:+393701157596" className="text-muted-foreground hover:text-brand-accent transition-colors">
                                         +39 370 115 7596
                                     </a>
                                 </div>
                             </div>
 
                             <div className="flex items-center gap-4">
-                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                                    <Linkedin className="h-6 w-6 text-primary" />
+                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-accent/10 dark:bg-brand-accent/15">
+                                    <Linkedin className="h-6 w-6 text-brand-accent" />
                                 </div>
                                 <div>
                                     <h3 className="font-semibold text-foreground">LinkedIn</h3>
@@ -110,7 +110,7 @@ export function Contact() {
                                         href="https://www.linkedin.com/in/gabriele-farigu-3863b1312/" 
                                         target="_blank" 
                                         rel="noopener noreferrer" 
-                                        className="text-muted-foreground hover:text-primary transition-colors"
+                                        className="text-muted-foreground hover:text-brand-accent transition-colors"
                                     >
                                         linkedin.com/in/gabriele-farigu
                                     </a>
@@ -118,8 +118,8 @@ export function Contact() {
                             </div>
 
                             <div className="flex items-center gap-4">
-                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                                    <MapPin className="h-6 w-6 text-primary" />
+                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-accent/10 dark:bg-brand-accent/15">
+                                    <MapPin className="h-6 w-6 text-brand-accent" />
                                 </div>
                                 <div>
                                     <h3 className="font-semibold text-foreground">Posizione</h3>
@@ -129,7 +129,7 @@ export function Contact() {
                         </div>
                     </div>
 
-                    <Card className="border-border/50 shadow-sm bg-background">
+                    <Card className="border-border/50 hover:border-brand-accent/30 shadow-sm bg-background transition-colors">
                         <CardHeader>
                             <CardTitle>Invia un messaggio</CardTitle>
                             <CardDescription>

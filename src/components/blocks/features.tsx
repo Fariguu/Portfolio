@@ -59,10 +59,10 @@ export async function Features() {
                         {features.map((feature) => {
                             const Icon = getIconComponent(feature.icon_name);
                             return (
-                                <div key={feature.name} className="flex flex-col bg-background p-6 rounded-2xl shadow-sm border border-border/50 hover:shadow-md transition-shadow">
+                                <div key={feature.name} className="flex flex-col bg-background p-6 rounded-2xl shadow-sm border border-border/50 hover:border-brand-accent/40 hover:shadow-md transition-all">
                                     <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-foreground">
-                                        <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-primary/10">
-                                            <Icon className="h-6 w-6 text-primary" aria-hidden="true" />
+                                        <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-brand-accent/10 dark:bg-brand-accent/15">
+                                            <Icon className="h-6 w-6 text-brand-accent" aria-hidden="true" />
                                         </div>
                                         {feature.name}
                                     </dt>

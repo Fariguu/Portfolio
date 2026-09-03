@@ -99,7 +99,7 @@ export async function Portfolio() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {projects.map((project, index) => (
-                        <Card key={project.id || index} className="overflow-hidden flex flex-col h-full bg-card group border-border/50 hover:border-primary/50 transition-colors">
+                        <Card key={project.id || index} className="overflow-hidden flex flex-col h-full bg-card group border-border/50 hover:border-brand-accent/50 transition-all">
                             <div className="relative w-full h-48 overflow-hidden">
                                 <Image
                                     src={project.image}
@@ -110,7 +110,7 @@ export async function Portfolio() {
                                     className="object-cover transition-transform duration-300 group-hover:scale-105"
                                 />
                                 {project.statusBadge && (
-                                    <div className="absolute top-3 right-3 bg-background/90 backdrop-blur-sm px-2.5 py-1 rounded-full text-xs font-semibold text-primary border border-primary/20 shadow-sm">
+                                    <div className="absolute top-3 right-3 bg-background/90 backdrop-blur-sm px-2.5 py-1 rounded-full text-xs font-semibold text-brand-accent border border-brand-accent/30 shadow-sm">
                                         {project.statusBadge}
                                     </div>
                                 )}

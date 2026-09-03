@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import { signOutAction } from '@/app/admin/actions/auth'
 import { Button } from '@/components/ui/button'
+import { ThemeToggle } from '@/components/theme/theme-toggle'
 
 import type { Metadata } from 'next'
 
@@ -81,6 +82,7 @@ export default async function AdminLayout({
 
             {/* Right side actions */}
             <div className="flex items-center gap-3">
+              <ThemeToggle />
               <Button variant="outline" size="sm" className="hidden sm:flex items-center gap-1.5" asChild>
                 <Link href="/" target="_blank">
                   <ExternalLink className="h-3.5 w-3.5" />
