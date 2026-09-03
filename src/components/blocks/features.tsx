@@ -4,11 +4,11 @@ import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
 
 interface FeaturesProps {
-  dict: Dictionary;
-  locale: Locale;
+  readonly dict: Dictionary;
+  readonly locale: Locale;
 }
 
-export async function Features({ dict, locale }: FeaturesProps) {
+export async function Features({ dict, locale }: Readonly<FeaturesProps>) {
   let features = dict.skills.fallbackList;
 
   // Se siamo in lingua italiana proviamo a recuperare eventuali aggiornamenti dal DB Supabase
