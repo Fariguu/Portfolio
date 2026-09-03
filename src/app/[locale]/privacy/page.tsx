@@ -8,7 +8,7 @@ import { getBaseUrl } from "@/lib/url";
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
 
 interface PrivacyPageProps {
-  params: Promise<{ locale: string }>;
+  readonly params: Promise<{ locale: string }>;
 }
 
 export function generateStaticParams() {
@@ -44,7 +44,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function PrivacyPage({ params }: PrivacyPageProps) {
+export default async function PrivacyPage({ params }: Readonly<PrivacyPageProps>) {
   const { locale: rawLocale } = await params;
   const locale: Locale = isValidLocale(rawLocale) ? rawLocale : defaultLocale;
   const dict = getDictionary(locale);

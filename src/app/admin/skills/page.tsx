@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic'
 
 export default async function AdminSkillsPage() {
   const supabase = createAdminClient()
-  const { data: skills, error } = await supabase
+  const { data: skills } = await supabase
     .from('skills')
     .select('*')
     .order('sort_order', { ascending: true })

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, type SyntheticEvent } from 'react'
 import type { Skill } from '@/lib/database.types'
 import { AVAILABLE_ICONS, getIconComponent } from '@/lib/icons'
 import {
@@ -23,10 +23,10 @@ import {
 } from 'lucide-react'
 
 interface SkillsManagerProps {
-  initialSkills: Skill[]
+  readonly initialSkills: Skill[]
 }
 
-export function SkillsManager({ initialSkills }: SkillsManagerProps) {
+export function SkillsManager({ initialSkills }: Readonly<SkillsManagerProps>) {
   const [skills, setSkills] = useState<Skill[]>(initialSkills)
   const [editingSkill, setEditingSkill] = useState<Skill | null>(null)
   const [isCreating, setIsCreating] = useState(false)
@@ -68,7 +68,7 @@ export function SkillsManager({ initialSkills }: SkillsManagerProps) {
     setErrorMsg(null)
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault()
     setLoading(true)
     setErrorMsg(null)
@@ -92,7 +92,7 @@ export function SkillsManager({ initialSkills }: SkillsManagerProps) {
                   name,
                   description,
                   icon_name: iconName,
-                  sort_order: parseInt(sortOrder, 10) || 0,
+                  sort_order: Number.parseInt(sortOrder, 10) || 0,
                   visible,
                 }
               : s
@@ -179,10 +179,11 @@ export function SkillsManager({ initialSkills }: SkillsManagerProps) {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="sm:col-span-2 space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">
+                <label htmlFor="skill_name" className="text-xs font-semibold text-foreground">
                   Titolo / Nome Competenza *
                 </label>
                 <input
+                  id="skill_name"
                   type="text"
                   placeholder="es. Frontend Moderno con Next.js"
                   value={name}
@@ -193,10 +194,11 @@ export function SkillsManager({ initialSkills }: SkillsManagerProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">
+                <label htmlFor="skill_sort_order" className="text-xs font-semibold text-foreground">
                   Ordine di visualizzazione
                 </label>
                 <input
+                  id="skill_sort_order"
                   type="number"
                   value={sortOrder}
                   onChange={(e) => setSortOrder(e.target.value)}
@@ -206,10 +208,11 @@ export function SkillsManager({ initialSkills }: SkillsManagerProps) {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-foreground">
+              <label htmlFor="skill_description" className="text-xs font-semibold text-foreground">
                 Descrizione *
               </label>
               <textarea
+                id="skill_description"
                 rows={3}
                 placeholder="Descrivi le tecnologie e il metodo che applichi..."
                 value={description}
@@ -221,9 +224,9 @@ export function SkillsManager({ initialSkills }: SkillsManagerProps) {
 
               {/* Icon Picker */}
               <div className="space-y-2">
-                <label className="text-xs font-semibold text-foreground block">
+                <span className="text-xs font-semibold text-foreground block">
                   Seleziona Icona:
-                </label>
+                </span>
                 <div className="grid grid-cols-5 sm:grid-cols-10 gap-2 max-h-36 overflow-y-auto p-2 border border-border rounded-xl bg-muted/20">
                   {Object.keys(AVAILABLE_ICONS).map((iconKey) => {
                     const IconCmp = AVAILABLE_ICONS[iconKey]

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, type SyntheticEvent } from 'react'
 import type { JourneyItem } from '@/lib/database.types'
 import {
   createJourneyItem,
@@ -25,8 +25,18 @@ import {
   AlertCircle,
 } from 'lucide-react'
 
+function JourneyTypeIcon({ type }: { readonly type?: string }) {
+  if (type === 'education') {
+    return <GraduationCap className="h-4 w-4 text-muted-foreground shrink-0" />
+  }
+  if (type === 'certification') {
+    return <Award className="h-4 w-4 text-muted-foreground shrink-0" />
+  }
+  return <BookOpen className="h-4 w-4 text-muted-foreground shrink-0" />
+}
+
 interface JourneyManagerProps {
-  initialItems: JourneyItem[]
+  readonly initialItems: JourneyItem[]
 }
 
 function formatPeriod(startDateStr: string, endDateStr: string | null): string {
@@ -42,7 +52,7 @@ function formatPeriod(startDateStr: string, endDateStr: string | null): string {
   }
 }
 
-export function JourneyManager({ initialItems }: JourneyManagerProps) {
+export function JourneyManager({ initialItems }: Readonly<JourneyManagerProps>) {
   const [items, setItems] = useState<JourneyItem[]>(initialItems)
   const [editingItem, setEditingItem] = useState<JourneyItem | null>(null)
   const [isCreating, setIsCreating] = useState(false)
@@ -105,7 +115,7 @@ export function JourneyManager({ initialItems }: JourneyManagerProps) {
     setErrorMsg(null)
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault()
     setLoading(true)
     setErrorMsg(null)
@@ -142,7 +152,7 @@ export function JourneyManager({ initialItems }: JourneyManagerProps) {
                   tags: tags.split(',').map((t) => t.trim()).filter(Boolean),
                   link_label: linkLabel || null,
                   link_url: linkUrl || null,
-                  sort_order: parseInt(sortOrder, 10) || 0,
+                  sort_order: Number.parseInt(sortOrder, 10) || 0,
                   visible,
                 }
               : it
@@ -229,10 +239,11 @@ export function JourneyManager({ initialItems }: JourneyManagerProps) {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">
+                <label htmlFor="journey_title" className="text-xs font-semibold text-foreground">
                   Titolo o Nome Corso/Diploma *
                 </label>
                 <input
+                  id="journey_title"
                   type="text"
                   placeholder="Es. Laurea in Informatica (ITPS)"
                   value={title}
@@ -243,10 +254,11 @@ export function JourneyManager({ initialItems }: JourneyManagerProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">
+                <label htmlFor="journey_institution" className="text-xs font-semibold text-foreground">
                   Istituto o Università *
                 </label>
                 <input
+                  id="journey_institution"
                   type="text"
                   placeholder="Es. Università degli Studi di Bari Aldo Moro"
                   value={institution}
@@ -259,10 +271,11 @@ export function JourneyManager({ initialItems }: JourneyManagerProps) {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">
+                <label htmlFor="journey_type" className="text-xs font-semibold text-foreground">
                   Tipo di traguardo
                 </label>
                 <select
+                  id="journey_type"
                   value={type}
                   onChange={(e) => setType(e.target.value as any)}
                   className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
@@ -274,10 +287,11 @@ export function JourneyManager({ initialItems }: JourneyManagerProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">
+                <label htmlFor="journey_start_date" className="text-xs font-semibold text-foreground">
                   Data di Inizio *
                 </label>
                 <input
+                  id="journey_start_date"
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
@@ -288,20 +302,22 @@ export function JourneyManager({ initialItems }: JourneyManagerProps) {
 
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-semibold text-foreground">
+                  <label htmlFor="journey_end_date" className="text-xs font-semibold text-foreground">
                     Data di Fine
                   </label>
-                  <label className="flex items-center gap-1.5 text-xs text-primary font-medium cursor-pointer">
+                  <label htmlFor="journey_is_current" className="flex items-center gap-1.5 text-xs text-primary font-medium cursor-pointer">
                     <input
+                      id="journey_is_current"
                       type="checkbox"
                       checked={isCurrent}
                       onChange={(e) => setIsCurrent(e.target.checked)}
                       className="rounded border-border text-primary focus:ring-primary h-3.5 w-3.5"
                     />
-                    In corso / Presente
+                    <span>In corso / Presente</span>
                   </label>
                 </div>
                 <input
+                  id="journey_end_date"
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
@@ -312,10 +328,11 @@ export function JourneyManager({ initialItems }: JourneyManagerProps) {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-foreground">
+              <label htmlFor="journey_description" className="text-xs font-semibold text-foreground">
                 Descrizione Dettagliata *
               </label>
               <textarea
+                id="journey_description"
                 rows={3}
                 placeholder="Fornisci dettagli sul percorso, materie studiate, competenze acquisite..."
                 value={description}
@@ -326,10 +343,11 @@ export function JourneyManager({ initialItems }: JourneyManagerProps) {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-foreground">
+              <label htmlFor="journey_tags" className="text-xs font-semibold text-foreground">
                 Tags / Parole Chiave (separati da virgola)
               </label>
               <input
+                id="journey_tags"
                 type="text"
                 placeholder="es. Ingegneria del Software, Basi di Dati, Algoritmi"
                 value={tags}
@@ -340,10 +358,11 @@ export function JourneyManager({ initialItems }: JourneyManagerProps) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">
+                <label htmlFor="journey_link_label" className="text-xs font-semibold text-foreground">
                   Etichetta Link (opzionale)
                 </label>
                 <input
+                  id="journey_link_label"
                   type="text"
                   placeholder="Es. Scheda Corso UniBa"
                   value={linkLabel}
@@ -353,10 +372,11 @@ export function JourneyManager({ initialItems }: JourneyManagerProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">
+                <label htmlFor="journey_link_url" className="text-xs font-semibold text-foreground">
                   URL Link (opzionale)
                 </label>
                 <input
+                  id="journey_link_url"
                   type="url"
                   placeholder="https://..."
                   value={linkUrl}
@@ -429,13 +449,7 @@ export function JourneyManager({ initialItems }: JourneyManagerProps) {
                   </h3>
 
                   <p className="text-sm font-medium text-foreground/80 flex items-center gap-1.5">
-                    {item.type === 'education' ? (
-                      <GraduationCap className="h-4 w-4 text-muted-foreground shrink-0" />
-                    ) : item.type === 'certification' ? (
-                      <Award className="h-4 w-4 text-muted-foreground shrink-0" />
-                    ) : (
-                      <BookOpen className="h-4 w-4 text-muted-foreground shrink-0" />
-                    )}
+                    <JourneyTypeIcon type={item.type} />
                     <span>{item.institution}</span>
                   </p>
 

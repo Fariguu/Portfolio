@@ -3,13 +3,15 @@ import { createClient } from "@/lib/supabase/server";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
 
+export type TimelineItemType = "education" | "certification" | "milestone";
+
 export interface TimelineItemDisplay {
   id?: string;
   period: string;
   title: string;
   institution: string;
   description: string;
-  type?: "education" | "certification" | "milestone";
+  type?: TimelineItemType;
   isCurrent?: boolean;
   tags?: string[];
   link?: {
@@ -35,12 +37,22 @@ function formatPeriod(
   }
 }
 
-interface JourneyProps {
-  dict: Dictionary;
-  locale: Locale;
+function TimelineTypeIcon({ type }: { readonly type?: TimelineItemType }) {
+  if (type === "education") {
+    return <GraduationCap className="h-4 w-4 text-muted-foreground shrink-0" />;
+  }
+  if (type === "certification") {
+    return <Award className="h-4 w-4 text-muted-foreground shrink-0" />;
+  }
+  return <BookOpen className="h-4 w-4 text-muted-foreground shrink-0" />;
 }
 
-export async function Journey({ dict, locale }: JourneyProps) {
+interface JourneyProps {
+  readonly dict: Dictionary;
+  readonly locale: Locale;
+}
+
+export async function Journey({ dict, locale }: Readonly<JourneyProps>) {
   let timelineData: TimelineItemDisplay[] = dict.journey.fallbackList.map(
     (item, index) => ({
       id: `fallback-${index}`,
@@ -147,13 +159,7 @@ export async function Journey({ dict, locale }: JourneyProps) {
 
                     {/* Institution / Subtitle */}
                     <p className="text-sm font-medium text-foreground/80 flex items-center gap-1.5">
-                      {item.type === "education" ? (
-                        <GraduationCap className="h-4 w-4 text-muted-foreground shrink-0" />
-                      ) : item.type === "certification" ? (
-                        <Award className="h-4 w-4 text-muted-foreground shrink-0" />
-                      ) : (
-                        <BookOpen className="h-4 w-4 text-muted-foreground shrink-0" />
-                      )}
+                      <TimelineTypeIcon type={item.type} />
                       <span>{item.institution}</span>
                     </p>
 

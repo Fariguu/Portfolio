@@ -27,7 +27,7 @@ export async function createJourneyItem(formData: FormData) {
 
   const link_label = (formData.get('link_label') as string) || null
   const link_url = (formData.get('link_url') as string) || null
-  const sort_order = parseInt((formData.get('sort_order') as string) || '0', 10)
+  const sort_order = Number.parseInt((formData.get('sort_order') as string) || '0', 10)
   const visible = formData.get('visible') === 'true' || formData.get('visible') === 'on'
 
   if (!title || !institution || !description || !start_date) {
@@ -82,7 +82,7 @@ export async function updateJourneyItem(id: string, formData: FormData) {
 
   const link_label = (formData.get('link_label') as string) || null
   const link_url = (formData.get('link_url') as string) || null
-  const sort_order = parseInt((formData.get('sort_order') as string) || '0', 10)
+  const sort_order = Number.parseInt((formData.get('sort_order') as string) || '0', 10)
   const visible = formData.get('visible') === 'true' || formData.get('visible') === 'on'
 
   if (!title || !institution || !description || !start_date) {

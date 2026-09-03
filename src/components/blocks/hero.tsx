@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Github, Linkedin, Mail } from "lucide-react";
+import { ArrowRight, Mail } from "lucide-react";
+import { Github, Linkedin } from "@/components/ui/icons";
 import type { Dictionary } from "@/lib/i18n/types";
 
 interface HeroProps {
-  dict: Dictionary;
+  readonly dict: Dictionary;
 }
 
-export function Hero({ dict }: HeroProps) {
+export function Hero({ dict }: Readonly<HeroProps>) {
   return (
     <section className="relative w-full overflow-hidden bg-background py-24 lg:py-32 flex items-center min-h-[90vh]">
       {/* Background gradients */}
