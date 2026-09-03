@@ -4,14 +4,14 @@ import { getDictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
 
 interface JsonLdProps {
-  locale?: Locale;
+  readonly locale?: Locale;
 }
 
 /**
  * Inietta gli structured data JSON-LD conformi a Schema.org nel documento.
  * È un Server Component: zero overhead JavaScript lato client.
  */
-export function JsonLd({ locale = "it" }: JsonLdProps) {
+export function JsonLd({ locale = "it" }: Readonly<JsonLdProps>) {
   const baseUrl = getBaseUrl();
   const ogImageUrl = `${baseUrl}/opengraph-image.png`;
   const dict = getDictionary(locale);
