@@ -6,14 +6,14 @@ import { Globe } from "lucide-react";
 import { type Locale } from "@/lib/i18n/config";
 
 interface LanguageSwitcherProps {
-  currentLocale: Locale;
-  className?: string;
+  readonly currentLocale: Locale;
+  readonly className?: string;
 }
 
 export function LanguageSwitcher({
   currentLocale,
   className = "",
-}: LanguageSwitcherProps) {
+}: Readonly<LanguageSwitcherProps>) {
   const pathname = usePathname();
   const router = useRouter();
 

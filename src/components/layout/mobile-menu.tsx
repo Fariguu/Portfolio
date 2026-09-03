@@ -7,12 +7,12 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 
 interface MobileMenuProps {
-  navigations: Array<{ title: string; href: string }>;
-  contactCta: string;
-  toggleMenuLabel: string;
+  readonly navigations: ReadonlyArray<{ readonly title: string; readonly href: string }>;
+  readonly contactCta: string;
+  readonly toggleMenuLabel: string;
 }
 
-export function MobileMenu({ navigations, contactCta, toggleMenuLabel }: MobileMenuProps) {
+export function MobileMenu({ navigations, contactCta, toggleMenuLabel }: Readonly<MobileMenuProps>) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
