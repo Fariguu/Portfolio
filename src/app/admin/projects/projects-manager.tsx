@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from 'react'
+import { useState, useRef, type SyntheticEvent } from 'react'
 import type { Project } from '@/lib/database.types'
 import {
   createProject,
@@ -28,10 +28,10 @@ import {
 import Image from 'next/image'
 
 interface ProjectsManagerProps {
-  initialProjects: Project[]
+  readonly initialProjects: Project[]
 }
 
-export function ProjectsManager({ initialProjects }: ProjectsManagerProps) {
+export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerProps>) {
   const [projects, setProjects] = useState<Project[]>(initialProjects)
   const [editingProject, setEditingProject] = useState<Project | null>(null)
   const [isCreating, setIsCreating] = useState(false)
@@ -120,7 +120,7 @@ export function ProjectsManager({ initialProjects }: ProjectsManagerProps) {
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault()
     setLoading(true)
     setErrorMsg(null)
@@ -256,10 +256,11 @@ export function ProjectsManager({ initialProjects }: ProjectsManagerProps) {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="sm:col-span-2 space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">
+                <label htmlFor="project_title" className="text-xs font-semibold text-foreground">
                   Titolo Progetto *
                 </label>
                 <input
+                  id="project_title"
                   type="text"
                   placeholder="es. Impresa Edile"
                   value={title}
@@ -270,10 +271,11 @@ export function ProjectsManager({ initialProjects }: ProjectsManagerProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">
+                <label htmlFor="project_status_badge" className="text-xs font-semibold text-foreground">
                   Badge Stato (opzionale)
                 </label>
                 <input
+                  id="project_status_badge"
                   type="text"
                   placeholder="es. In sviluppo attivo"
                   value={statusBadge}
@@ -285,9 +287,9 @@ export function ProjectsManager({ initialProjects }: ProjectsManagerProps) {
 
             {/* Image Upload / URL */}
             <div className="space-y-2 p-4 rounded-xl bg-muted/20 border border-border/60">
-              <label className="text-xs font-semibold text-foreground block">
+              <span className="text-xs font-semibold text-foreground block">
                 Immagine di Copertina *
-              </label>
+              </span>
 
               <div className="flex flex-col sm:flex-row gap-4 items-start">
                 {imagePreview ? (
@@ -330,10 +332,11 @@ export function ProjectsManager({ initialProjects }: ProjectsManagerProps) {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-xs text-muted-foreground block">
+                    <label htmlFor="project_manual_image_url" className="text-xs text-muted-foreground block">
                       Oppure inserisci un URL diretto:
                     </label>
                     <input
+                      id="project_manual_image_url"
                       type="url"
                       placeholder="https://..."
                       value={manualImageUrl}
@@ -349,10 +352,11 @@ export function ProjectsManager({ initialProjects }: ProjectsManagerProps) {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-foreground">
+              <label htmlFor="project_description" className="text-xs font-semibold text-foreground">
                 Descrizione Dettagliata *
               </label>
               <textarea
+                id="project_description"
                 rows={3}
                 placeholder="Descrivi l'architettura, le funzionalità chiave e le sfide risolte..."
                 value={description}
@@ -364,10 +368,11 @@ export function ProjectsManager({ initialProjects }: ProjectsManagerProps) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">
+                <label htmlFor="project_tags" className="text-xs font-semibold text-foreground">
                   Tecnologie / Tags (separati da virgola)
                 </label>
                 <input
+                  id="project_tags"
                   type="text"
                   placeholder="Next.js 16, React 19, TypeScript, Supabase"
                   value={tags}
@@ -377,10 +382,11 @@ export function ProjectsManager({ initialProjects }: ProjectsManagerProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">
+                <label htmlFor="project_sort_order" className="text-xs font-semibold text-foreground">
                   Ordine di visualizzazione
                 </label>
                 <input
+                  id="project_sort_order"
                   type="number"
                   value={sortOrder}
                   onChange={(e) => setSortOrder(e.target.value)}
@@ -391,10 +397,11 @@ export function ProjectsManager({ initialProjects }: ProjectsManagerProps) {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">
+                <label htmlFor="project_github_url" className="text-xs font-semibold text-foreground">
                   URL GitHub (opzionale)
                 </label>
                 <input
+                  id="project_github_url"
                   type="url"
                   placeholder="https://github.com/..."
                   value={githubUrl}
@@ -404,10 +411,11 @@ export function ProjectsManager({ initialProjects }: ProjectsManagerProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">
+                <label htmlFor="project_github_label" className="text-xs font-semibold text-foreground">
                   Testo Pulsante GitHub
                 </label>
                 <input
+                  id="project_github_label"
                   type="text"
                   placeholder="es. Codice GitHub / Bozza"
                   value={githubLabel}
@@ -417,10 +425,11 @@ export function ProjectsManager({ initialProjects }: ProjectsManagerProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">
+                <label htmlFor="project_demo_url" className="text-xs font-semibold text-foreground">
                   URL Demo Live (opzionale)
                 </label>
                 <input
+                  id="project_demo_url"
                   type="url"
                   placeholder="https://..."
                   value={demoUrl}
