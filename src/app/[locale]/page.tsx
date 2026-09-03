@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { Hero } from "@/components/blocks/hero";
 import { Features } from "@/components/blocks/features";
 import { Journey } from "@/components/blocks/journey";
 import { Portfolio } from "@/components/blocks/portfolio";
-import { Contact } from "@/components/blocks/contact";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+
+const Contact = dynamic(
+  () => import("@/components/blocks/contact").then((mod) => mod.Contact)
+);
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { isValidLocale, defaultLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getBaseUrl } from "@/lib/url";

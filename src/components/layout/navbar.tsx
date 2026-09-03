@@ -2,12 +2,28 @@
 
 import * as React from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Code2 } from "lucide-react";
 import { LanguageSwitcher } from "./language-switcher";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
+
+const MobileMenu = dynamic(
+  () => import("./mobile-menu").then((mod) => mod.MobileMenu),
+  {
+    ssr: false,
+    loading: () => (
+      <Button
+        variant="ghost"
+        className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+        aria-label="Menu"
+      >
+        <Menu className="h-6 w-6" />
+      </Button>
+    ),
+  }
+);
 
 interface NavbarProps {
   dict: Dictionary;
@@ -15,12 +31,6 @@ interface NavbarProps {
 }
 
 export function Navbar({ dict, locale }: NavbarProps) {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [isMounted, setIsMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   const homeHref = locale === "en" ? "/en" : "/";
 
@@ -76,49 +86,11 @@ export function Navbar({ dict, locale }: NavbarProps) {
         {/* Mobile Nav */}
         <div className="flex md:hidden items-center gap-2">
           <LanguageSwitcher currentLocale={locale} />
-          {isMounted ? (
-            <Sheet open={isOpen} onOpenChange={setIsOpen}>
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
-                >
-                  <Menu className="h-6 w-6" />
-                  <span className="sr-only">{dict.nav.toggleMenu}</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] pr-0">
-                <div className="flex flex-col gap-6 pt-8 px-4 text-lg font-medium">
-                  {navigations.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setIsOpen(false)}
-                      className="hover:text-primary transition-colors"
-                    >
-                      {item.title}
-                    </Link>
-                  ))}
-                  <Button
-                    className="mt-4 w-full rounded-full"
-                    asChild
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <Link href="#contatti">{dict.nav.contactCta}</Link>
-                  </Button>
-                </div>
-              </SheetContent>
-            </Sheet>
-          ) : (
-            <Button
-              variant="ghost"
-              className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
-              aria-label={dict.nav.toggleMenu}
-            >
-              <Menu className="h-6 w-6" />
-              <span className="sr-only">{dict.nav.toggleMenu}</span>
-            </Button>
-          )}
+          <MobileMenu
+            navigations={navigations}
+            contactCta={dict.nav.contactCta}
+            toggleMenuLabel={dict.nav.toggleMenu}
+          />
         </div>
       </div>
     </header>

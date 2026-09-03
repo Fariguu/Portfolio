@@ -20,7 +20,7 @@ import {
   Send,
 } from "lucide-react";
 import { sendContactEmail } from "@/app/actions/contact";
-import { Turnstile } from "@marsidev/react-turnstile";
+import { LazyTurnstile } from "./lazy-turnstile";
 import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
@@ -292,20 +292,12 @@ export function Contact({ dict, locale }: ContactProps) {
 
                   {/* Cloudflare Turnstile anti-bot widget */}
                   {turnstileSiteKey && (
-                    <div className="pt-1 flex justify-center sm:justify-start">
-                      <Turnstile
-                        siteKey={turnstileSiteKey}
-                        onSuccess={(token) => setTurnstileToken(token)}
-                        onError={() =>
-                          setErrorMessage(dict.contact.turnstileError)
-                        }
-                        onExpire={() => setTurnstileToken("")}
-                        options={{
-                          theme: "auto",
-                          size: "flexible",
-                        }}
-                      />
-                    </div>
+                    <LazyTurnstile
+                      siteKey={turnstileSiteKey}
+                      onSuccess={(token) => setTurnstileToken(token)}
+                      onError={() => setErrorMessage(dict.contact.turnstileError)}
+                      onExpire={() => setTurnstileToken("")}
+                    />
                   )}
 
                   <Button
