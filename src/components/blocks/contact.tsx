@@ -66,7 +66,7 @@ export function Contact() {
                 <div className="grid gap-12 lg:grid-cols-2 items-start">
                     <div className="space-y-6">
                         <div className="space-y-4">
-                            <p className="text-base font-semibold leading-7 text-brand-accent">Contatti</p>
+                            <p className="text-base font-semibold leading-7 text-primary">Contatti</p>
                             <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
                                 Mettiamoci in Contatto
                             </h2>

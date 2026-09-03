@@ -88,7 +88,7 @@ export async function Portfolio() {
         <section id="progetti" className="w-full py-24 bg-background">
             <div className="container px-4 md:px-6 mx-auto">
                 <div className="mx-auto max-w-2xl text-center space-y-4 mb-16">
-                    <p className="text-base font-semibold leading-7 text-brand-accent">Progetti</p>
+                    <p className="text-base font-semibold leading-7 text-primary">Progetti</p>
                     <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
                         I Miei Lavori e Progetti
                     </h2>

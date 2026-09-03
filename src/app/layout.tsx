@@ -87,6 +87,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="it" className="scroll-smooth" suppressHydrationWarning>
+      <head>
+        {/* Google tag (gtag.js) */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-0PDN3595Y5"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'G-0PDN3595Y5');
+            `,
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -102,19 +120,6 @@ export default function RootLayout({
           <SpeedInsights />
         </ThemeProvider>
       </body>
-      <Script
-        src="https://www.googletagmanager.com/gtag/js?id=G-0PDN3595Y5"
-        strategy="afterInteractive"
-      />
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-
-          gtag('config', 'G-0PDN3595Y5');
-        `}
-      </Script>
     </html>
   );
 }
