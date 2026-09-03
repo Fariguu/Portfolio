@@ -3,11 +3,11 @@
 Gentile Traduttore/Traduttrice,  
 Questo documento illustra l'elenco completo di tutti i testi del portfolio di **Gabriele Farigu** (sviluppatore web & software) per la traduzione e revisione dall'Italiano all'Inglese.
 
-Il file di codice sorgente corrispondente alle traduzioni inglesi si trova in:  
-📂 `src/lib/i18n/dictionaries/en.ts`
+Il file di codice sorgente corrispondente alle traduzioni si trova in:  
+📂 `src/lib/i18n/dictionary.ts`
 
 Puoi scegliere se:
-1. **Modificare direttamente il file `en.ts`** aggiornando le stringhe racchiuse tra virgolette; oppure
+1. **Modificare direttamente il file `dictionary.ts`** aggiornando le stringhe racchiuse nei blocchi `{ it: "...", en: "..." }`; oppure
 2. **Fornire le tue traduzioni** facendo riferimento alle sezioni e chiavi indicate nelle tabelle seguenti.
 
 ---
