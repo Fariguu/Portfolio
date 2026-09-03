@@ -12,7 +12,7 @@ export function Hero({ dict }: HeroProps) {
       {/* Background gradients */}
       <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
         <div
-          className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+          className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] dark:from-[#047857] dark:to-[#88fc9d] opacity-30 dark:opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
           style={{
             clipPath:
               "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
@@ -23,8 +23,8 @@ export function Hero({ dict }: HeroProps) {
       <div className="container px-4 md:px-6 relative z-10 mx-auto">
         <div className="flex flex-col items-center justify-center text-center space-y-8">
           {/* Badge con larghezza minima protetta per evitare reflow orizzontali */}
-          <div className="inline-flex items-center justify-center min-w-[245px] rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-sm font-medium text-primary transition-colors hover:bg-primary/20 backdrop-blur-sm cursor-pointer animate-fade-in">
-            <span className="flex h-2 w-2 rounded-full bg-primary mr-2 shrink-0"></span>
+          <div className="inline-flex items-center justify-center min-w-[245px] rounded-full border border-primary/20 bg-primary/10 dark:border-emerald-500/30 dark:bg-emerald-500/10 px-3.5 py-1 text-sm font-medium text-primary dark:text-[#88fc9d] transition-colors hover:bg-primary/20 dark:hover:bg-emerald-500/20 backdrop-blur-sm cursor-pointer animate-fade-in">
+            <span className="flex h-2 w-2 rounded-full bg-emerald-500 dark:bg-[#88fc9d] mr-2 shrink-0 animate-pulse"></span>
             <span>{dict.hero.badge}</span>
           </div>
 
@@ -52,7 +52,7 @@ export function Hero({ dict }: HeroProps) {
             <Button
               size="lg"
               variant="outline"
-              className="rounded-full h-12 w-full sm:w-[150px] justify-center font-medium bg-background/50 backdrop-blur-sm transition-all duration-200"
+              className="rounded-full h-12 w-full sm:w-[150px] justify-center font-medium bg-background/50 backdrop-blur-sm hover:text-brand-accent hover:border-brand-accent/40 transition-all duration-200"
               asChild
             >
               <a href="#contatti">{dict.hero.ctaContact}</a>
@@ -64,7 +64,7 @@ export function Hero({ dict }: HeroProps) {
               href="https://github.com/Fariguu"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-primary transition-colors"
+              className="hover:text-brand-accent transition-colors"
             >
               <Github className="h-6 w-6" />
               <span className="sr-only">GitHub</span>
@@ -73,14 +73,14 @@ export function Hero({ dict }: HeroProps) {
               href="https://www.linkedin.com/in/gabriele-farigu-3863b1312/"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-primary transition-colors"
+              className="hover:text-brand-accent transition-colors"
             >
               <Linkedin className="h-6 w-6" />
               <span className="sr-only">LinkedIn</span>
             </a>
             <a
               href="mailto:farigugabriele@gmail.com"
-              className="hover:text-primary transition-colors"
+              className="hover:text-brand-accent transition-colors"
             >
               <Mail className="h-6 w-6" />
               <span className="sr-only">Email</span>

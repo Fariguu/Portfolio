@@ -107,8 +107,8 @@ export function Contact({ dict, locale }: ContactProps) {
 
             <div className="space-y-4 pt-4">
               <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                  <Mail className="h-6 w-6 text-primary" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-accent/10 dark:bg-brand-accent/15">
+                  <Mail className="h-6 w-6 text-brand-accent" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-foreground">
@@ -116,7 +116,7 @@ export function Contact({ dict, locale }: ContactProps) {
                   </h3>
                   <a
                     href="mailto:farigugabriele@gmail.com"
-                    className="text-muted-foreground hover:text-primary transition-colors"
+                    className="text-muted-foreground hover:text-brand-accent transition-colors"
                   >
                     farigugabriele@gmail.com
                   </a>
@@ -124,8 +124,8 @@ export function Contact({ dict, locale }: ContactProps) {
               </div>
 
               <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                  <Phone className="h-6 w-6 text-primary" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-accent/10 dark:bg-brand-accent/15">
+                  <Phone className="h-6 w-6 text-brand-accent" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-foreground">
@@ -133,7 +133,7 @@ export function Contact({ dict, locale }: ContactProps) {
                   </h3>
                   <a
                     href="tel:+393701157596"
-                    className="text-muted-foreground hover:text-primary transition-colors"
+                    className="text-muted-foreground hover:text-brand-accent transition-colors"
                   >
                     +39 370 115 7596
                   </a>
@@ -141,8 +141,8 @@ export function Contact({ dict, locale }: ContactProps) {
               </div>
 
               <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                  <Linkedin className="h-6 w-6 text-primary" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-accent/10 dark:bg-brand-accent/15">
+                  <Linkedin className="h-6 w-6 text-brand-accent" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-foreground">LinkedIn</h3>
@@ -150,7 +150,7 @@ export function Contact({ dict, locale }: ContactProps) {
                     href="https://www.linkedin.com/in/gabriele-farigu-3863b1312/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-primary transition-colors"
+                    className="text-muted-foreground hover:text-brand-accent transition-colors"
                   >
                     linkedin.com/in/gabriele-farigu
                   </a>
@@ -158,8 +158,8 @@ export function Contact({ dict, locale }: ContactProps) {
               </div>
 
               <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                  <MapPin className="h-6 w-6 text-primary" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-accent/10 dark:bg-brand-accent/15">
+                  <MapPin className="h-6 w-6 text-brand-accent" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-foreground">
@@ -182,10 +182,10 @@ export function Contact({ dict, locale }: ContactProps) {
             </CardHeader>
             <CardContent>
               {isSubmitted ? (
-                <div className="p-8 rounded-xl bg-primary/5 border border-primary/20 text-center space-y-4 animate-fade-in">
+                <div className="p-8 rounded-xl bg-brand-accent/5 border border-brand-accent/20 text-center space-y-4 animate-fade-in">
                   <div className="flex justify-center">
-                    <div className="h-16 w-16 rounded-full bg-emerald-500/10 flex items-center justify-center">
-                      <CheckCircle2 className="h-10 w-10 text-emerald-500" />
+                    <div className="h-16 w-16 rounded-full bg-brand-accent/10 flex items-center justify-center">
+                      <CheckCircle2 className="h-10 w-10 text-brand-accent" />
                     </div>
                   </div>
                   <div className="space-y-1">
@@ -202,7 +202,7 @@ export function Contact({ dict, locale }: ContactProps) {
                       variant="outline"
                       size="sm"
                       onClick={handleReset}
-                      className="rounded-full"
+                      className="rounded-full hover:text-brand-accent hover:border-brand-accent/40"
                     >
                       {dict.contact.sendAnother}
                     </Button>
@@ -322,7 +322,7 @@ export function Contact({ dict, locale }: ContactProps) {
                     {dict.contact.privacyConsentPrefix}{" "}
                     <Link
                       href={privacyHref}
-                      className="underline hover:text-primary transition-colors"
+                      className="underline hover:text-brand-accent transition-colors"
                     >
                       {dict.contact.privacyConsentLinkText}
                     </Link>

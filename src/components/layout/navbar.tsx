@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { Menu, Code2 } from "lucide-react";
 import { LanguageSwitcher } from "./language-switcher";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
 
@@ -31,7 +32,6 @@ interface NavbarProps {
 }
 
 export function Navbar({ dict, locale }: NavbarProps) {
-
   const homeHref = locale === "en" ? "/en" : "/";
 
   const navigations = [
@@ -48,7 +48,7 @@ export function Navbar({ dict, locale }: NavbarProps) {
         {/* Left: Brand Logo & Name */}
         <div className="flex items-center gap-2 z-10">
           <Link href={homeHref} className="flex items-center space-x-2">
-            <Code2 className="h-6 w-6 text-primary" />
+            <Code2 className="h-6 w-6 text-brand-accent transition-colors" />
             <span className="font-bold inline-block">Gabriele Farigu</span>
           </Link>
         </div>
@@ -63,7 +63,7 @@ export function Navbar({ dict, locale }: NavbarProps) {
               <Link
                 key={item.href}
                 href={item.href}
-                className="w-[94px] text-center py-1.5 transition-colors hover:text-primary text-muted-foreground whitespace-nowrap"
+                className="w-[94px] text-center py-1.5 transition-colors hover:text-brand-accent text-muted-foreground whitespace-nowrap"
               >
                 {item.title}
               </Link>
@@ -72,7 +72,8 @@ export function Navbar({ dict, locale }: NavbarProps) {
         </nav>
 
         {/* Right: Actions with fixed dimensions to guarantee zero layout shift */}
-        <div className="hidden md:flex items-center justify-end space-x-3 z-10 w-[220px]">
+        <div className="hidden md:flex items-center justify-end space-x-3 z-10 min-w-[240px]">
+          <ThemeToggle />
           <LanguageSwitcher currentLocale={locale} />
           <Button
             asChild
@@ -85,6 +86,7 @@ export function Navbar({ dict, locale }: NavbarProps) {
 
         {/* Mobile Nav */}
         <div className="flex md:hidden items-center gap-2">
+          <ThemeToggle />
           <LanguageSwitcher currentLocale={locale} />
           <MobileMenu
             navigations={navigations}

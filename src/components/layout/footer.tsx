@@ -16,7 +16,7 @@ export function Footer({ dict, locale }: FooterProps) {
       <div className="container px-4 md:px-6 mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
           <div className="flex items-center space-x-2">
-            <Code2 className="h-6 w-6 text-primary" />
+            <Code2 className="h-6 w-6 text-brand-accent" />
             <span className="text-xl font-bold tracking-tight">
               Gabriele Farigu
             </span>
@@ -27,7 +27,7 @@ export function Footer({ dict, locale }: FooterProps) {
               href="https://github.com/Fariguu"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-muted-foreground hover:text-brand-accent transition-colors"
             >
               <Github className="h-5 w-5" />
               <span className="sr-only">GitHub</span>
@@ -36,14 +36,14 @@ export function Footer({ dict, locale }: FooterProps) {
               href="https://www.linkedin.com/in/gabriele-farigu-3863b1312/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-muted-foreground hover:text-brand-accent transition-colors"
             >
               <Linkedin className="h-5 w-5" />
               <span className="sr-only">LinkedIn</span>
             </Link>
             <Link
               href="mailto:farigugabriele@gmail.com"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-muted-foreground hover:text-brand-accent transition-colors"
             >
               <Mail className="h-5 w-5" />
               <span className="sr-only">Email</span>
@@ -56,7 +56,7 @@ export function Footer({ dict, locale }: FooterProps) {
             </p>
             <Link
               href={privacyHref}
-              className="text-xs text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
+              className="text-xs text-muted-foreground hover:text-brand-accent transition-colors underline-offset-4 hover:underline"
             >
               {dict.footer.privacyPolicy}
             </Link>

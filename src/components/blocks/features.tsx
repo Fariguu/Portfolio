@@ -50,12 +50,12 @@ export async function Features({ dict, locale }: FeaturesProps) {
               return (
                 <div
                   key={feature.name}
-                  className="flex flex-col bg-background p-6 rounded-2xl shadow-xs border border-border/50 hover:shadow-md transition-shadow min-h-[190px]"
+                  className="flex flex-col bg-background p-6 rounded-2xl shadow-xs border border-border/50 hover:border-brand-accent/40 hover:shadow-md transition-all min-h-[190px]"
                   style={{ contain: "layout" }}
                 >
                   <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-foreground">
-                    <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-primary/10 shrink-0">
-                      <Icon className="h-6 w-6 text-primary" aria-hidden="true" />
+                    <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-brand-accent/10 dark:bg-brand-accent/15 shrink-0">
+                      <Icon className="h-6 w-6 text-brand-accent" aria-hidden="true" />
                     </div>
                     <span>{feature.name}</span>
                   </dt>
