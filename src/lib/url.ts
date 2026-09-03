@@ -13,7 +13,10 @@ export function getBaseUrl(): string {
       if (!url.startsWith('http://') && !url.startsWith('https://')) {
         url = `https://${url}`;
       }
-      return url.replace(/\/+$/, '');
+      while (url.endsWith('/')) {
+        url = url.slice(0, -1);
+      }
+      return url;
     }
   }
 
