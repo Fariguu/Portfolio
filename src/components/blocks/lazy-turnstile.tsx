@@ -12,10 +12,10 @@ const Turnstile = dynamic(
 );
 
 interface LazyTurnstileProps {
-  siteKey: string;
-  onSuccess: (token: string) => void;
-  onError: () => void;
-  onExpire: () => void;
+  readonly siteKey: string;
+  readonly onSuccess: (token: string) => void;
+  readonly onError: () => void;
+  readonly onExpire: () => void;
 }
 
 export function LazyTurnstile({
@@ -23,7 +23,7 @@ export function LazyTurnstile({
   onSuccess,
   onError,
   onExpire,
-}: LazyTurnstileProps) {
+}: Readonly<LazyTurnstileProps>) {
   const [shouldRender, setShouldRender] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
 

@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Github, Lock } from "lucide-react";
+import { ExternalLink, Lock } from "lucide-react";
+import { Github } from "@/components/ui/icons";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import type { Project } from "@/lib/database.types";
@@ -22,11 +23,11 @@ interface ProjectDisplay {
 }
 
 interface PortfolioProps {
-  dict: Dictionary;
-  locale: Locale;
+  readonly dict: Dictionary;
+  readonly locale: Locale;
 }
 
-export async function Portfolio({ dict, locale }: PortfolioProps) {
+export async function Portfolio({ dict, locale }: Readonly<PortfolioProps>) {
   let projects: ProjectDisplay[] = dict.portfolio.fallbackList.map((p, idx) => ({
     id: `fallback-${idx}`,
     title: p.title,

@@ -27,11 +27,11 @@ const MobileMenu = dynamic(
 );
 
 interface NavbarProps {
-  dict: Dictionary;
-  locale: Locale;
+  readonly dict: Dictionary;
+  readonly locale: Locale;
 }
 
-export function Navbar({ dict, locale }: NavbarProps) {
+export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
   const homeHref = locale === "en" ? "/en" : "/";
 
   const navigations = [

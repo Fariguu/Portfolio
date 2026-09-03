@@ -6,11 +6,11 @@ import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 
 interface ThemeToggleProps {
-  className?: string;
-  showLabel?: boolean;
+  readonly className?: string;
+  readonly showLabel?: boolean;
 }
 
-export function ThemeToggle({ className, showLabel = false }: ThemeToggleProps) {
+export function ThemeToggle({ className, showLabel = false }: Readonly<ThemeToggleProps>) {
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 

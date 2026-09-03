@@ -1,14 +1,15 @@
-import { Code2, Github, Linkedin, Mail } from "lucide-react";
+import { Code2, Mail } from "lucide-react";
+import { Github, Linkedin } from "@/components/ui/icons";
 import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
 
 interface FooterProps {
-  dict: Dictionary;
-  locale: Locale;
+  readonly dict: Dictionary;
+  readonly locale: Locale;
 }
 
-export function Footer({ dict, locale }: FooterProps) {
+export function Footer({ dict, locale }: Readonly<FooterProps>) {
   const privacyHref = locale === "en" ? "/en/privacy" : "/privacy";
 
   return (

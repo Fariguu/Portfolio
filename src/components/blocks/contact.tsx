@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/card";
 import {
   CheckCircle2,
-  Linkedin,
   Mail,
   MapPin,
   Phone,
@@ -19,6 +18,7 @@ import {
   AlertCircle,
   Send,
 } from "lucide-react";
+import { Linkedin } from "@/components/ui/icons";
 import { sendContactEmail } from "@/app/actions/contact";
 import { LazyTurnstile } from "./lazy-turnstile";
 import Link from "next/link";
@@ -26,11 +26,11 @@ import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
 
 interface ContactProps {
-  dict: Dictionary;
-  locale: Locale;
+  readonly dict: Dictionary;
+  readonly locale: Locale;
 }
 
-export function Contact({ dict, locale }: ContactProps) {
+export function Contact({ dict, locale }: Readonly<ContactProps>) {
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -46,7 +46,7 @@ export function Contact({ dict, locale }: ContactProps) {
 
   const privacyHref = locale === "en" ? "/en/privacy" : "/privacy";
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setErrorMessage(null);
