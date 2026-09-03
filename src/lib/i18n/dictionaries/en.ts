@@ -1,31 +1,19 @@
 import type { Dictionary } from "../types";
+import { createDictionary, createKeywords } from "./shared";
 
 /**
- * ENGLISH DICTIONARY (Baseline version)
+ * ENGLISH DICTIONARY
  *
  * NOTE FOR TRANSLATOR:
  * Feel free to refine or adjust any phrasing below to match your professional translation standards.
  * Each section maps directly to the UI sections of the portfolio.
  */
-export const enDictionary: Dictionary = {
+export const enDictionary: Dictionary = createDictionary({
   meta: {
     title: "Gabriele Farigu | Web & Software Developer",
     description:
       "Portfolio of Gabriele Farigu, web and software developer specializing in Next.js, React, TypeScript, and Supabase. Full-stack projects, scalable architectures, and clean code.",
-    keywords: [
-      "Gabriele Farigu",
-      "web developer",
-      "full-stack developer",
-      "software engineer",
-      "portfolio developer",
-      "Next.js developer",
-      "React",
-      "TypeScript",
-      "Supabase",
-      "Tailwind CSS",
-      "web development Italy",
-      "Bari",
-    ],
+    keywords: createKeywords("web developer", "web development Italy"),
     ogTitle: "Gabriele Farigu | Web & Software Developer",
     ogDescription:
       "I design and build modern, fast, and bespoke web solutions. Explore my portfolio featuring Next.js, React, and Supabase projects.",
@@ -42,7 +30,6 @@ export const enDictionary: Dictionary = {
   },
   hero: {
     badge: "Available for new projects",
-    name: "Gabriele Farigu",
     tagline:
       "I design and build modern, fast, and tailored web solutions. I help projects and businesses transform concrete ideas into intuitive, reliable, and meticulously crafted digital products.",
     ctaProjects: "View My Projects",
@@ -58,25 +45,21 @@ export const enDictionary: Dictionary = {
         name: "Modern Frontend with Next.js",
         description:
           "Building responsive, high-performance user interfaces with Next.js (App Router), React, TypeScript, and Tailwind CSS.",
-        icon_name: "MonitorSmartphone",
       },
       {
         name: "Backend & Relational Databases",
         description:
           "Managing databases with Supabase (PostgreSQL) and SQLite, crafting secure queries, RPC functions, and data modeling.",
-        icon_name: "Database",
       },
       {
         name: "Security, Privacy & Validation",
         description:
           "Dedicated focus on best practices: Row Level Security (RLS), schema validation with Zod, and bot protection with Cloudflare Turnstile.",
-        icon_name: "ShieldCheck",
       },
       {
         name: "Interactivity, Maps & Graphics",
         description:
           "Integrating interactive maps with Leaflet, fluid animations with Framer Motion, and client-side vector/Canvas rendering.",
-        icon_name: "Layers",
       },
     ],
   },
@@ -89,14 +72,9 @@ export const enDictionary: Dictionary = {
     detailsLabel: "View Details",
     fallbackList: [
       {
-        period: "2019 — 2024",
-        title:
-          "High School Diploma — Business Information Systems (SIA)",
-        institution: 'I.I.S.S. "Pertini - Anelli - Pinto"',
+        title: "High School Diploma — Business Information Systems (SIA)",
         description:
           "Secondary school diploma with specialization in Business Information Systems. Coursework focused on business software development, relational database design and modeling (SQL), computer networks, cybersecurity, and business economics.",
-        type: "education",
-        isCurrent: false,
         tags: [
           "Business Information Systems",
           "SQL Databases",
@@ -105,7 +83,6 @@ export const enDictionary: Dictionary = {
           "Business Economics",
         ],
         linkLabel: "Official Institute Website",
-        linkUrl: "https://www.pertinianellipinto.edu.it/",
       },
       {
         period: "2024 — Present",
@@ -115,8 +92,6 @@ export const enDictionary: Dictionary = {
           "University of Bari Aldo Moro — Department of Computer Science",
         description:
           "Academic program focused on the theoretical and methodological foundations of computer programming, algorithms, and software engineering. In-depth study of software design, testing, verification, database systems, and user interface ergonomics.",
-        type: "education",
-        isCurrent: true,
         tags: [
           "Software Engineering",
           "Algorithms & Data Structures",
@@ -126,8 +101,6 @@ export const enDictionary: Dictionary = {
           "UI/UX Design",
         ],
         linkLabel: "Degree Program Info (UniBa)",
-        linkUrl:
-          "https://www.uniba.it/it/corsi/cdl-informatica-tecnologie-produzione-software",
       },
     ],
   },
@@ -147,58 +120,20 @@ export const enDictionary: Dictionary = {
         statusBadge: "Featured",
         description:
           "Web platform for a construction enterprise specializing in bespoke building and conservative restoration of historical trulli and masserie in Apulia. Features an interactive quote estimator, turnkey services showcase, Leaflet interactive map, and Framer Motion animations.",
-        image:
-          "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800",
-        tags: [
-          "Next.js 16",
-          "React 19",
-          "TypeScript",
-          "Tailwind CSS v4",
-          "Framer Motion",
-          "Leaflet",
-        ],
-        github: "https://github.com/Fariguu/Impresa-Edile",
         githubLabel: "GitHub Code",
-        isPrivate: true,
-        featured: true,
       },
       {
         title: "EduBook",
         statusBadge: "Active Development",
         description:
           "Serverless platform for managing and booking private tutoring sessions. Features a multi-tutor architecture, interactive calendar with automated slot partitioning, secure passwordless authentication (Supabase OTP), transactional emails with Resend, and Cloudflare Turnstile bot protection.",
-        image:
-          "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=800",
-        tags: [
-          "Next.js 16",
-          "React 19",
-          "TypeScript",
-          "Supabase",
-          "Tailwind CSS",
-          "Resend",
-        ],
-        github: "https://github.com/Fariguu/Educational-Booking-WebSite",
         githubLabel: "Architecture Draft",
-        isPrivate: true,
-        featured: false,
       },
       {
         title: "QR-Code Creator",
         description:
           "Client-side web application for generating high-resolution static QR codes (100% private, never expire). Supports full color customization, logo embedding with circular safe-zone calculation, and export in both HD PNG (up to 2048px) and pure vector SVG.",
-        image:
-          "https://images.unsplash.com/photo-1595079676339-1534801ad6cf?auto=format&fit=crop&q=80&w=800",
-        tags: [
-          "JavaScript ES6+",
-          "HTML5",
-          "CSS3",
-          "Canvas API",
-          "SVG Export",
-        ],
-        github: "https://github.com/Fariguu/QR-Code-Creator",
         githubLabel: "GitHub Code",
-        isPrivate: false,
-        featured: false,
       },
     ],
   },
@@ -305,4 +240,4 @@ export const enDictionary: Dictionary = {
     selectLanguage: "Select language",
     currentLanguage: "Current language",
   },
-};
+});

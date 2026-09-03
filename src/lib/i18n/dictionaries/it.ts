@@ -1,24 +1,12 @@
 import type { Dictionary } from "../types";
+import { createDictionary, createKeywords } from "./shared";
 
-export const itDictionary: Dictionary = {
+export const itDictionary: Dictionary = createDictionary({
   meta: {
     title: "Gabriele Farigu | Sviluppatore Web & Software",
     description:
       "Portfolio di Gabriele Farigu, sviluppatore web e software specializzato in Next.js, React, TypeScript e Supabase. Progetti full-stack, architetture scalabili e codice pulito.",
-    keywords: [
-      "Gabriele Farigu",
-      "sviluppatore web",
-      "full-stack developer",
-      "software engineer",
-      "portfolio developer",
-      "Next.js developer",
-      "React",
-      "TypeScript",
-      "Supabase",
-      "Tailwind CSS",
-      "web development Italia",
-      "Bari",
-    ],
+    keywords: createKeywords("sviluppatore web", "web development Italia"),
     ogTitle: "Gabriele Farigu | Sviluppatore Web & Software",
     ogDescription:
       "Progetto e realizzo soluzioni web moderne, veloci e su misura. Esplora il mio portfolio con progetti Next.js, React e Supabase.",
@@ -35,7 +23,6 @@ export const itDictionary: Dictionary = {
   },
   hero: {
     badge: "Disponibile per nuovi progetti",
-    name: "Gabriele Farigu",
     tagline:
       "Progetto e realizzo soluzioni web moderne, veloci e su misura. Aiuto progetti e attività a trasformare esigenze concrete in prodotti digitali intuitivi, affidabili e curati in ogni dettaglio.",
     ctaProjects: "Guarda i miei progetti",
@@ -51,25 +38,21 @@ export const itDictionary: Dictionary = {
         name: "Frontend Moderno con Next.js",
         description:
           "Realizzo interfacce utente reattive e veloci con Next.js (App Router), React, TypeScript e Tailwind CSS.",
-        icon_name: "MonitorSmartphone",
       },
       {
         name: "Backend & Database Relazionali",
         description:
           "Gestione di database con Supabase (PostgreSQL) e SQLite, con query sicure, funzioni RPC e modellazione dei dati.",
-        icon_name: "Database",
       },
       {
         name: "Sicurezza, Privacy & Validazione",
         description:
           "Focus su buone pratiche: Row Level Security (RLS), validazione degli schemi con Zod e protezione anti-spam con Cloudflare Turnstile.",
-        icon_name: "ShieldCheck",
       },
       {
         name: "Interattività, Mappe & Grafica",
         description:
           "Integrazione di mappe dinamiche con Leaflet, animazioni fluide con Framer Motion e grafica vettoriale/Canvas client-side.",
-        icon_name: "Layers",
       },
     ],
   },
@@ -82,14 +65,10 @@ export const itDictionary: Dictionary = {
     detailsLabel: "Vedi Dettagli",
     fallbackList: [
       {
-        period: "2019 — 2024",
         title:
           "Diploma di Scuola Secondaria di Secondo Grado — Sistemi Informativi Aziendali (SIA)",
-        institution: 'I.I.S.S. "Pertini - Anelli - Pinto"',
         description:
           "Diploma conseguito con specializzazione in Sistemi Informativi Aziendali (SIA). Formazione incentrata su programmazione e sviluppo software gestionale, progettazione e modellazione di database relazionali (SQL), reti informatiche, sicurezza dei dati aziendali ed economia d'impresa.",
-        type: "education",
-        isCurrent: false,
         tags: [
           "Sistemi Informativi Aziendali",
           "Database SQL",
@@ -98,7 +77,6 @@ export const itDictionary: Dictionary = {
           "Economia Aziendale",
         ],
         linkLabel: "Sito Ufficiale Istituto",
-        linkUrl: "https://www.pertinianellipinto.edu.it/",
       },
       {
         period: "2024 — Presente",
@@ -108,8 +86,6 @@ export const itDictionary: Dictionary = {
           "Università degli Studi di Bari Aldo Moro — Dipartimento di Informatica",
         description:
           "Percorso accademico focalizzato sui fondamenti teorici e metodologici della programmazione, dell'algoritmica e dell'ingegneria del software. Approfondimento dei modelli e tecniche per la produzione, verifica e manutenzione di sistemi software affidabili, gestione di basi di dati e sviluppo di interfacce utente efficaci.",
-        type: "education",
-        isCurrent: true,
         tags: [
           "Ingegneria del Software",
           "Algoritmi e Strutture Dati",
@@ -119,8 +95,6 @@ export const itDictionary: Dictionary = {
           "UI/UX Design",
         ],
         linkLabel: "Scheda CdL UniBa ITPS",
-        linkUrl:
-          "https://www.uniba.it/it/corsi/cdl-informatica-tecnologie-produzione-software",
       },
     ],
   },
@@ -140,58 +114,20 @@ export const itDictionary: Dictionary = {
         statusBadge: "In Evidenza",
         description:
           "Piattaforma web per un'impresa edile specializzata in costruzioni ex-novo e restauro conservativo di trulli e masserie storiche in Puglia. Integra calcolo preventivo interattivo, vetrina dei servizi chiavi in mano, mappa del territorio con Leaflet e animazioni fluide con Framer Motion.",
-        image:
-          "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800",
-        tags: [
-          "Next.js 16",
-          "React 19",
-          "TypeScript",
-          "Tailwind CSS v4",
-          "Framer Motion",
-          "Leaflet",
-        ],
-        github: "https://github.com/Fariguu/Impresa-Edile",
         githubLabel: "Codice GitHub",
-        isPrivate: true,
-        featured: true,
       },
       {
         title: "EduBook",
         statusBadge: "In sviluppo attivo",
         description:
           "Piattaforma serverless per la gestione e prenotazione di lezioni private. Offre un'architettura multi-docente, calendario interattivo con partizionamento automatico degli slot orari, autenticazione sicura passwordless (OTP via Supabase), email transazionali con Resend e protezione bot con Cloudflare Turnstile.",
-        image:
-          "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=800",
-        tags: [
-          "Next.js 16",
-          "React 19",
-          "TypeScript",
-          "Supabase",
-          "Tailwind CSS",
-          "Resend",
-        ],
-        github: "https://github.com/Fariguu/Educational-Booking-WebSite",
         githubLabel: "Bozza Architettura",
-        isPrivate: true,
-        featured: false,
       },
       {
         title: "QR-Code Creator",
         description:
           "Applicazione web client-side per la generazione di codici QR statici ad alta risoluzione (100% privati, non scadono mai). Supporta personalizzazione dei colori, inserimento logo con calcolo intelligente della safe-zone circolare ed esportazione sia in formato PNG HD (fino a 2048px) sia in SVG vettoriale puro.",
-        image:
-          "https://images.unsplash.com/photo-1595079676339-1534801ad6cf?auto=format&fit=crop&q=80&w=800",
-        tags: [
-          "JavaScript ES6+",
-          "HTML5",
-          "CSS3",
-          "Canvas API",
-          "SVG Export",
-        ],
-        github: "https://github.com/Fariguu/QR-Code-Creator",
         githubLabel: "Codice GitHub",
-        isPrivate: false,
-        featured: false,
       },
     ],
   },
@@ -297,4 +233,4 @@ export const itDictionary: Dictionary = {
     selectLanguage: "Seleziona lingua",
     currentLanguage: "Lingua corrente",
   },
-};
+});
