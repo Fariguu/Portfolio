@@ -46,7 +46,7 @@ export async function Features() {
         <section id="competenze" className="w-full py-24 bg-muted/40 relative">
             <div className="container px-4 md:px-6 mx-auto">
                 <div className="mx-auto max-w-2xl text-center space-y-4">
-                    <p className="text-base font-semibold leading-7 text-primary">Competenze</p>
+                    <p className="text-base font-semibold leading-7 text-brand-accent">Competenze</p>
                     <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
                         Tecnologie e Metodo di Lavoro
                     </h2>
@@ -59,10 +59,10 @@ export async function Features() {
                         {features.map((feature) => {
                             const Icon = getIconComponent(feature.icon_name);
                             return (
-                                <div key={feature.name} className="flex flex-col bg-background p-6 rounded-2xl shadow-sm border border-border/50 hover:shadow-md transition-shadow">
+                                <div key={feature.name} className="flex flex-col bg-background p-6 rounded-2xl shadow-sm border border-border/50 hover:border-brand-accent/40 hover:shadow-md transition-all">
                                     <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-foreground">
-                                        <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-primary/10">
-                                            <Icon className="h-6 w-6 text-primary" aria-hidden="true" />
+                                        <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-brand-accent/10 dark:bg-brand-accent/15">
+                                            <Icon className="h-6 w-6 text-brand-accent" aria-hidden="true" />
                                         </div>
                                         {feature.name}
                                     </dt>

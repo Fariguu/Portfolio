@@ -23,7 +23,7 @@ export function Navbar() {
             <div className="container flex h-16 items-center justify-between px-4 md:px-6 mx-auto">
                 <div className="flex items-center gap-2">
                     <Link href="/" className="flex items-center space-x-2">
-                        <Code2 className="h-6 w-6 text-primary" />
+                        <Code2 className="h-6 w-6 text-brand-accent transition-colors" />
                         <span className="font-bold inline-block">Gabriele Farigu</span>
                     </Link>
                 </div>
@@ -34,7 +34,7 @@ export function Navbar() {
                         <Link
                             key={item.title}
                             href={item.href}
-                            className="transition-colors hover:text-primary text-muted-foreground"
+                            className="transition-colors hover:text-brand-accent text-muted-foreground"
                         >
                             {item.title}
                         </Link>
@@ -65,7 +65,7 @@ export function Navbar() {
                                         key={item.title}
                                         href={item.href}
                                         onClick={() => setIsOpen(false)}
-                                        className="hover:text-primary transition-colors"
+                                        className="hover:text-brand-accent transition-colors"
                                     >
                                         {item.title}
                                     </Link>

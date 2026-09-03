@@ -110,7 +110,7 @@ export async function Journey() {
             <div className="container px-4 md:px-6 mx-auto">
                 {/* Header */}
                 <div className="mx-auto max-w-2xl text-center space-y-4 mb-16">
-                    <p className="text-base font-semibold leading-7 text-primary">Percorso</p>
+                    <p className="text-base font-semibold leading-7 text-brand-accent">Percorso</p>
                     <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl text-foreground">
                         Formazione & Traguardi
                     </h2>
@@ -130,8 +130,8 @@ export async function Journey() {
                                     {/* Bullet point / Dot */}
                                     <div
                                         className={`absolute -left-[31px] sm:-left-[39px] top-1.5 h-4 w-4 rounded-full border-2 border-background transition-all duration-300 ${isCurrent
-                                                ? "bg-primary ring-4 ring-primary/20 scale-110"
-                                                : "bg-foreground group-hover:scale-125 group-hover:bg-primary"
+                                                ? "bg-brand-accent ring-4 ring-brand-accent/25 scale-110"
+                                                : "bg-foreground group-hover:scale-125 group-hover:bg-brand-accent"
                                             }`}
                                         aria-hidden="true"
                                     />
@@ -140,12 +140,12 @@ export async function Journey() {
                                     <div className="space-y-2">
                                         {/* Date and Title line */}
                                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                                            <span className="inline-flex items-center text-sm font-bold text-primary tracking-wide">
-                                                <Calendar className="h-3.5 w-3.5 mr-1 text-primary/80" />
+                                            <span className="inline-flex items-center text-sm font-bold text-brand-accent tracking-wide">
+                                                <Calendar className="h-3.5 w-3.5 mr-1 text-brand-accent/80" />
                                                 {item.period}
                                             </span>
                                             <span className="text-muted-foreground font-semibold hidden sm:inline">—</span>
-                                            <h3 className="text-lg sm:text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                                            <h3 className="text-lg sm:text-xl font-bold text-foreground group-hover:text-brand-accent transition-colors">
                                                 {item.title}
                                             </h3>
                                         </div>
@@ -188,7 +188,7 @@ export async function Journey() {
                                                     href={item.link.url}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="inline-flex items-center text-xs font-semibold text-primary hover:underline"
+                                                    className="inline-flex items-center text-xs font-semibold text-brand-accent hover:underline"
                                                 >
                                                     {item.link.label}
                                                     <ExternalLink className="h-3 w-3 ml-1" />

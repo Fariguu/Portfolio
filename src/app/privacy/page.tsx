@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { ArrowLeft, ShieldCheck, Mail, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Metadata } from "next";
@@ -24,7 +24,7 @@ export default function PrivacyPage() {
           </Button>
 
           <div className="flex items-center gap-3 mb-3">
-            <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+            <div className="h-10 w-10 rounded-xl bg-brand-accent/10 flex items-center justify-center text-brand-accent">
               <ShieldCheck className="h-6 w-6" />
             </div>
             <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
@@ -42,7 +42,7 @@ export default function PrivacyPage() {
             <p>
               Il Titolare del trattamento dei dati è <strong>Gabriele Farigu</strong>, sviluppatore web e software con sede a Turi (BA), Italia.
               Per qualsiasi chiarimento o per l&apos;esercizio dei tuoi diritti in materia di privacy, puoi scrivermi all&apos;indirizzo:{" "}
-              <a href="mailto:farigugabriele@gmail.com" className="text-primary hover:underline font-medium">
+              <a href="mailto:farigugabriele@gmail.com" className="text-brand-accent hover:underline font-medium">
                 farigugabriele@gmail.com
               </a>.
             </p>
@@ -114,7 +114,7 @@ export default function PrivacyPage() {
             </ul>
             <p className="pt-2">
               Per esercitare tali diritti è sufficiente inviare un&apos;email a{" "}
-              <a href="mailto:farigugabriele@gmail.com" className="text-primary hover:underline font-medium">
+              <a href="mailto:farigugabriele@gmail.com" className="text-brand-accent hover:underline font-medium">
                 farigugabriele@gmail.com
               </a>.
             </p>

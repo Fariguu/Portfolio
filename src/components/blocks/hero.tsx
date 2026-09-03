@@ -38,21 +38,21 @@ export function Hero() {
                                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                             </a>
                         </Button>
-                        <Button size="lg" variant="outline" className="rounded-full h-12 px-8 font-medium bg-background/50 backdrop-blur-sm" asChild>
+                        <Button size="lg" variant="outline" className="rounded-full h-12 px-8 font-medium bg-background/50 backdrop-blur-sm hover:text-brand-accent hover:border-brand-accent/40 transition-colors" asChild>
                             <a href="#contatti">Contattami</a>
                         </Button>
                     </div>
 
                     <div className="flex items-center gap-6 pt-8 text-muted-foreground animate-fade-in-up animation-delay-300">
-                        <a href="https://github.com/Fariguu" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+                        <a href="https://github.com/Fariguu" target="_blank" rel="noopener noreferrer" className="hover:text-brand-accent transition-colors">
                             <Github className="h-6 w-6" />
                             <span className="sr-only">GitHub</span>
                         </a>
-                        <a href="https://www.linkedin.com/in/gabriele-farigu-3863b1312/" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+                        <a href="https://www.linkedin.com/in/gabriele-farigu-3863b1312/" target="_blank" rel="noopener noreferrer" className="hover:text-brand-accent transition-colors">
                             <Linkedin className="h-6 w-6" />
                             <span className="sr-only">LinkedIn</span>
                         </a>
-                        <a href="mailto:farigugabriele@gmail.com" className="hover:text-primary transition-colors">
+                        <a href="mailto:farigugabriele@gmail.com" className="hover:text-brand-accent transition-colors">
                             <Mail className="h-6 w-6" />
                             <span className="sr-only">Email</span>
                         </a>
