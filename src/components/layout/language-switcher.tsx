@@ -43,18 +43,6 @@ export function LanguageSwitcher({
   const nextLocale: Locale = currentLocale === "it" ? "en" : "it";
   const targetUrl = getTargetUrl(nextLocale);
 
-  // Prefetch automatico delle rotte per eliminare la latenza di rete
-  React.useEffect(() => {
-    router.prefetch(targetUrl);
-    if (currentLocale === "it") {
-      router.prefetch("/en");
-      router.prefetch("/en/privacy");
-    } else {
-      router.prefetch("/");
-      router.prefetch("/privacy");
-    }
-  }, [router, targetUrl, currentLocale]);
-
   const handleToggle = () => {
     // 1. Aggiornamento ottimistico dell'indicatore visivo
     setActiveLocale(nextLocale);
@@ -87,6 +75,7 @@ export function LanguageSwitcher({
       type="button"
       onClick={handleToggle}
       onMouseEnter={() => router.prefetch(targetUrl)}
+      onTouchStart={() => router.prefetch(targetUrl)}
       aria-label={ariaLabel}
       title={titleTooltip}
       className={`group relative inline-flex items-center justify-between w-[86px] rounded-full border border-border/60 bg-muted/40 p-1 text-xs font-medium backdrop-blur-sm transition-all duration-200 hover:border-primary/50 hover:bg-muted/70 active:scale-95 cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${className}`}

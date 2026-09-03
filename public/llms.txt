@@ -1,0 +1,25 @@
+# Gabriele Farigu - Portfolio & Software Developer
+
+> Portfolio personale di Gabriele Farigu, sviluppatore web e software full-stack specializzato in Next.js, React, TypeScript, Supabase e architetture cloud moderne.
+
+Questo file segue lo standard [llms.txt](https://llmstxt.org/) e fornisce contesto strutturato per Large Language Model (LLM), agenti autonomi e crawler AI sul portfolio, le competenze e i progetti di Gabriele Farigu.
+
+## Pagine Principali
+
+- [Home (Italiano)](https://gabrielefarigu.com/): Pagina principale in italiano con panoramica professionale, competenze, timeline e progetti.
+- [Home (English)](https://gabrielefarigu.com/en): English version of the portfolio homepage with full stack project showcase.
+- [Informativa sulla Privacy (IT)](https://gabrielefarigu.com/privacy): Informativa sul trattamento dei dati personali conforme al GDPR (UE 2016/679).
+- [Privacy Policy (EN)](https://gabrielefarigu.com/en/privacy): Privacy policy and personal data processing disclosure conforming to GDPR.
+
+## Sezioni del Portfolio
+
+- [Competenze](https://gabrielefarigu.com/#competenze): Stack tecnologico comprendente Frontend (Next.js, React 19, TypeScript, Tailwind CSS v4), Backend & Database (Supabase, PostgreSQL, SQLite, REST APIs), Sicurezza & Performance (RLS, Zod, Cloudflare Turnstile).
+- [Percorso](https://gabrielefarigu.com/#percorso): Cronologia formativa e professionale, formazione accademica in Informatica presso l'Università degli Studi di Bari Aldo Moro e certificazioni.
+- [Progetti](https://gabrielefarigu.com/#progetti): Portfolio di applicazioni web scalabili, progetti full-stack e repository open-source.
+- [Contatti](https://gabrielefarigu.com/#contatti): Canali diretti di comunicazione (email, modulo contatti protetto da Turnstile, LinkedIn, GitHub).
+
+## Link Esterni e Profili Ufficiali
+
+- [GitHub](https://github.com/Fariguu): Profilo GitHub ufficiale con repository e codice sorgente pubblico.
+- [LinkedIn](https://www.linkedin.com/in/gabriele-farigu-3863b1312/): Profilo professionale LinkedIn per opportunità di lavoro e collaborazioni.
+- [Email](mailto:farigugabriele@gmail.com): Contatto email diretto.
