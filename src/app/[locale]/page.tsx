@@ -16,7 +16,7 @@ import { getBaseUrl } from "@/lib/url";
 import { siteConfig } from "@/lib/seo.config";
 
 interface PageProps {
-  params: Promise<{ locale: string }>;
+  readonly params: Promise<{ locale: string }>;
 }
 
 export function generateStaticParams() {
@@ -61,7 +61,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function HomePage({ params }: PageProps) {
+export default async function HomePage({ params }: Readonly<PageProps>) {
   const { locale: rawLocale } = await params;
   const locale: Locale = isValidLocale(rawLocale) ? rawLocale : defaultLocale;
   const dict = getDictionary(locale);
