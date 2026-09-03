@@ -16,80 +16,110 @@ export function LanguageSwitcher({
 }: LanguageSwitcherProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const [isPending, startTransition] = React.useTransition();
 
-  const handleSwitch = (targetLocale: Locale) => {
-    if (targetLocale === currentLocale) return;
+  // Calcola il target URL per il passaggio di lingua
+  const getTargetUrl = React.useCallback(
+    (targetLocale: Locale) => {
+      let newPath = pathname;
 
-    // Set persistence cookie (1 year duration)
-    document.cookie = `NEXT_LOCALE=${targetLocale}; path=/; max-age=31536000; SameSite=Lax`;
-
-    // Compute target path
-    let newPath = pathname;
-
-    if (targetLocale === "en") {
-      if (pathname === "/") {
-        newPath = "/en";
-      } else if (!pathname.startsWith("/en")) {
-        newPath = `/en${pathname}`;
+      if (targetLocale === "en") {
+        if (pathname === "/") {
+          newPath = "/en";
+        } else if (!pathname.startsWith("/en")) {
+          newPath = `/en${pathname}`;
+        }
+      } else {
+        if (pathname === "/en") {
+          newPath = "/";
+        } else if (pathname.startsWith("/en/")) {
+          newPath = pathname.replace(/^\/en/, "") || "/";
+        }
       }
+
+      const hash = typeof window !== "undefined" ? window.location.hash : "";
+      return hash ? `${newPath}${hash}` : newPath;
+    },
+    [pathname]
+  );
+
+  const nextLocale: Locale = currentLocale === "it" ? "en" : "it";
+  const targetUrl = getTargetUrl(nextLocale);
+
+  // Pre-fetch aggressivo della route opposta per reattività istantanea al click
+  React.useEffect(() => {
+    router.prefetch(targetUrl);
+    // Pre-carica anche le pagine principali
+    if (currentLocale === "it") {
+      router.prefetch("/en");
+      router.prefetch("/en/privacy");
     } else {
-      // targetLocale === "it"
-      if (pathname === "/en") {
-        newPath = "/";
-      } else if (pathname.startsWith("/en/")) {
-        newPath = pathname.replace(/^\/en/, "");
-      }
+      router.prefetch("/");
+      router.prefetch("/privacy");
     }
+  }, [router, targetUrl, currentLocale]);
 
-    // Preserve hash if present
-    const hash = window.location.hash;
-    const finalUrl = hash ? `${newPath}${hash}` : newPath;
+  const handleToggle = () => {
+    // 1. Salva la preferenza nel cookie
+    document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000; SameSite=Lax`;
 
-    startTransition(() => {
-      router.push(finalUrl);
-      router.refresh();
-    });
+    // 2. Navigazione immediata usando la cache prefetchata di Next.js
+    router.push(targetUrl);
   };
 
+  const ariaLabel =
+    currentLocale === "it"
+      ? "Lingua corrente Italiano. Clicca per passare all'Inglese"
+      : "Current language English. Click to switch to Italian";
+
+  const titleTooltip =
+    currentLocale === "it"
+      ? "Clicca per passare all'Inglese (EN)"
+      : "Click to switch to Italian (IT)";
+
   return (
-    <div
-      role="group"
-      aria-label="Language selection"
-      className={`inline-flex items-center rounded-full border border-border/60 bg-muted/40 p-0.5 text-xs font-medium backdrop-blur-sm ${className}`}
+    <button
+      type="button"
+      onClick={handleToggle}
+      onMouseEnter={() => router.prefetch(targetUrl)}
+      aria-label={ariaLabel}
+      title={titleTooltip}
+      className={`group relative inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-muted/40 p-1 text-xs font-medium backdrop-blur-sm transition-all duration-200 hover:border-primary/50 hover:bg-muted/70 active:scale-95 cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${className}`}
     >
-      <div className="flex items-center pl-2 pr-1 text-muted-foreground" aria-hidden="true">
+      <div
+        className="flex items-center pl-1 text-muted-foreground group-hover:text-primary transition-colors"
+        aria-hidden="true"
+      >
         <Globe className="h-3.5 w-3.5" />
       </div>
-      <button
-        type="button"
-        onClick={() => handleSwitch("it")}
-        disabled={isPending}
-        className={`px-2.5 py-1 rounded-full transition-all duration-200 ${
-          currentLocale === "it"
-            ? "bg-background text-foreground shadow-xs font-semibold"
-            : "text-muted-foreground hover:text-foreground"
-        }`}
-        aria-pressed={currentLocale === "it"}
-        aria-label="Passa all'italiano"
-      >
-        IT
-      </button>
-      <span className="text-border text-[10px] select-none">|</span>
-      <button
-        type="button"
-        onClick={() => handleSwitch("en")}
-        disabled={isPending}
-        className={`px-2.5 py-1 rounded-full transition-all duration-200 ${
-          currentLocale === "en"
-            ? "bg-background text-foreground shadow-xs font-semibold"
-            : "text-muted-foreground hover:text-foreground"
-        }`}
-        aria-pressed={currentLocale === "en"}
-        aria-label="Switch to English"
-      >
-        EN
-      </button>
-    </div>
+
+      <div className="relative flex items-center bg-background/60 rounded-full p-0.5 border border-border/40">
+        {/* Indicatore a scorrimento animato */}
+        <div
+          className={`absolute top-0.5 bottom-0.5 w-[26px] rounded-full bg-background shadow-xs border border-border/50 transition-transform duration-200 ease-out ${
+            currentLocale === "en" ? "translate-x-[26px]" : "translate-x-0"
+          }`}
+        />
+
+        <span
+          className={`relative z-10 w-[26px] py-0.5 text-center text-[11px] font-semibold transition-colors duration-200 ${
+            currentLocale === "it"
+              ? "text-foreground font-bold"
+              : "text-muted-foreground group-hover:text-foreground"
+          }`}
+        >
+          IT
+        </span>
+
+        <span
+          className={`relative z-10 w-[26px] py-0.5 text-center text-[11px] font-semibold transition-colors duration-200 ${
+            currentLocale === "en"
+              ? "text-foreground font-bold"
+              : "text-muted-foreground group-hover:text-foreground"
+          }`}
+        >
+          EN
+        </span>
+      </div>
+    </button>
   );
 }
