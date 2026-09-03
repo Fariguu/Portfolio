@@ -8,6 +8,7 @@ import { siteConfig } from "@/lib/seo.config";
 import { JsonLd } from "@/components/seo/json-ld";
 import { defaultLocale, isValidLocale, type Locale } from "@/lib/i18n/config";
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -71,27 +72,23 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} className="scroll-smooth" suppressHydrationWarning>
-      <head>
-        {/* Google tag (gtag.js) */}
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-0PDN3595Y5"
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-
-              gtag('config', 'G-0PDN3595Y5');
-            `,
-          }}
-        />
-      </head>
+      <head />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        {/* Google tag (gtag.js) caricato in idle/lazyOnload per non bloccare il thread principale (TBT) */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-0PDN3595Y5"
+          strategy="lazyOnload"
+        />
+        <Script id="google-analytics" strategy="lazyOnload">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-0PDN3595Y5', { page_path: window.location.pathname });
+          `}
+        </Script>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

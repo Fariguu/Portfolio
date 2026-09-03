@@ -130,6 +130,6 @@ export const config = {
      * - favicon.ico, immagini social, icone
      * - robots.txt, sitemap.xml, manifest.webmanifest
      */
-    "/((?!_next/static|_next/image|favicon.ico|icon|apple-icon|opengraph-image|twitter-image|robots.txt|sitemap.xml|manifest.webmanifest).*)",
+    "/((?!_next/static|_next/image|favicon.ico|icon|apple-icon|opengraph-image|twitter-image|robots.txt|sitemap.xml|manifest.webmanifest|llms.txt).*)",
   ],
 };
