@@ -9,7 +9,7 @@ interface HeroProps {
 export function Hero({ dict }: HeroProps) {
   return (
     <section className="relative w-full overflow-hidden bg-background py-24 lg:py-32 flex items-center min-h-[90vh]">
-      {/* Background gradients for stunning aesthetic */}
+      {/* Background gradients */}
       <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
         <div
           className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
@@ -22,25 +22,26 @@ export function Hero({ dict }: HeroProps) {
 
       <div className="container px-4 md:px-6 relative z-10 mx-auto">
         <div className="flex flex-col items-center justify-center text-center space-y-8">
-          <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-medium text-primary transition-colors hover:bg-primary/20 backdrop-blur-sm cursor-pointer animate-fade-in">
-            <span className="flex h-2 w-2 rounded-full bg-primary mr-2"></span>
-            {dict.hero.badge}
+          {/* Badge con larghezza minima protetta per evitare reflow orizzontali */}
+          <div className="inline-flex items-center justify-center min-w-[245px] rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-sm font-medium text-primary transition-colors hover:bg-primary/20 backdrop-blur-sm cursor-pointer animate-fade-in">
+            <span className="flex h-2 w-2 rounded-full bg-primary mr-2 shrink-0"></span>
+            <span>{dict.hero.badge}</span>
           </div>
 
           <div className="space-y-4 max-w-4xl animate-fade-in-up">
             <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl/none bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-500 dark:from-gray-100 dark:to-gray-500 pb-2">
               <br className="hidden sm:block" /> {dict.hero.name}
             </h1>
-            <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+            <p className="mx-auto max-w-[700px] min-h-[56px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed transition-opacity duration-150">
               {dict.hero.tagline}
             </p>
           </div>
 
-          {/* CTA Buttons with fixed desktop dimensions to prevent button shifting during language change */}
+          {/* CTA Buttons con larghezza protetta su desktop per eliminare il layout shift */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up animation-delay-200">
             <Button
               size="lg"
-              className="rounded-full shadow-lg h-12 w-full sm:w-[230px] justify-center group font-medium"
+              className="rounded-full shadow-lg h-12 w-full sm:w-[230px] justify-center group font-medium transition-all duration-200"
               asChild
             >
               <a href="#progetti">
@@ -51,7 +52,7 @@ export function Hero({ dict }: HeroProps) {
             <Button
               size="lg"
               variant="outline"
-              className="rounded-full h-12 w-full sm:w-[150px] justify-center font-medium bg-background/50 backdrop-blur-sm"
+              className="rounded-full h-12 w-full sm:w-[150px] justify-center font-medium bg-background/50 backdrop-blur-sm transition-all duration-200"
               asChild
             >
               <a href="#contatti">{dict.hero.ctaContact}</a>

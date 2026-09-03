@@ -17,7 +17,15 @@ export function LanguageSwitcher({
   const pathname = usePathname();
   const router = useRouter();
 
-  // Calcola il target URL per il passaggio di lingua
+  // Stato ottimistico locale per far scorrere la pillola istantaneamente a 0ms
+  const [activeLocale, setActiveLocale] = React.useState<Locale>(currentLocale);
+
+  // Sincronizza se il server o la rotta cambiano
+  React.useEffect(() => {
+    setActiveLocale(currentLocale);
+  }, [currentLocale]);
+
+  // Calcolo del percorso di destinazione
   const getTargetUrl = React.useCallback(
     (targetLocale: Locale) => {
       let newPath = pathname;
@@ -45,10 +53,9 @@ export function LanguageSwitcher({
   const nextLocale: Locale = currentLocale === "it" ? "en" : "it";
   const targetUrl = getTargetUrl(nextLocale);
 
-  // Pre-fetch aggressivo della route opposta per reattività istantanea al click
+  // Prefetch automatico delle rotte per eliminare la latenza di rete
   React.useEffect(() => {
     router.prefetch(targetUrl);
-    // Pre-carica anche le pagine principali
     if (currentLocale === "it") {
       router.prefetch("/en");
       router.prefetch("/en/privacy");
@@ -59,11 +66,32 @@ export function LanguageSwitcher({
   }, [router, targetUrl, currentLocale]);
 
   const handleToggle = () => {
-    // 1. Salva la preferenza nel cookie
+    // 1. Aggiornamento ottimistico dell'indicatore visivo
+    setActiveLocale(nextLocale);
+
+    // 2. Persistenza preferenza cookie
     document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000; SameSite=Lax`;
 
-    // 2. Navigazione immediata usando la cache prefetchata di Next.js
-    router.push(targetUrl);
+    // 3. Esecuzione con View Transitions API se supportata dal browser
+    if (
+      typeof document !== "undefined" &&
+      "startViewTransition" in document &&
+      typeof (document as unknown as { startViewTransition: unknown }).startViewTransition === "function"
+    ) {
+      (document as unknown as { startViewTransition: (cb: () => Promise<void> | void) => void }).startViewTransition(() => {
+        return new Promise<void>((resolve) => {
+          React.startTransition(() => {
+            router.push(targetUrl);
+            setTimeout(resolve, 0);
+          });
+        });
+      });
+    } else {
+      // Fallback per browser senza View Transitions (Safari/Firefox precedenti)
+      React.startTransition(() => {
+        router.push(targetUrl);
+      });
+    }
   };
 
   const ariaLabel =
@@ -93,16 +121,16 @@ export function LanguageSwitcher({
       </div>
 
       <div className="relative flex items-center bg-background/60 rounded-full p-0.5 border border-border/40">
-        {/* Indicatore a scorrimento animato */}
+        {/* Indicatore a scorrimento animato fluido */}
         <div
           className={`absolute top-0.5 bottom-0.5 w-[26px] rounded-full bg-background shadow-xs border border-border/50 transition-transform duration-200 ease-out ${
-            currentLocale === "en" ? "translate-x-[26px]" : "translate-x-0"
+            activeLocale === "en" ? "translate-x-[26px]" : "translate-x-0"
           }`}
         />
 
         <span
           className={`relative z-10 w-[26px] py-0.5 text-center text-[11px] font-semibold transition-colors duration-200 ${
-            currentLocale === "it"
+            activeLocale === "it"
               ? "text-foreground font-bold"
               : "text-muted-foreground group-hover:text-foreground"
           }`}
@@ -112,7 +140,7 @@ export function LanguageSwitcher({
 
         <span
           className={`relative z-10 w-[26px] py-0.5 text-center text-[11px] font-semibold transition-colors duration-200 ${
-            currentLocale === "en"
+            activeLocale === "en"
               ? "text-foreground font-bold"
               : "text-muted-foreground group-hover:text-foreground"
           }`}

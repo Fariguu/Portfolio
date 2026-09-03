@@ -32,7 +32,7 @@ export async function Features({ dict, locale }: FeaturesProps) {
   return (
     <section id="competenze" className="w-full py-24 bg-muted/40 relative">
       <div className="container px-4 md:px-6 mx-auto">
-        <div className="mx-auto max-w-2xl text-center space-y-4">
+        <div className="mx-auto max-w-2xl text-center space-y-4 min-h-[135px] flex flex-col justify-center">
           <p className="text-base font-semibold leading-7 text-primary">
             {dict.skills.badge}
           </p>
@@ -50,13 +50,14 @@ export async function Features({ dict, locale }: FeaturesProps) {
               return (
                 <div
                   key={feature.name}
-                  className="flex flex-col bg-background p-6 rounded-2xl shadow-xs border border-border/50 hover:shadow-md transition-shadow"
+                  className="flex flex-col bg-background p-6 rounded-2xl shadow-xs border border-border/50 hover:shadow-md transition-shadow min-h-[190px]"
+                  style={{ contain: "layout" }}
                 >
                   <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-foreground">
-                    <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-primary/10">
+                    <div className="h-10 w-10 flex items-center justify-center rounded-lg bg-primary/10 shrink-0">
                       <Icon className="h-6 w-6 text-primary" aria-hidden="true" />
                     </div>
-                    {feature.name}
+                    <span>{feature.name}</span>
                   </dt>
                   <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-muted-foreground">
                     <p className="flex-auto">{feature.description}</p>
