@@ -72,26 +72,10 @@ export function LanguageSwitcher({
     // 2. Persistenza preferenza cookie
     document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000; SameSite=Lax`;
 
-    // 3. Esecuzione con View Transitions API se supportata dal browser
-    if (
-      typeof document !== "undefined" &&
-      "startViewTransition" in document &&
-      typeof (document as unknown as { startViewTransition: unknown }).startViewTransition === "function"
-    ) {
-      (document as unknown as { startViewTransition: (cb: () => Promise<void> | void) => void }).startViewTransition(() => {
-        return new Promise<void>((resolve) => {
-          React.startTransition(() => {
-            router.push(targetUrl);
-            setTimeout(resolve, 0);
-          });
-        });
-      });
-    } else {
-      // Fallback per browser senza View Transitions (Safari/Firefox precedenti)
-      React.startTransition(() => {
-        router.push(targetUrl);
-      });
-    }
+    // 3. Navigazione immediata fluida senza sfarfallio della pagina
+    React.startTransition(() => {
+      router.push(targetUrl);
+    });
   };
 
   const ariaLabel =

@@ -14,7 +14,7 @@ export default async function LocaleLayout({
   return (
     <>
       <LanguageHtmlSync locale={locale} />
-      <div className="w-full flex-1 transition-opacity duration-200 animate-in fade-in-50">
+      <div className="w-full flex-1">
         {children}
       </div>
     </>
