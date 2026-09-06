@@ -8,6 +8,7 @@ import {
   deleteProject,
   toggleProjectVisibility,
   toggleProjectFeatured,
+  translateProjectFields,
 } from '@/app/admin/actions/projects'
 import { Button } from '@/components/ui/button'
 import {
@@ -24,6 +25,8 @@ import {
   X,
   Loader2,
   AlertCircle,
+  Sparkles,
+  Globe,
 } from 'lucide-react'
 import Image from 'next/image'
 
@@ -36,9 +39,10 @@ export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerPro
   const [editingProject, setEditingProject] = useState<Project | null>(null)
   const [isCreating, setIsCreating] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [translating, setTranslating] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
-  // Form states
+  // Form states (Italiano)
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [imageFile, setImageFile] = useState<File | null>(null)
@@ -54,6 +58,12 @@ export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerPro
   const [visible, setVisible] = useState(true)
   const [sortOrder, setSortOrder] = useState('1')
 
+  // Form states (Inglese)
+  const [titleEn, setTitleEn] = useState('')
+  const [descriptionEn, setDescriptionEn] = useState('')
+  const [githubLabelEn, setGithubLabelEn] = useState('GitHub Code')
+  const [statusBadgeEn, setStatusBadgeEn] = useState('')
+
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const openCreateModal = () => {
@@ -68,6 +78,10 @@ export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerPro
     setDemoUrl('')
     setGithubUrl('')
     setGithubLabel('Codice GitHub')
+    setTitleEn('')
+    setDescriptionEn('')
+    setGithubLabelEn('GitHub Code')
+    setStatusBadgeEn('')
     setIsPrivate(false)
     setFeatured(false)
     setVisible(true)
@@ -88,6 +102,10 @@ export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerPro
     setDemoUrl(project.demo_url || '')
     setGithubUrl(project.github_url || '')
     setGithubLabel(project.github_label || 'Codice GitHub')
+    setTitleEn(project.title_en || '')
+    setDescriptionEn(project.description_en || '')
+    setGithubLabelEn(project.github_label_en || 'GitHub Code')
+    setStatusBadgeEn(project.status_badge_en || '')
     setIsPrivate(project.is_private)
     setFeatured(project.featured)
     setVisible(project.visible)
@@ -102,6 +120,37 @@ export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerPro
     setImageFile(null)
     setImagePreview('')
     setErrorMsg(null)
+  }
+
+  const handleAutoTranslate = async () => {
+    if (!title && !description) {
+      setErrorMsg('Inserisci almeno il titolo o la descrizione in italiano per avviare la traduzione automatica.')
+      return
+    }
+
+    setTranslating(true)
+    setErrorMsg(null)
+    try {
+      const formData = new FormData()
+      formData.append('title', title)
+      formData.append('description', description)
+      formData.append('github_label', githubLabel)
+      formData.append('status_badge', statusBadge)
+
+      const res = await translateProjectFields(formData)
+      if (res.error) throw new Error(res.error)
+
+      if (res.translation) {
+        if (res.translation.title_en) setTitleEn(res.translation.title_en)
+        if (res.translation.description_en) setDescriptionEn(res.translation.description_en)
+        if (res.translation.github_label_en) setGithubLabelEn(res.translation.github_label_en)
+        if (res.translation.status_badge_en) setStatusBadgeEn(res.translation.status_badge_en)
+      }
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Errore durante la traduzione')
+    } finally {
+      setTranslating(false)
+    }
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -145,6 +194,10 @@ export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerPro
     formData.append('demo_url', demoUrl)
     formData.append('github_url', githubUrl)
     formData.append('github_label', githubLabel)
+    formData.append('title_en', titleEn)
+    formData.append('description_en', descriptionEn)
+    formData.append('github_label_en', githubLabelEn)
+    formData.append('status_badge_en', statusBadgeEn)
     formData.append('is_private', isPrivate.toString())
     formData.append('featured', featured.toString())
     formData.append('visible', visible.toString())
@@ -434,6 +487,90 @@ export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerPro
                   placeholder="https://..."
                   value={demoUrl}
                   onChange={(e) => setDemoUrl(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
+            </div>
+
+            {/* SEZIONE TRADUZIONE INGLESE (Bilingual Fields & AI Translation) */}
+            <div className="p-4 rounded-xl bg-secondary/30 border border-border space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border/70 pb-3">
+                <div className="flex items-center gap-2">
+                  <Globe className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-bold text-foreground">Versione Inglese (EN)</span>
+                  <span className="text-[11px] text-muted-foreground hidden sm:inline">• Utilizzata sulla rotta /en</span>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleAutoTranslate}
+                  disabled={translating}
+                  className="flex items-center gap-1.5 text-xs text-primary border-primary/30 hover:bg-primary/10"
+                >
+                  {translating ? (
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  ) : (
+                    <Sparkles className="h-3.5 w-3.5 text-amber-500" />
+                  )}
+                  {translating ? 'Traduzione in corso...' : 'Traduci automaticamente con AI'}
+                </Button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="sm:col-span-2 space-y-1.5">
+                  <label htmlFor="project_title_en" className="text-xs font-semibold text-foreground">
+                    Titolo in Inglese (EN)
+                  </label>
+                  <input
+                    id="project_title_en"
+                    type="text"
+                    placeholder="es. Construction Firm Web Platform (lascia vuoto per auto-tradurre)"
+                    value={titleEn}
+                    onChange={(e) => setTitleEn(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label htmlFor="project_status_badge_en" className="text-xs font-semibold text-foreground">
+                    Badge Stato in Inglese (EN)
+                  </label>
+                  <input
+                    id="project_status_badge_en"
+                    type="text"
+                    placeholder="es. Active Development"
+                    value={statusBadgeEn}
+                    onChange={(e) => setStatusBadgeEn(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label htmlFor="project_description_en" className="text-xs font-semibold text-foreground">
+                  Descrizione in Inglese (EN)
+                </label>
+                <textarea
+                  id="project_description_en"
+                  rows={3}
+                  placeholder="English description for international visitors and SEO... (lascia vuoto per auto-tradurre)"
+                  value={descriptionEn}
+                  onChange={(e) => setDescriptionEn(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                />
+              </div>
+
+              <div className="space-y-1.5 sm:w-1/2">
+                <label htmlFor="project_github_label_en" className="text-xs font-semibold text-foreground">
+                  Testo Pulsante GitHub (EN)
+                </label>
+                <input
+                  id="project_github_label_en"
+                  type="text"
+                  placeholder="es. GitHub Code / Architecture Draft"
+                  value={githubLabelEn}
+                  onChange={(e) => setGithubLabelEn(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>

@@ -104,6 +104,10 @@ export type Database = {
           demo_url: string | null
           github_url: string | null
           github_label: string | null
+          title_en: string | null
+          description_en: string | null
+          github_label_en: string | null
+          status_badge_en: string | null
           is_private: boolean
           featured: boolean
           visible: boolean
@@ -121,6 +125,10 @@ export type Database = {
           demo_url?: string | null
           github_url?: string | null
           github_label?: string | null
+          title_en?: string | null
+          description_en?: string | null
+          github_label_en?: string | null
+          status_badge_en?: string | null
           is_private?: boolean
           featured?: boolean
           visible?: boolean
@@ -138,6 +146,10 @@ export type Database = {
           demo_url?: string | null
           github_url?: string | null
           github_label?: string | null
+          title_en?: string | null
+          description_en?: string | null
+          github_label_en?: string | null
+          status_badge_en?: string | null
           is_private?: boolean
           featured?: boolean
           visible?: boolean

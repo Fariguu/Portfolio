@@ -1,0 +1,154 @@
+/**
+ * Servizio di traduzione automatica (Italiano -> Inglese)
+ * Utilizza prioritariamente Google Gemini API con prompt ottimizzato per lessico tecnico/developer.
+ * Se la chiave non è disponibile o fallisce, adotta un fallback automatico su MyMemory Translate.
+ */
+
+export interface ProjectTranslationInput {
+  title?: string
+  description?: string
+  github_label?: string
+  status_badge?: string
+}
+
+export interface ProjectTranslationOutput {
+  title_en: string
+  description_en: string
+  github_label_en: string
+  status_badge_en: string
+}
+
+/**
+ * Traduce un batch di campi di un progetto software da IT a EN tramite Google Gemini API.
+ */
+async function translateWithGemini(
+  input: ProjectTranslationInput,
+  apiKey: string
+): Promise<ProjectTranslationOutput | null> {
+  try {
+    const prompt = `You are a professional software engineer and bilingual translator (Italian to English).
+Translate the following portfolio project fields from Italian to fluent, technical, idiomatic English suitable for a top-tier developer portfolio.
+Do not invent facts, maintain the meaning and tone accurately.
+Recognize software terminology properly (e.g. "Bozza Architettura" -> "Architecture Draft", "In sviluppo attivo" -> "Active Development", "Codice GitHub" -> "GitHub Code").
+
+Input JSON:
+${JSON.stringify({
+  title: input.title || '',
+  description: input.description || '',
+  github_label: input.github_label || '',
+  status_badge: input.status_badge || '',
+})}
+
+Respond ONLY with a valid raw JSON object with exactly these keys:
+{
+  "title_en": "...",
+  "description_en": "...",
+  "github_label_en": "...",
+  "status_badge_en": "..."
+}`
+
+    // Endpoint standard Gemini 2.5 Flash
+    const model = 'gemini-2.5-flash'
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [{ text: prompt }],
+          },
+        ],
+        generationConfig: {
+          temperature: 0.2,
+          responseMimeType: 'application/json',
+        },
+      }),
+    })
+
+    if (!response.ok) {
+      console.warn(`[translate] Gemini API error (${response.status}):`, await response.text())
+      return null
+    }
+
+    const data = await response.json()
+    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text
+    if (!rawText) return null
+
+    // Rimuove eventuali backticks markdown se presenti
+    const cleanedText = rawText
+      .replace(/^```json\s*/i, '')
+      .replace(/^```\s*/i, '')
+      .replace(/```\s*$/i, '')
+      .trim()
+
+    const parsed = JSON.parse(cleanedText) as ProjectTranslationOutput
+    return {
+      title_en: parsed.title_en?.trim() || '',
+      description_en: parsed.description_en?.trim() || '',
+      github_label_en: parsed.github_label_en?.trim() || '',
+      status_badge_en: parsed.status_badge_en?.trim() || '',
+    }
+  } catch (err) {
+    console.warn('[translate] Errore chiamata Gemini:', err)
+    return null
+  }
+}
+
+/**
+ * Traduce un singolo testo usando MyMemory Free API (fallback privo di chiavi)
+ */
+async function translateTextWithMyMemory(text: string): Promise<string> {
+  if (!text || text.trim().length === 0) return ''
+  try {
+    const encoded = encodeURIComponent(text.trim())
+    const res = await fetch(`https://api.mymemory.translated.net/get?q=${encoded}&langpair=it|en`)
+    if (!res.ok) return text
+    const json = await res.json()
+    const translated = json?.responseData?.translatedText
+    return typeof translated === 'string' && translated.length > 0 ? translated : text
+  } catch {
+    return text
+  }
+}
+
+/**
+ * Fallback translation using MyMemory
+ */
+async function fallbackTranslate(input: ProjectTranslationInput): Promise<ProjectTranslationOutput> {
+  const [title_en, description_en, github_label_en, status_badge_en] = await Promise.all([
+    input.title ? translateTextWithMyMemory(input.title) : Promise.resolve(''),
+    input.description ? translateTextWithMyMemory(input.description) : Promise.resolve(''),
+    input.github_label ? translateTextWithMyMemory(input.github_label) : Promise.resolve(''),
+    input.status_badge ? translateTextWithMyMemory(input.status_badge) : Promise.resolve(''),
+  ])
+
+  return {
+    title_en,
+    description_en,
+    github_label_en,
+    status_badge_en,
+  }
+}
+
+/**
+ * Funzione principale:
+ * Traduce i campi di un progetto dall'italiano all'inglese.
+ */
+export async function translateProjectData(
+  input: ProjectTranslationInput
+): Promise<ProjectTranslationOutput> {
+  const apiKey = process.env.GEMINI_API_KEY?.trim()
+
+  if (apiKey) {
+    const geminiResult = await translateWithGemini(input, apiKey)
+    if (geminiResult && (geminiResult.title_en || geminiResult.description_en)) {
+      return geminiResult
+    }
+  }
+
+  return fallbackTranslate(input)
+}
