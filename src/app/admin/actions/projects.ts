@@ -3,6 +3,7 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { verifyAdminSession } from '@/lib/auth-guard'
 import { revalidatePath } from 'next/cache'
+import { translateProjectData } from '@/lib/translate'
 
 async function uploadImageIfPresent(file: File | null, existingUrl?: string): Promise<string> {
   if (!file || file.size === 0) {
@@ -31,6 +32,34 @@ async function uploadImageIfPresent(file: File | null, existingUrl?: string): Pr
     .getPublicUrl(fileName)
 
   return publicUrlData.publicUrl
+}
+
+/**
+ * Azione Server per tradurre al volo i campi dal form prima del salvataggio
+ */
+export async function translateProjectFields(formData: FormData) {
+  try {
+    const authCheck = await verifyAdminSession()
+    if (!authCheck.authorized) {
+      return { error: authCheck.error || 'Non autorizzato' }
+    }
+
+    const title = (formData.get('title') as string) || ''
+    const description = (formData.get('description') as string) || ''
+    const github_label = (formData.get('github_label') as string) || ''
+    const status_badge = (formData.get('status_badge') as string) || ''
+
+    const translation = await translateProjectData({
+      title,
+      description,
+      github_label,
+      status_badge,
+    })
+
+    return { success: true, translation }
+  } catch (err: any) {
+    return { error: err.message || 'Errore durante la traduzione' }
+  }
 }
 
 export async function createProject(formData: FormData) {
@@ -69,8 +98,28 @@ export async function createProject(formData: FormData) {
     const visible = formData.get('visible') === 'true' || formData.get('visible') === 'on'
     const sort_order = Number.parseInt((formData.get('sort_order') as string) || '0', 10)
 
+    let title_en = (formData.get('title_en') as string) || ''
+    let description_en = (formData.get('description_en') as string) || ''
+    let github_label_en = (formData.get('github_label_en') as string) || ''
+    let status_badge_en = (formData.get('status_badge_en') as string) || ''
+
     if (!title || !description) {
       return { error: 'Titolo e descrizione sono obbligatori' }
+    }
+
+    // Se i campi in lingua inglese non sono stati inseriti a mano, traduciamo automaticamente
+    if (!title_en.trim() || !description_en.trim() || !github_label_en.trim() || (status_badge && !status_badge_en.trim())) {
+      const autoTranslated = await translateProjectData({
+        title,
+        description,
+        github_label,
+        status_badge: status_badge || undefined,
+      })
+
+      if (!title_en.trim()) title_en = autoTranslated.title_en
+      if (!description_en.trim()) description_en = autoTranslated.description_en
+      if (!github_label_en.trim()) github_label_en = autoTranslated.github_label_en || 'GitHub Code'
+      if (status_badge && !status_badge_en.trim()) status_badge_en = autoTranslated.status_badge_en
     }
 
     const supabase = createAdminClient()
@@ -83,6 +132,10 @@ export async function createProject(formData: FormData) {
       demo_url,
       github_url,
       github_label,
+      title_en: title_en.trim() || null,
+      description_en: description_en.trim() || null,
+      github_label_en: github_label_en.trim() || null,
+      status_badge_en: status_badge_en.trim() || null,
       is_private,
       featured,
       visible,
@@ -94,6 +147,7 @@ export async function createProject(formData: FormData) {
     }
 
     revalidatePath('/')
+    revalidatePath('/[locale]', 'layout')
     revalidatePath('/admin/projects')
     revalidatePath('/admin')
     return { success: true }
@@ -141,8 +195,28 @@ export async function updateProject(id: string, formData: FormData) {
     const visible = formData.get('visible') === 'true' || formData.get('visible') === 'on'
     const sort_order = Number.parseInt((formData.get('sort_order') as string) || '0', 10)
 
+    let title_en = (formData.get('title_en') as string) || ''
+    let description_en = (formData.get('description_en') as string) || ''
+    let github_label_en = (formData.get('github_label_en') as string) || ''
+    let status_badge_en = (formData.get('status_badge_en') as string) || ''
+
     if (!title || !description) {
       return { error: 'Titolo e descrizione sono obbligatori' }
+    }
+
+    // Se i campi in lingua inglese non sono stati inseriti a mano, traduciamo automaticamente
+    if (!title_en.trim() || !description_en.trim() || !github_label_en.trim() || (status_badge && !status_badge_en.trim())) {
+      const autoTranslated = await translateProjectData({
+        title,
+        description,
+        github_label,
+        status_badge: status_badge || undefined,
+      })
+
+      if (!title_en.trim()) title_en = autoTranslated.title_en
+      if (!description_en.trim()) description_en = autoTranslated.description_en
+      if (!github_label_en.trim()) github_label_en = autoTranslated.github_label_en || 'GitHub Code'
+      if (status_badge && !status_badge_en.trim()) status_badge_en = autoTranslated.status_badge_en
     }
 
     const supabase = createAdminClient()
@@ -157,6 +231,10 @@ export async function updateProject(id: string, formData: FormData) {
         demo_url,
         github_url,
         github_label,
+        title_en: title_en.trim() || null,
+        description_en: description_en.trim() || null,
+        github_label_en: github_label_en.trim() || null,
+        status_badge_en: status_badge_en.trim() || null,
         is_private,
         featured,
         visible,
@@ -170,6 +248,7 @@ export async function updateProject(id: string, formData: FormData) {
     }
 
     revalidatePath('/')
+    revalidatePath('/[locale]', 'layout')
     revalidatePath('/admin/projects')
     revalidatePath('/admin')
     return { success: true }

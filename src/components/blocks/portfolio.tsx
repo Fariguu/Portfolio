@@ -42,17 +42,34 @@ export async function Portfolio({ dict, locale }: Readonly<PortfolioProps>) {
     featured: p.featured,
   }));
 
-  if (locale === "it") {
-    try {
-      const supabase = await createClient();
-      const { data, error } = await supabase
-        .from("projects")
-        .select("*")
-        .eq("visible", true)
-        .order("sort_order", { ascending: true });
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("projects")
+      .select("*")
+      .eq("visible", true)
+      .order("sort_order", { ascending: true });
 
-      if (!error && data && data.length > 0) {
-        projects = (data as Project[]).map((p) => ({
+    if (!error && data && data.length > 0) {
+      projects = (data as Project[]).map((p, idx) => {
+        if (locale === "en") {
+          const dictFallback = dict.portfolio.fallbackList[idx];
+          return {
+            id: p.id,
+            title: p.title_en || dictFallback?.title || p.title,
+            description: p.description_en || dictFallback?.description || p.description,
+            image: p.image_url,
+            tags: p.tags || [],
+            statusBadge: p.status_badge_en || dictFallback?.statusBadge || undefined,
+            demo: p.demo_url || undefined,
+            github: p.github_url || undefined,
+            githubLabel: p.github_label_en || dictFallback?.githubLabel || dict.portfolio.codeLabel,
+            isPrivate: p.is_private,
+            featured: p.featured,
+          };
+        }
+
+        return {
           id: p.id,
           title: p.title,
           description: p.description,
@@ -64,11 +81,11 @@ export async function Portfolio({ dict, locale }: Readonly<PortfolioProps>) {
           githubLabel: p.github_label || dict.portfolio.codeLabel,
           isPrivate: p.is_private,
           featured: p.featured,
-        }));
-      }
-    } catch {
-      // Fallback sul dizionario
+        };
+      });
     }
+  } catch {
+    // Fallback sul dizionario
   }
 
   return (
