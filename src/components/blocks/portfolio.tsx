@@ -8,10 +8,12 @@ import { createClient } from "@/lib/supabase/server";
 import type { Project } from "@/lib/database.types";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
+import { hasCaseStudyDescription } from "@/lib/data/case-studies";
 
 interface ProjectDisplay {
   id?: string;
   slug?: string;
+  hasCaseStudy: boolean;
   title: string;
   description: string;
   image: string;
@@ -29,31 +31,35 @@ interface PortfolioProps {
   readonly locale: Locale;
 }
 
-function resolveSlug(title: string, fallbackSlug?: string): string | undefined {
-  if (fallbackSlug) return fallbackSlug;
-  const lower = title.toLowerCase();
+function resolveProjectSlug(title: string, candidateSlug?: string): string | undefined {
+  if (candidateSlug) return candidateSlug;
+  const lower = title.toLowerCase().trim();
   if (lower.includes("impresa")) return "impresa-edile";
   if (lower.includes("edubook")) return "edubook";
   if (lower.includes("qr")) return "qr-code-creator";
-  if (lower.includes("spider")) return "spider-tree";
   return undefined;
 }
 
 export async function Portfolio({ dict, locale }: Readonly<PortfolioProps>) {
-  let projects: ProjectDisplay[] = dict.portfolio.fallbackList.map((p, idx) => ({
-    id: `fallback-${idx}`,
-    slug: p.slug,
-    title: p.title,
-    description: p.description,
-    image: p.image,
-    tags: p.tags,
-    statusBadge: p.statusBadge,
-    demo: p.demo,
-    github: p.github,
-    githubLabel: p.githubLabel || dict.portfolio.codeLabel,
-    isPrivate: p.isPrivate,
-    featured: p.featured,
-  }));
+  let projects: ProjectDisplay[] = dict.portfolio.fallbackList.map((p, idx) => {
+    const slug = resolveProjectSlug(p.title, p.slug);
+    const hasCaseStudy = Boolean(slug && hasCaseStudyDescription(slug, locale));
+    return {
+      id: `fallback-${idx}`,
+      slug,
+      hasCaseStudy,
+      title: p.title,
+      description: p.description,
+      image: p.image,
+      tags: p.tags,
+      statusBadge: p.statusBadge,
+      demo: p.demo,
+      github: p.github,
+      githubLabel: p.githubLabel || dict.portfolio.codeLabel,
+      isPrivate: p.isPrivate,
+      featured: p.featured,
+    };
+  });
 
   try {
     const supabase = await createClient();
@@ -64,14 +70,20 @@ export async function Portfolio({ dict, locale }: Readonly<PortfolioProps>) {
       .order("sort_order", { ascending: true });
 
     if (!error && data && data.length > 0) {
-      projects = (data as Project[]).map((p, idx) => {
-        const dictFallback = dict.portfolio.fallbackList[idx];
-        const slug = resolveSlug(p.title, dictFallback?.slug);
+      projects = (data as Project[]).map((p) => {
+        // Find matching fallback item by exact title match or slug
+        const dictFallback = dict.portfolio.fallbackList.find(
+          (f) => f.title.toLowerCase() === p.title.toLowerCase() ||
+                 (f.slug && p.title.toLowerCase().includes(f.slug.replace(/-/g, " ")))
+        );
+        const slug = resolveProjectSlug(p.title, dictFallback?.slug);
+        const hasCaseStudy = Boolean(slug && hasCaseStudyDescription(slug, locale));
 
         if (locale === "en") {
           return {
             id: p.id,
             slug,
+            hasCaseStudy,
             title: p.title_en || dictFallback?.title || p.title,
             description: p.description_en || dictFallback?.description || p.description,
             image: p.image_url,
@@ -88,6 +100,7 @@ export async function Portfolio({ dict, locale }: Readonly<PortfolioProps>) {
         return {
           id: p.id,
           slug,
+          hasCaseStudy,
           title: p.title,
           description: p.description,
           image: p.image_url,
@@ -168,7 +181,7 @@ export async function Portfolio({ dict, locale }: Readonly<PortfolioProps>) {
                 <CardDescription className="text-sm md:text-base leading-relaxed">
                   {project.description}
                 </CardDescription>
-                {project.slug && (
+                {project.hasCaseStudy && project.slug && (
                   <div className="pt-2">
                     <Button
                       variant="outline"

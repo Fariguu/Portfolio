@@ -265,7 +265,7 @@ const content = {
       en: "Preview of project",
     },
     viewCaseStudy: {
-      it: "Leggi Case Study ➔",
+      it: "Leggi caso di studio ➔",
       en: "Read Case Study ➔",
     },
     fallbackList: [

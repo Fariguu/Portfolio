@@ -554,148 +554,6 @@ export const CASE_STUDIES: CaseStudy[] = [
       operatingSystem: 'Any (Web Browser)',
     },
   },
-  {
-    slug: 'spider-tree',
-    title: {
-      it: 'Spider Tree — Algoritmo di Visualizzazione & Parsing Gerarchico',
-      en: 'Spider Tree — Hierarchical Parsing & Graph Visualization Algorithm',
-    },
-    subtitle: {
-      it: 'Strumento di analisi e visualizzazione grafica di directory e strutture dati complesse con layout radiale e calcolo di complessità.',
-      en: 'Analysis and visual tree mapping utility for complex file hierarchies featuring radial layouts and algorithmic complexity analysis.',
-    },
-    category: {
-      it: 'Algorithms & Tree Visualization',
-      en: 'Algorithms & Tree Visualization',
-    },
-    period: '2024',
-    role: {
-      it: 'Software Developer & Algorithm Engineer',
-      en: 'Software Developer & Algorithm Engineer',
-    },
-    client: {
-      it: 'Progetto Open Source / Studio Accademico',
-      en: 'Open Source Project / Academic Exploration',
-    },
-    coverImage:
-      'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=1200',
-    githubUrl: 'https://github.com/Fariguu/Spider-Tree',
-    isPrivate: false,
-    featured: false,
-    tags: [
-      'Python',
-      'TypeScript',
-      'Graph Theory',
-      'Tree Traversal',
-      'Data Structures',
-    ],
-    metaDescription: {
-      it: 'Case study Spider Tree: algoritmi di parsing gerarchico, attraversamento ad albero BFS/DFS e visualizzazione radiale di strutture dati.',
-      en: 'Spider Tree case study: hierarchical graph parsing, BFS/DFS traversal algorithms, and radial visual layout generation.',
-    },
-    metaKeywords: {
-      it: [
-        'spider tree algoritmo',
-        'visualizzazione alberi gerarchici',
-        'algoritmi attraversamento grafo python',
-        'alberi n-ari complessita spaziale',
-      ],
-      en: [
-        'spider tree algorithm',
-        'tree hierarchy visualization',
-        'graph traversal bfs dfs algorithms',
-        'spatial tree complexity analysis',
-      ],
-    },
-    overview: {
-      problem: {
-        it: "Comprendere a colpo d'occhio la complessità architetturale di grandi repository o strutture di dati annidate è difficile con i soli comandi terminale tipo `tree`, che risultano illeggibili superate le decine di cartelle.",
-        en: 'Grasping the architectural depth of massive code repositories or deeply nested data schemas is unwieldy with plain CLI tree outputs once directory counts exceed several dozen nodes.',
-      },
-      context: {
-        it: "Nato durante gli studi di Algoritmi e Strutture Dati presso l'Università di Bari, il progetto affronta il problema della visualizzazione geometrica di alberi n-ari senza collisione di nodi.",
-        en: 'Conceived during academic coursework in Algorithms & Data Structures at the University of Bari, this project tackles non-overlapping geometric spatial layout computation for n-ary trees.',
-      },
-      goal: {
-        it: 'Sviluppare un motore di scansione con attraversamento ottimizzato (BFS/DFS), calcolo metrico della profondità e generazione di layout gerarchici leggibili ed esportabili.',
-        en: 'Engineer an optimized tree traversal scanner (BFS/DFS) with depth metrics and exportable spatial hierarchical layouts.',
-      },
-    },
-    architecture: {
-      summary: {
-        it: "Pipeline di calcolo in due fasi: scansione ricorsiva asincrona della directory con memoria limitata (O(V+E)) seguita dal calcolo delle coordinate euclidee per il posizionamento dei nodi.",
-        en: "Two-stage computational pipeline: memory-bounded recursive asynchronous graph traversal (O(V+E)) followed by Euclidean coordinate calculation for node placement.",
-      },
-      highlights: {
-        it: [
-          'Attraversamento depth-first (DFS) con memoization per evitare cicli di symlink',
-          'Calcolo della densità dei rami e bilanciamento spaziale degli archi',
-          'Esportazione in formati strutturati (JSON, Markdown, ASCII art ad alto contrasto)',
-        ],
-        en: [
-          'Depth-first search (DFS) with visited memoization preventing cyclic symlink loops',
-          'Branch density calculation with dynamic edge angular spacing',
-          'Multi-format export: structured JSON, hierarchical Markdown, and high-contrast ASCII art',
-        ],
-      },
-    },
-    challenges: {
-      it: [
-        {
-          title: 'Gestione di Alberi Giganteschi Senza Stack Overflow',
-          problem:
-            'Directory profonde con migliaia di file possono causare superamento del call stack nella ricorsione tradizionale.',
-          solution:
-            'Sostituita la ricorsione implicita con un iteratore esplicito basato su stack su heap, limitando il footprint di memoria anche con oltre 50.000 file scansionati.',
-        },
-      ],
-      en: [
-        {
-          title: 'Handling Massive Directories Without Call Stack Overflow',
-          problem:
-            'Deep directory trees containing thousands of files quickly trigger Maximum Call Stack Exceeded crashes under naive recursion.',
-          solution:
-            'Replaced implicit call-stack recursion with an explicit heap-allocated stack iterator, bounding memory consumption even when scanning 50,000+ files.',
-        },
-      ],
-    },
-    features: {
-      it: [
-        'Scansione rapida di gerarchie di file e directory con filtri regex',
-        'Rilevamento e neutralizzazione automatica di collegamenti simbolici ricorsivi',
-        'Output personalizzabile per profondità massima, dimensione file e conteggio elementi',
-        'Calcolo statistico del rapporto cartelle/file e profondità media dell\'albero',
-      ],
-      en: [
-        'High-speed directory hierarchy scanning with configurable regex excludes',
-        'Automated detection and resolution of recursive symlinks',
-        'Customizable max-depth, file size reporting, and leaf counters',
-        'Statistical profiling of directory-to-file ratios and average tree depth',
-      ],
-    },
-    results: {
-      it: [
-        'Scansione di oltre 10.000 nodi in meno di 250ms',
-        'Zero crash da ricorsione infinita su link simbolici complessi',
-        'Utilizzato per generare documentazione architetturale automatizzata',
-      ],
-      en: [
-        'Scanned 10,000+ nodes in under 250ms',
-        'Zero infinite-loop crashes verified across complex symlinked file structures',
-        'Adopted as an automated architectural documentation generator',
-      ],
-    },
-    stack: [
-      { name: 'Python', category: 'backend', version: '3.11' },
-      { name: 'TypeScript', category: 'frontend' },
-      { name: 'Graph Theory', category: 'tools' },
-      { name: 'Data Structures', category: 'tools' },
-    ],
-    schemaOrg: {
-      applicationCategory: 'DeveloperApplication',
-      operatingSystem: 'Cross-Platform (Linux, macOS, Windows)',
-    },
-  },
 ]
 
 export function getAllCaseStudies(): CaseStudy[] {
@@ -704,6 +562,22 @@ export function getAllCaseStudies(): CaseStudy[] {
 
 export function getCaseStudyBySlug(slug: string): CaseStudy | undefined {
   return CASE_STUDIES.find((cs) => cs.slug.toLowerCase() === slug.toLowerCase())
+}
+
+export function hasCaseStudyDescription(slug?: string, locale: 'it' | 'en' = 'it'): boolean {
+  if (!slug) return false
+  const cs = getCaseStudyBySlug(slug)
+  if (!cs) return false
+
+  const hasSubtitle = Boolean(cs.subtitle?.[locale] && cs.subtitle[locale].trim().length > 0)
+  const hasOverview = Boolean(
+    (cs.overview?.problem?.[locale] && cs.overview.problem[locale].trim().length > 0) ||
+    (cs.overview?.context?.[locale] && cs.overview.context[locale].trim().length > 0) ||
+    (cs.overview?.goal?.[locale] && cs.overview.goal[locale].trim().length > 0)
+  )
+  const hasMeta = Boolean(cs.metaDescription?.[locale] && cs.metaDescription[locale].trim().length > 0)
+
+  return hasSubtitle || hasOverview || hasMeta
 }
 
 export function getAdjacentCaseStudies(currentSlug: string): {
