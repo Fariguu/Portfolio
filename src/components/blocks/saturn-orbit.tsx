@@ -318,7 +318,7 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
             ref={(el) => {
               itemsRef.current[index] = el;
             }}
-            className="absolute top-1/2 left-1/2 pointer-events-auto will-change-transform cursor-pointer group"
+            className="absolute top-1/2 left-1/2 pointer-events-auto will-change-transform cursor-default group"
             onMouseEnter={() => {
               isHoveredRef.current = true;
             }}
