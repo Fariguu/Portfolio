@@ -101,6 +101,15 @@ export interface Dictionary {
     sendAnother: string;
     genericError: string;
   };
+  faq: {
+    badge: string;
+    title: string;
+    description: string;
+    items: Array<{
+      question: string;
+      answer: string;
+    }>;
+  };
   footer: {
     creatorTagline: string;
     privacyPolicy: string;
