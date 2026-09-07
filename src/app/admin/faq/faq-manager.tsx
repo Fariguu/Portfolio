@@ -357,18 +357,13 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
                     type="button"
                     onClick={() => setActiveTab('en')}
                     className={cn(
-                      "px-3.5 py-1.5 rounded-md text-xs font-medium transition-colors flex items-center gap-1.5 font-sans",
+                      "px-3.5 py-1.5 rounded-md text-xs font-medium transition-colors font-sans",
                       activeTab === 'en'
                         ? "bg-background text-foreground shadow-xs font-semibold"
                         : "text-muted-foreground hover:text-foreground"
                     )}
                   >
-                    <span>English</span>
-                    {questionEn.trim() && answerEn.trim() ? (
-                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" title="Traduzione compilata" />
-                    ) : (
-                      <span className="text-[10px] text-muted-foreground opacity-75">(Vuoto)</span>
-                    )}
+                    English
                   </button>
                 </div>
 
