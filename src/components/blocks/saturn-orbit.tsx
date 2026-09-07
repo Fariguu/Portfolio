@@ -182,7 +182,6 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
   const uniqueId = useId().replace(/:/g, "");
   const containerRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<Array<HTMLDivElement | null>>([]);
-  const isHoveredRef = useRef(false);
   const rotationRef = useRef(0);
   const scrollProgressRef = useRef(0);
   const [dimensions, setDimensions] = useState({ rx: 430, ry: 135 });
@@ -239,10 +238,8 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
       const delta = (now - lastTime) / 1000;
       lastTime = now;
 
-      // Avanzamento rotazione solo se non siamo in pausa hover
-      if (!isHoveredRef.current) {
-        rotationRef.current = (rotationRef.current + ((2 * Math.PI) / durationSeconds) * delta) % (2 * Math.PI);
-      }
+      // Avanzamento rotazione continuo
+      rotationRef.current = (rotationRef.current + ((2 * Math.PI) / durationSeconds) * delta) % (2 * Math.PI);
 
       const currentRot = rotationRef.current;
       const totalItems = TECH_ITEMS.length;
@@ -319,12 +316,6 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
               itemsRef.current[index] = el;
             }}
             className="absolute top-1/2 left-1/2 pointer-events-auto will-change-transform cursor-default group"
-            onMouseEnter={() => {
-              isHoveredRef.current = true;
-            }}
-            onMouseLeave={() => {
-              isHoveredRef.current = false;
-            }}
           >
             <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl backdrop-blur-xs transition-all duration-200 hover:scale-115">
               <div className="w-4 h-4 flex items-center justify-center shrink-0 drop-shadow-xs transition-transform duration-200 group-hover:scale-120">
