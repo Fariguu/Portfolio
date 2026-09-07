@@ -24,6 +24,7 @@ import {
   Languages,
   CheckCircle2,
 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 interface FAQManagerProps {
   readonly initialFaqs: FAQItem[]
@@ -231,26 +232,23 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
               <div className="space-y-3 flex-1">
                 {/* Header item con ordine e badge visibilità */}
                 <div className="flex items-center gap-2.5">
-                  <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-secondary text-foreground border border-border">
+                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded-md bg-secondary text-foreground border border-border">
                     #{faq.sort_order}
                   </span>
                   {!faq.visible && (
-                    <span className="text-xs font-semibold text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
-                      Nascosta dal sito
+                    <span className="text-xs font-medium text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
+                      Nascosta
                     </span>
                   )}
                   {faq.question_en && (
-                    <span className="text-xs font-medium text-sky-500 bg-sky-500/10 px-2 py-0.5 rounded-md border border-sky-500/20 flex items-center gap-1">
-                      <Languages className="h-3 w-3" /> EN Tradotta
+                    <span className="text-[11px] font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded border border-border/60">
+                      EN disponibile
                     </span>
                   )}
                 </div>
 
-                {/* Versione Italiana */}
+                {/* Domanda e Risposta (Italiano) */}
                 <div className="space-y-1">
-                  <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    <span>🇮🇹 Italiano</span>
-                  </div>
                   <h3 className="font-semibold text-foreground text-base leading-snug">
                     {faq.question_it}
                   </h3>
@@ -258,21 +256,6 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
                     {faq.answer_it}
                   </p>
                 </div>
-
-                {/* Versione Inglese (se presente) */}
-                {faq.question_en && (
-                  <div className="space-y-1 pt-3 border-t border-border/40">
-                    <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-sky-500">
-                      <span>🇬🇧 English</span>
-                    </div>
-                    <h4 className="font-medium text-foreground/90 text-sm leading-snug">
-                      {faq.question_en}
-                    </h4>
-                    <p className="text-xs text-muted-foreground leading-relaxed pt-0.5">
-                      {faq.answer_en}
-                    </p>
-                  </div>
-                )}
               </div>
 
               {/* Azioni */}
@@ -355,35 +338,36 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
 
               {/* Toolbar Lingue & Azione Traduci */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-secondary/50 rounded-xl border border-border/60">
-                {/* Tab Selector */}
-                <div className="flex items-center gap-1.5 p-1 bg-background rounded-lg border border-border/80">
+                {/* Clean Segmented Tab Control */}
+                <div className="flex items-center gap-1 bg-muted p-1 rounded-lg border border-border/60">
                   <button
                     type="button"
                     onClick={() => setActiveTab('it')}
-                    className={`flex items-center gap-2 px-3.5 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                    className={cn(
+                      "px-3.5 py-1.5 rounded-md text-xs font-medium transition-colors font-sans",
                       activeTab === 'it'
-                        ? 'bg-primary text-primary-foreground shadow-xs'
-                        : 'text-muted-foreground hover:text-foreground'
-                    }`}
+                        ? "bg-background text-foreground shadow-xs font-semibold"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
                   >
-                    <span>🇮🇹 Italiano</span>
-                    <span className="text-[10px] opacity-75">(Obbligatorio)</span>
+                    Italiano
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setActiveTab('en')}
-                    className={`flex items-center gap-2 px-3.5 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                    className={cn(
+                      "px-3.5 py-1.5 rounded-md text-xs font-medium transition-colors flex items-center gap-1.5 font-sans",
                       activeTab === 'en'
-                        ? 'bg-primary text-primary-foreground shadow-xs'
-                        : 'text-muted-foreground hover:text-foreground'
-                    }`}
+                        ? "bg-background text-foreground shadow-xs font-semibold"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
                   >
-                    <span>🇬🇧 English</span>
+                    <span>English</span>
                     {questionEn.trim() && answerEn.trim() ? (
-                      <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" title="Traduzione compilata" />
                     ) : (
-                      <span className="text-[10px] text-muted-foreground">(Opzionale)</span>
+                      <span className="text-[10px] text-muted-foreground opacity-75">(Vuoto)</span>
                     )}
                   </button>
                 </div>
