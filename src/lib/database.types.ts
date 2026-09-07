@@ -159,6 +159,42 @@ export type Database = {
         }
         Relationships: []
       }
+      faqs: {
+        Row: {
+          id: string
+          question_it: string
+          answer_it: string
+          question_en: string | null
+          answer_en: string | null
+          sort_order: number
+          visible: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          question_it: string
+          answer_it: string
+          question_en?: string | null
+          answer_en?: string | null
+          sort_order?: number
+          visible?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          question_it?: string
+          answer_it?: string
+          question_en?: string | null
+          answer_en?: string | null
+          sort_order?: number
+          visible?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -178,3 +214,4 @@ export type Database = {
 export type Skill = Database['public']['Tables']['skills']['Row']
 export type JourneyItem = Database['public']['Tables']['journey_items']['Row']
 export type Project = Database['public']['Tables']['projects']['Row']
+export type FAQItem = Database['public']['Tables']['faqs']['Row']

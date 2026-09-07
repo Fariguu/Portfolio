@@ -4,6 +4,7 @@ import {
   Layers,
   GraduationCap,
   FolderGit2,
+  HelpCircle,
   Plus,
   ArrowUpRight,
   Eye,
@@ -22,15 +23,19 @@ export default async function AdminDashboardPage() {
     { data: skills, count: skillsCount },
     { data: journey, count: journeyCount },
     { data: projects, count: projectsCount },
+    { data: faqs, count: faqsCount },
   ] = await Promise.all([
     supabase.from('skills').select('*', { count: 'exact' }),
     supabase.from('journey_items').select('*', { count: 'exact' }),
     supabase.from('projects').select('*', { count: 'exact' }),
+    supabase.from('faqs').select('*', { count: 'exact' }),
   ])
 
   const totalSkills = skillsCount || skills?.length || 0
   const totalJourney = journeyCount || journey?.length || 0
   const totalProjects = projectsCount || projects?.length || 0
+  const totalFaqs = faqsCount || faqs?.length || 0
+  const visibleFaqs = faqs?.filter((f) => f.visible).length || 0
 
   const visibleProjects = projects?.filter((p) => p.visible).length || 0
   const featuredProjects = projects?.filter((p) => p.featured).length || 0
@@ -57,7 +62,7 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Overview Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Competenze Card */}
         <Card className="hover:border-primary/50 transition-colors">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -129,10 +134,33 @@ export default async function AdminDashboardPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* FAQ Card */}
+        <Card className="hover:border-primary/50 transition-colors">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-semibold text-muted-foreground">
+              FAQ
+            </CardTitle>
+            <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+              <HelpCircle className="h-4 w-4" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-foreground">{totalFaqs}</div>
+            <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+              <CheckCircle2 className="h-3 w-3 text-emerald-500" /> {visibleFaqs} visibili sul sito
+            </p>
+            <div className="mt-4 pt-4 border-t border-border flex justify-between items-center">
+              <Button size="sm" variant="ghost" className="text-xs h-8 px-2" asChild>
+                <Link href="/admin/faq">Gestisci FAQ →</Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Quick Action Sections */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
         <div className="p-6 rounded-2xl border border-border/60 bg-card space-y-3">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-foreground flex items-center gap-2">
@@ -140,12 +168,12 @@ export default async function AdminDashboardPage() {
             </h3>
             <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
           </div>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            Aggiungi nuove competenze tecniche o metodologie con l&apos;icona dedicata.
+          <p className="text-xs text-muted-foreground">
+            Aggiungi una nuova tecnologia o competenza metodologica.
           </p>
           <Button asChild size="sm" className="w-full mt-2">
             <Link href="/admin/skills">
-              <Plus className="h-3.5 w-3.5 mr-1" /> Aggiungi Competenza
+              <Plus className="h-4 w-4 mr-1" /> Aggiungi
             </Link>
           </Button>
         </div>
@@ -153,16 +181,16 @@ export default async function AdminDashboardPage() {
         <div className="p-6 rounded-2xl border border-border/60 bg-card space-y-3">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-foreground flex items-center gap-2">
-              <GraduationCap className="h-4 w-4 text-primary" /> Nuova Tappa Percorso
+              <GraduationCap className="h-4 w-4 text-primary" /> Nuova Tappa
             </h3>
             <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
           </div>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            Inserisci studi universitari, certificazioni o esperienze formative.
+          <p className="text-xs text-muted-foreground">
+            Aggiungi una nuova esperienza, certificazione o traguardo.
           </p>
           <Button asChild size="sm" className="w-full mt-2">
             <Link href="/admin/journey">
-              <Plus className="h-3.5 w-3.5 mr-1" /> Aggiungi Tappa
+              <Plus className="h-4 w-4 mr-1" /> Aggiungi
             </Link>
           </Button>
         </div>
@@ -174,12 +202,29 @@ export default async function AdminDashboardPage() {
             </h3>
             <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
           </div>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            Carica un nuovo progetto con screenshot, tag tecnologici, link GitHub e demo.
+          <p className="text-xs text-muted-foreground">
+            Inserisci un nuovo progetto completo con screenshot e repository.
           </p>
           <Button asChild size="sm" className="w-full mt-2">
             <Link href="/admin/projects">
-              <Plus className="h-3.5 w-3.5 mr-1" /> Aggiungi Progetto
+              <Plus className="h-4 w-4 mr-1" /> Aggiungi
+            </Link>
+          </Button>
+        </div>
+
+        <div className="p-6 rounded-2xl border border-border/60 bg-card space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-foreground flex items-center gap-2">
+              <HelpCircle className="h-4 w-4 text-primary" /> Nuova FAQ
+            </h3>
+            <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Aggiungi o personalizza una domanda frequente per i tuoi clienti.
+          </p>
+          <Button asChild size="sm" className="w-full mt-2">
+            <Link href="/admin/faq">
+              <Plus className="h-4 w-4 mr-1" /> Aggiungi
             </Link>
           </Button>
         </div>
