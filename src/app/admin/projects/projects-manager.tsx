@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, type SyntheticEvent } from 'react'
+import { useState, useEffect, useRef, type SyntheticEvent } from 'react'
 import type { Project } from '@/lib/database.types'
 import {
   createProject,
@@ -27,20 +27,78 @@ import {
   AlertCircle,
   Sparkles,
   Globe,
+  FileText,
+  CheckCircle2,
 } from 'lucide-react'
 import Image from 'next/image'
+import { cn } from '@/lib/utils'
+import { CaseStudyModal } from './case-study-modal'
 
 interface ProjectsManagerProps {
   readonly initialProjects: Project[]
 }
 
+type ToastType = 'success' | 'error'
+
+interface ToastState {
+  type: ToastType
+  message: string
+  exiting: boolean
+}
+
 export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerProps>) {
   const [projects, setProjects] = useState<Project[]>(initialProjects)
   const [editingProject, setEditingProject] = useState<Project | null>(null)
+  const [caseStudyProject, setCaseStudyProject] = useState<Project | null>(null)
   const [isCreating, setIsCreating] = useState(false)
   const [loading, setLoading] = useState(false)
   const [translating, setTranslating] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const [toast, setToast] = useState<ToastState | null>(null)
+
+  const showToast = (message: string, type: ToastType = 'success') => {
+    setToast({ type, message, exiting: false })
+  }
+
+  useEffect(() => {
+    if (!toast) return
+
+    if (!toast.exiting) {
+      const timer = setTimeout(() => {
+        setToast((prev) => (prev ? { ...prev, exiting: true } : null))
+      }, 3400)
+      return () => clearTimeout(timer)
+    }
+
+    const cleanupTimer = setTimeout(() => {
+      setToast(null)
+    }, 350)
+    return () => clearTimeout(cleanupTimer)
+  }, [toast])
+
+  const dismissToast = () => {
+    setToast((prev) => (prev ? { ...prev, exiting: true } : null))
+  }
+
+  const handleCaseStudySaved = (updatedProject: Project) => {
+    setProjects((prev) =>
+      prev.map((p) => (p.id === updatedProject.id ? updatedProject : p))
+    )
+    setCaseStudyProject(null)
+    showToast('Caso di studio salvato con successo!')
+  }
+
+  const handleCaseStudyDeleted = (projectId: string) => {
+    setProjects((prev) =>
+      prev.map((p) =>
+        p.id === projectId
+          ? { ...p, case_study_md: null, case_study_md_en: null }
+          : p
+      )
+    )
+    setCaseStudyProject(null)
+    showToast('Caso di studio rimosso con successo!')
+  }
 
   // Form states (Italiano)
   const [title, setTitle] = useState('')
@@ -687,6 +745,36 @@ export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerPro
                 <p className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">
                   {project.description}
                 </p>
+
+                {/* Case study banner / button */}
+                <div className="pt-2">
+                  {project.case_study_md && project.case_study_md.trim().length > 0 ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCaseStudyProject(project)}
+                      className="w-full justify-between text-xs font-semibold border-emerald-500/40 text-emerald-600 dark:text-emerald-400 bg-emerald-500/5 hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400 group/cs"
+                    >
+                      <span className="flex items-center gap-1.5">
+                        <FileText className="h-3.5 w-3.5 text-emerald-500" />
+                        Caso di Studio: Presente
+                      </span>
+                      <span className="text-[11px] underline underline-offset-2">Modifica ➔</span>
+                    </Button>
+                  ) : (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCaseStudyProject(project)}
+                      className="w-full justify-center text-xs text-muted-foreground border-dashed border-border/80 hover:border-primary hover:text-primary hover:bg-primary/5 gap-1.5"
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                      Aggiungi Caso di Studio
+                    </Button>
+                  )}
+                </div>
               </div>
 
               {/* Actions Toolbar */}
@@ -750,6 +838,59 @@ export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerPro
             <p className="text-muted-foreground text-sm">
               Nessun progetto presente. Clicca su &quot;Nuovo Progetto&quot; per caricarne uno!
             </p>
+          </div>
+        )}
+      </div>
+
+      {/* Case Study Modal */}
+      {caseStudyProject && (
+        <CaseStudyModal
+          project={caseStudyProject}
+          onClose={() => setCaseStudyProject(null)}
+          onSaved={handleCaseStudySaved}
+          onDeleted={handleCaseStudyDeleted}
+        />
+      )}
+
+      {/* Toast fluttuante pastello (verde per successo, rosso per errore) con contenitore isolato */}
+      <div className="fixed inset-x-0 bottom-0 pointer-events-none z-60 flex justify-end p-4 sm:p-6 overflow-hidden">
+        {toast && (
+          <div
+            role="status"
+            aria-live="polite"
+            className={cn(
+              "pointer-events-auto flex items-center gap-3 px-4 py-2.5 rounded-full select-none max-w-md shadow-lg transition-all",
+              toast.exiting ? "animate-toast-out" : "animate-toast-in",
+              toast.type === 'success'
+                ? "bg-emerald-50/95 dark:bg-emerald-950/90 text-emerald-900 dark:text-emerald-100 border border-emerald-200/90 dark:border-emerald-800/80 shadow-emerald-500/10 backdrop-blur-md"
+                : "bg-rose-50/95 dark:bg-rose-950/90 text-rose-900 dark:text-rose-100 border border-rose-200/90 dark:border-rose-800/80 shadow-rose-500/10 backdrop-blur-md"
+            )}
+          >
+            {toast.type === 'success' ? (
+              <div className="flex items-center justify-center h-5 w-5 rounded-full bg-emerald-200/60 dark:bg-emerald-800/60 text-emerald-700 dark:text-emerald-300 shrink-0">
+                <CheckCircle2 className="h-3.5 w-3.5" />
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-5 w-5 rounded-full bg-rose-200/60 dark:bg-rose-800/60 text-rose-700 dark:text-rose-300 shrink-0">
+                <AlertCircle className="h-3.5 w-3.5" />
+              </div>
+            )}
+            <span className="text-xs sm:text-sm font-medium leading-tight">
+              {toast.message}
+            </span>
+            <button
+              type="button"
+              onClick={dismissToast}
+              className={cn(
+                "p-1 rounded-full transition-colors shrink-0 ml-1",
+                toast.type === 'success'
+                  ? "text-emerald-700/60 hover:text-emerald-950 dark:text-emerald-300/60 dark:hover:text-emerald-100 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50"
+                  : "text-rose-700/60 hover:text-rose-950 dark:text-rose-300/60 dark:hover:text-rose-100 hover:bg-rose-200/50 dark:hover:bg-rose-800/50"
+              )}
+              aria-label="Chiudi notifica"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
           </div>
         )}
       </div>

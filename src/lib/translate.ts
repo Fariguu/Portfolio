@@ -243,3 +243,59 @@ export async function translateFAQData(
     answer_en,
   }
 }
+
+/**
+ * Traduce un testo completo in formato Markdown da Italiano a Inglese preservando
+ * rigorosamente la sintassi Markdown (titoli, liste, blocchi di codice, grassetto, ecc.).
+ */
+export async function translateMarkdownCaseStudy(markdown: string): Promise<string> {
+  if (!markdown || !markdown.trim()) return ''
+
+  const apiKey = process.env.GEMINI_API_KEY?.trim()
+  if (apiKey) {
+    try {
+      const prompt = `You are a professional software engineer and bilingual translator (Italian to English).
+Translate the following project case study written in Markdown from Italian to fluent, technical, idiomatic English suitable for a top-tier software engineer portfolio.
+
+CRITICAL INSTRUCTIONS:
+1. Preserve ALL Markdown formatting EXACTLY: headers (#, ##, ###), bold (**text**), lists (- or 1.), blockquotes (>), horizontal rules (---), and code blocks (\`\`\`lang ... \`\`\`).
+2. Do not translate code, variable names, URLs, or file paths inside code blocks or inline backticks.
+3. Maintain technical accuracy (e.g. "computo metrico" -> "cost estimation / bill of quantities", "trulli e masserie" -> "trulli and masserie (historic Apulian stone estates)").
+4. Output ONLY the translated Markdown text directly without any extra wrapping, meta-commentary or JSON.
+
+Markdown input:
+${markdown}`
+
+      const model = 'gemini-2.5-flash'
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.2,
+          },
+        }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text
+        if (rawText && rawText.trim().length > 0) {
+          return rawText
+            .replace(/^```markdown\s*/i, '')
+            .replace(/```\s*$/i, '')
+            .trim()
+        }
+      }
+    } catch {
+      // Fallback
+    }
+  }
+
+  // Fallback se Gemini non è configurato: restituisce il testo originale
+  return markdown
+}
+

@@ -1,10 +1,29 @@
 import type { MetadataRoute } from "next";
 import { getBaseUrl } from "@/lib/url";
 import { getAllCaseStudies } from "@/lib/data/case-studies";
+import { createClient } from "@/lib/supabase/server";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = getBaseUrl();
   const caseStudies = getAllCaseStudies();
+  const slugs = new Set<string>(caseStudies.map((cs) => cs.slug));
+
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("projects")
+      .select("slug")
+      .not("case_study_md", "is", null)
+      .eq("visible", true);
+
+    if (data) {
+      for (const p of data) {
+        if (p.slug) slugs.add(p.slug);
+      }
+    }
+  } catch {
+    // Fallback static
+  }
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -57,9 +76,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  const projectRoutes: MetadataRoute.Sitemap = caseStudies.flatMap((cs) => {
-    const itUrl = `${baseUrl}/progetti/${cs.slug}`;
-    const enUrl = `${baseUrl}/en/progetti/${cs.slug}`;
+  const projectRoutes: MetadataRoute.Sitemap = Array.from(slugs).flatMap((projectSlug) => {
+    const itUrl = `${baseUrl}/progetti/${projectSlug}`;
+    const enUrl = `${baseUrl}/en/progetti/${projectSlug}`;
     const alternates = {
       languages: {
         it: itUrl,

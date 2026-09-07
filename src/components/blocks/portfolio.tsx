@@ -76,8 +76,11 @@ export async function Portfolio({ dict, locale }: Readonly<PortfolioProps>) {
           (f) => f.title.toLowerCase() === p.title.toLowerCase() ||
                  (f.slug && p.title.toLowerCase().includes(f.slug.replace(/-/g, " ")))
         );
-        const slug = resolveProjectSlug(p.title, dictFallback?.slug);
-        const hasCaseStudy = Boolean(slug && hasCaseStudyDescription(slug, locale));
+        const slug = p.slug || resolveProjectSlug(p.title, dictFallback?.slug);
+        const hasDbCaseStudy = Boolean(
+          (locale === "en" ? (p.case_study_md_en || p.case_study_md) : p.case_study_md)?.trim()
+        );
+        const hasCaseStudy = hasDbCaseStudy || Boolean(slug && hasCaseStudyDescription(slug, locale));
 
         if (locale === "en") {
           return {
