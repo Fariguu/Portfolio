@@ -466,16 +466,6 @@ const content = {
           en: "I guide you step-by-step in registering the domain in your name. For hosting and database, I leverage modern cloud infrastructure (such as Vercel and Supabase), which for most initial projects operate within generous free tiers with zero recurring fees.",
         },
       },
-      {
-        question: {
-          it: "Se ho già un sito web esistente, è possibile fare un restyling o migliorarne la velocità?",
-          en: "If I already have an existing website, can we redesign it or improve its speed?",
-        },
-        answer: {
-          it: "Certamente. È possibile ricostruire o modernizzare la piattaforma mantenendo i tuoi contenuti e la reputazione SEO acquisita, passando a uno stack moderno (Next.js e Tailwind) che garantisce tempi di caricamento istantanei e punteggi massimi su Google PageSpeed.",
-          en: "Absolutely. We can revamp and modernize your platform while preserving your existing content and SEO ranking, upgrading to a modern stack (Next.js & Tailwind) that achieves near-instant load times and top scores on Google PageSpeed.",
-        },
-      },
     ],
   },
   footer: {
