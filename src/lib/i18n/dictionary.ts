@@ -422,6 +422,52 @@ const content = {
       en: "Unable to send the message. Please try again.",
     },
   },
+  faq: {
+    badge: {
+      it: "FAQ",
+      en: "FAQ",
+    },
+    title: {
+      it: "Domande Frequenti",
+      en: "Frequently Asked Questions",
+    },
+    description: {
+      it: "Risposte rapide e trasparenti sui processi di lavoro, tempi, costi e gestione dei progetti.",
+      en: "Clear, straightforward answers about my workflow, timelines, hosting, and project delivery.",
+    },
+    items: [
+      {
+        question: {
+          it: "Cosa serve per iniziare a realizzare un progetto o sito web?",
+          en: "What is needed to start building a project or website?",
+        },
+        answer: {
+          it: "Basta un'idea chiara dell'obiettivo che vuoi raggiungere. Se hai già testi, logo o riferimenti grafici bene, altrimenti definiamo insieme la struttura, le funzionalità necessarie e il design prima di scrivere una sola riga di codice.",
+          en: "All you need is a clear idea of your goal. If you already have copy, logos, or design references, that's great! Otherwise, we define the structure, essential features, and interface together before writing a single line of code.",
+        },
+      },
+      {
+        question: {
+          it: "Quanto tempo ci vuole per sviluppare una web app o un sito web?",
+          en: "How long does it take to develop a web app or website?",
+        },
+        answer: {
+          it: "I tempi dipendono dalla complessità: per un sito vetrina o portfolio ad alte prestazioni servono solitamente 1-2 settimane. Per applicazioni web con autenticazione, database e logiche personalizzate (come gestionali o prenotazioni) i tempi medi sono di 3-5 settimane con aggiornamenti costanti.",
+          en: "Timelines depend on project scope: a modern showcase site or high-performance portfolio typically takes 1-2 weeks. Full web applications with authentication, databases, and custom logic (like booking systems or admin dashboards) usually take 3-5 weeks with regular progress updates.",
+        },
+      },
+      {
+        question: {
+          it: "Chi gestisce il dominio, l'hosting e i costi mensili dell'infrastruttura?",
+          en: "Who manages the domain, hosting, and monthly infrastructure costs?",
+        },
+        answer: {
+          it: "Ti guido passo passo nella registrazione del dominio a tuo nome. Per l'hosting e il database impiego infrastrutture cloud moderne (come Vercel e Supabase) che nella maggior parte dei progetti rientrano nei piani gratuiti, garantendo zero costi fissi all'avvio.",
+          en: "I guide you step-by-step in registering the domain in your name. For hosting and database, I leverage modern cloud infrastructure (such as Vercel and Supabase), which for most initial projects operate within generous free tiers with zero recurring fees.",
+        },
+      },
+    ],
+  },
   footer: {
     creatorTagline: {
       it: "Realizzato con Next.js e Tailwind CSS.",
@@ -689,6 +735,15 @@ function buildDictionary(locale: Locale): Dictionary {
       successMessage: t(content.contact.successMessage, locale),
       sendAnother: t(content.contact.sendAnother, locale),
       genericError: t(content.contact.genericError, locale),
+    },
+    faq: {
+      badge: t(content.faq.badge, locale),
+      title: t(content.faq.title, locale),
+      description: t(content.faq.description, locale),
+      items: content.faq.items.map((item) => ({
+        question: t(item.question, locale),
+        answer: t(item.answer, locale),
+      })),
     },
     footer: {
       creatorTagline: t(content.footer.creatorTagline, locale),

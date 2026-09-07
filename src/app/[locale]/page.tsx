@@ -4,6 +4,7 @@ import { Hero } from "@/components/blocks/hero";
 import { Features } from "@/components/blocks/features";
 import { Journey } from "@/components/blocks/journey";
 import { Portfolio } from "@/components/blocks/portfolio";
+import { FAQ } from "@/components/blocks/faq";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 
@@ -75,6 +76,7 @@ export default async function HomePage({ params }: Readonly<PageProps>) {
         <Journey dict={dict} locale={locale} />
         <Portfolio dict={dict} locale={locale} />
         <Contact dict={dict} locale={locale} />
+        <FAQ dict={dict} locale={locale} />
       </main>
       <Footer dict={dict} locale={locale} />
     </div>
