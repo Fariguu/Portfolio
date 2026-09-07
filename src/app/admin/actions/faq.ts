@@ -3,6 +3,28 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { verifyAdminSession } from '@/lib/auth-guard'
 import { revalidatePath } from 'next/cache'
+import { translateFAQData } from '@/lib/translate'
+
+export async function translateFAQFields(formData: FormData) {
+  const authCheck = await verifyAdminSession()
+  if (!authCheck.authorized) {
+    return { error: authCheck.error || 'Non autorizzato' }
+  }
+
+  const question_it = (formData.get('question_it') as string) || ''
+  const answer_it = (formData.get('answer_it') as string) || ''
+
+  if (!question_it && !answer_it) {
+    return { error: 'Inserisci almeno la domanda o la risposta in italiano per avviare la traduzione' }
+  }
+
+  try {
+    const translation = await translateFAQData({ question_it, answer_it })
+    return { success: true, translation }
+  } catch (err: unknown) {
+    return { error: err instanceof Error ? err.message : 'Errore durante la traduzione' }
+  }
+}
 
 export async function createFAQ(formData: FormData) {
   const authCheck = await verifyAdminSession()

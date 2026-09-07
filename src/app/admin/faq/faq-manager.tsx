@@ -7,6 +7,7 @@ import {
   updateFAQ,
   deleteFAQ,
   toggleFAQVisibility,
+  translateFAQFields,
 } from '@/app/admin/actions/faq'
 import { Button } from '@/components/ui/button'
 import {
@@ -19,6 +20,9 @@ import {
   X,
   Loader2,
   AlertCircle,
+  Sparkles,
+  Languages,
+  CheckCircle2,
 } from 'lucide-react'
 
 interface FAQManagerProps {
@@ -30,7 +34,12 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
   const [editingFaq, setEditingFaq] = useState<FAQItem | null>(null)
   const [isCreating, setIsCreating] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [translating, setTranslating] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const [successMsg, setSuccessMsg] = useState<string | null>(null)
+
+  // Active language tab in modal: "it" | "en"
+  const [activeTab, setActiveTab] = useState<'it' | 'en'>('it')
 
   // Form states
   const [questionIt, setQuestionIt] = useState('')
@@ -49,7 +58,9 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
     setSortOrder((faqs.length + 1).toString())
     setVisible(true)
     setIsCreating(true)
+    setActiveTab('it')
     setErrorMsg(null)
+    setSuccessMsg(null)
   }
 
   const openEditModal = (faq: FAQItem) => {
@@ -61,13 +72,48 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
     setSortOrder(faq.sort_order.toString())
     setVisible(faq.visible)
     setIsCreating(true)
+    setActiveTab('it')
     setErrorMsg(null)
+    setSuccessMsg(null)
   }
 
   const handleClose = () => {
     setIsCreating(false)
     setEditingFaq(null)
     setErrorMsg(null)
+    setSuccessMsg(null)
+  }
+
+  // Auto-translate using AI / Gemini service
+  const handleAutoTranslate = async () => {
+    if (!questionIt.trim() && !answerIt.trim()) {
+      setErrorMsg('Scrivi prima la domanda o la risposta in italiano per poterla tradurre.')
+      return
+    }
+
+    setTranslating(true)
+    setErrorMsg(null)
+    setSuccessMsg(null)
+
+    const formData = new FormData()
+    formData.append('question_it', questionIt)
+    formData.append('answer_it', answerIt)
+
+    try {
+      const res = await translateFAQFields(formData)
+      if (res.error) throw new Error(res.error)
+
+      if (res.translation) {
+        if (res.translation.question_en) setQuestionEn(res.translation.question_en)
+        if (res.translation.answer_en) setAnswerEn(res.translation.answer_en)
+        setSuccessMsg('Traduzione in inglese completata con successo!')
+        setActiveTab('en') // Switch automatically to English tab to review
+      }
+    } catch (err: unknown) {
+      setErrorMsg(err instanceof Error ? err.message : 'Errore durante la traduzione automatica')
+    } finally {
+      setTranslating(false)
+    }
   }
 
   const handleSubmit = async (e: SyntheticEvent) => {
@@ -178,36 +224,59 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
           faqs.map((faq) => (
             <div
               key={faq.id}
-              className={`flex flex-col sm:flex-row sm:items-center justify-between p-5 rounded-xl border bg-background transition-all gap-4 ${
-                faq.visible ? 'border-border' : 'border-dashed border-border/50 opacity-60'
+              className={`flex flex-col md:flex-row md:items-start justify-between p-6 rounded-2xl border bg-background transition-all gap-5 ${
+                faq.visible ? 'border-border shadow-xs' : 'border-dashed border-border/50 opacity-60'
               }`}
             >
-              <div className="space-y-1.5 flex-1 pr-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold px-2 py-0.5 rounded bg-muted text-muted-foreground">
+              <div className="space-y-3 flex-1">
+                {/* Header item con ordine e badge visibilità */}
+                <div className="flex items-center gap-2.5">
+                  <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-secondary text-foreground border border-border">
                     #{faq.sort_order}
                   </span>
-                  <h3 className="font-semibold text-foreground text-base">
-                    {faq.question_it}
-                  </h3>
                   {!faq.visible && (
-                    <span className="text-xs text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded">
-                      Nascosta
+                    <span className="text-xs font-semibold text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-500/20">
+                      Nascosta dal sito
+                    </span>
+                  )}
+                  {faq.question_en && (
+                    <span className="text-xs font-medium text-sky-500 bg-sky-500/10 px-2 py-0.5 rounded-md border border-sky-500/20 flex items-center gap-1">
+                      <Languages className="h-3 w-3" /> EN Tradotta
                     </span>
                   )}
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                  {faq.answer_it}
-                </p>
-                {faq.question_en && (
-                  <p className="text-xs text-muted-foreground/70 italic">
-                    EN: {faq.question_en}
+
+                {/* Versione Italiana */}
+                <div className="space-y-1">
+                  <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    <span>🇮🇹 Italiano</span>
+                  </div>
+                  <h3 className="font-semibold text-foreground text-base leading-snug">
+                    {faq.question_it}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed pt-1">
+                    {faq.answer_it}
                   </p>
+                </div>
+
+                {/* Versione Inglese (se presente) */}
+                {faq.question_en && (
+                  <div className="space-y-1 pt-3 border-t border-border/40">
+                    <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-sky-500">
+                      <span>🇬🇧 English</span>
+                    </div>
+                    <h4 className="font-medium text-foreground/90 text-sm leading-snug">
+                      {faq.question_en}
+                    </h4>
+                    <p className="text-xs text-muted-foreground leading-relaxed pt-0.5">
+                      {faq.answer_en}
+                    </p>
+                  </div>
                 )}
               </div>
 
               {/* Azioni */}
-              <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
+              <div className="flex items-center gap-2 self-end md:self-start shrink-0 pt-1">
                 <Button
                   variant="outline"
                   size="sm"
@@ -243,123 +312,232 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
         )}
       </div>
 
-      {/* Modal Creazione / Modifica */}
+      {/* Modal Creazione / Modifica Ristrutturato */}
       {isCreating && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
-          <div className="bg-background border border-border w-full max-w-xl rounded-2xl p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-border pb-3">
-              <h2 className="text-lg font-bold text-foreground">
-                {editingFaq ? 'Modifica FAQ' : 'Crea Nuova FAQ'}
-              </h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xs p-4 sm:p-6 overflow-y-auto">
+          <div className="bg-background border border-border w-full max-w-3xl rounded-2xl shadow-2xl space-y-6 animate-in fade-in zoom-in-95 duration-150 my-8 overflow-hidden">
+            
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-border px-6 py-4 bg-muted/20">
+              <div>
+                <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
+                  <HelpCircle className="h-5 w-5 text-brand-accent" />
+                  {editingFaq ? 'Modifica FAQ' : 'Crea Nuova FAQ'}
+                </h2>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Compila i testi in italiano e genera la traduzione in inglese con un click.
+                </p>
+              </div>
               <button
                 type="button"
                 onClick={handleClose}
-                className="text-muted-foreground hover:text-foreground"
+                className="p-1 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            {errorMsg && (
-              <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg flex items-center gap-2 text-destructive text-sm">
-                <AlertCircle className="h-4 w-4 shrink-0" />
-                <span>{errorMsg}</span>
-              </div>
-            )}
+            {/* Content Body */}
+            <div className="px-6 space-y-5">
+              {/* Notifiche Errore o Successo */}
+              {errorMsg && (
+                <div className="p-3.5 bg-destructive/10 border border-destructive/20 rounded-xl flex items-center gap-2.5 text-destructive text-xs sm:text-sm">
+                  <AlertCircle className="h-4 w-4 shrink-0" />
+                  <span>{errorMsg}</span>
+                </div>
+              )}
+              {successMsg && (
+                <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center gap-2.5 text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm">
+                  <CheckCircle2 className="h-4 w-4 shrink-0" />
+                  <span>{successMsg}</span>
+                </div>
+              )}
 
-            <form onSubmit={handleSubmit} className="space-y-4 text-sm">
-              <div className="space-y-1.5">
-                <label className="font-semibold text-foreground">
-                  Domanda (Italiano) *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={questionIt}
-                  onChange={(e) => setQuestionIt(e.target.value)}
-                  placeholder="es. Cosa serve per iniziare un progetto?"
-                  className="w-full rounded-lg border border-border bg-muted/40 px-3.5 py-2 text-foreground focus:outline-hidden focus:ring-2 focus:ring-primary"
-                />
-              </div>
+              {/* Toolbar Lingue & Azione Traduci */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 bg-secondary/50 rounded-xl border border-border/60">
+                {/* Tab Selector */}
+                <div className="flex items-center gap-1.5 p-1 bg-background rounded-lg border border-border/80">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('it')}
+                    className={`flex items-center gap-2 px-3.5 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                      activeTab === 'it'
+                        ? 'bg-primary text-primary-foreground shadow-xs'
+                        : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    <span>🇮🇹 Italiano</span>
+                    <span className="text-[10px] opacity-75">(Obbligatorio)</span>
+                  </button>
 
-              <div className="space-y-1.5">
-                <label className="font-semibold text-foreground">
-                  Risposta (Italiano) *
-                </label>
-                <textarea
-                  required
-                  rows={4}
-                  value={answerIt}
-                  onChange={(e) => setAnswerIt(e.target.value)}
-                  placeholder="Spiega in modo chiaro e trasparente..."
-                  className="w-full rounded-lg border border-border bg-muted/40 px-3.5 py-2 text-foreground focus:outline-hidden focus:ring-2 focus:ring-primary"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-border/50">
-                <div className="space-y-1.5">
-                  <label className="font-medium text-muted-foreground text-xs">
-                    Question (English - Opzionale)
-                  </label>
-                  <input
-                    type="text"
-                    value={questionEn}
-                    onChange={(e) => setQuestionEn(e.target.value)}
-                    placeholder="e.g. What is needed to start?"
-                    className="w-full rounded-lg border border-border bg-muted/20 px-3 py-1.5 text-xs text-foreground focus:outline-hidden focus:ring-1 focus:ring-primary"
-                  />
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('en')}
+                    className={`flex items-center gap-2 px-3.5 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                      activeTab === 'en'
+                        ? 'bg-primary text-primary-foreground shadow-xs'
+                        : 'text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    <span>🇬🇧 English</span>
+                    {questionEn.trim() && answerEn.trim() ? (
+                      <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    ) : (
+                      <span className="text-[10px] text-muted-foreground">(Opzionale)</span>
+                    )}
+                  </button>
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="font-medium text-muted-foreground text-xs">
-                    Answer (English - Opzionale)
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={answerEn}
-                    onChange={(e) => setAnswerEn(e.target.value)}
-                    placeholder="Clear explanation in English..."
-                    className="w-full rounded-lg border border-border bg-muted/20 px-3 py-1.5 text-xs text-foreground focus:outline-hidden focus:ring-1 focus:ring-primary"
-                  />
-                </div>
+                {/* Pulsante Traduci con AI */}
+                <Button
+                  type="button"
+                  onClick={handleAutoTranslate}
+                  disabled={translating || !questionIt.trim()}
+                  variant="outline"
+                  size="sm"
+                  className="bg-brand-accent/10 border-brand-accent/30 text-brand-accent hover:bg-brand-accent/20 hover:text-brand-accent flex items-center gap-2 text-xs font-semibold h-9 shadow-xs"
+                >
+                  {translating ? (
+                    <>
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      <span>Traduzione in corso...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-3.5 w-3.5" />
+                      <span>Traduci in Inglese con AI</span>
+                    </>
+                  )}
+                </Button>
               </div>
 
-              <div className="flex items-center gap-6 pt-2">
-                <div className="space-y-1 w-32">
-                  <label className="font-semibold text-foreground text-xs">
-                    Ordine (Sort Order)
+              <form id="faq-form" onSubmit={handleSubmit} className="space-y-5">
+                {/* SCHEDA ITALIANO */}
+                {activeTab === 'it' && (
+                  <div className="space-y-4 animate-in fade-in-50 duration-150">
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-foreground flex items-center justify-between">
+                        <span>Domanda in Italiano *</span>
+                        <span className="text-xs font-normal text-muted-foreground">La domanda posta dal cliente</span>
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={questionIt}
+                        onChange={(e) => setQuestionIt(e.target.value)}
+                        placeholder="es. Cosa serve per iniziare a realizzare un progetto?"
+                        className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:ring-2 focus:ring-primary shadow-xs"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-foreground flex items-center justify-between">
+                        <span>Risposta in Italiano *</span>
+                        <span className="text-xs font-normal text-muted-foreground">Spiegazione chiara e trasparente</span>
+                      </label>
+                      <textarea
+                        required
+                        rows={6}
+                        value={answerIt}
+                        onChange={(e) => setAnswerIt(e.target.value)}
+                        placeholder="Descrivi in modo professionale come operi, quali passaggi segui e quali sono i vantaggi..."
+                        className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground leading-relaxed focus:outline-hidden focus:ring-2 focus:ring-primary shadow-xs resize-y"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* SCHEDA INGLESE */}
+                {activeTab === 'en' && (
+                  <div className="space-y-4 animate-in fade-in-50 duration-150">
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-foreground flex items-center justify-between">
+                        <span>Question (English)</span>
+                        <span className="text-xs font-normal text-muted-foreground">Mostrata quando la lingua è /en</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={questionEn}
+                        onChange={(e) => setQuestionEn(e.target.value)}
+                        placeholder="e.g. What is needed to start building a project or website?"
+                        className="w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground focus:outline-hidden focus:ring-2 focus:ring-primary shadow-xs"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-foreground flex items-center justify-between">
+                        <span>Answer (English)</span>
+                        <span className="text-xs font-normal text-muted-foreground">Clear and professional explanation</span>
+                      </label>
+                      <textarea
+                        rows={6}
+                        value={answerEn}
+                        onChange={(e) => setAnswerEn(e.target.value)}
+                        placeholder="Clear, professional explanation in English..."
+                        className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground leading-relaxed focus:outline-hidden focus:ring-2 focus:ring-primary shadow-xs resize-y"
+                      />
+                    </div>
+
+                    {!questionEn.trim() && (
+                      <div className="p-3 bg-secondary/60 rounded-xl text-xs text-muted-foreground flex items-center justify-between">
+                        <span>I campi in inglese sono ancora vuoti.</span>
+                        <button
+                          type="button"
+                          onClick={handleAutoTranslate}
+                          className="text-brand-accent hover:underline font-semibold"
+                        >
+                          Genera ora con AI ➔
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Opzioni di Pubblicazione e Ordinamento */}
+                <div className="flex flex-wrap items-center justify-between gap-4 p-4 rounded-xl bg-secondary/30 border border-border/60">
+                  <div className="flex items-center gap-3">
+                    <label className="text-xs font-bold text-foreground">
+                      Posizione / Ordine:
+                    </label>
+                    <input
+                      type="number"
+                      value={sortOrder}
+                      onChange={(e) => setSortOrder(e.target.value)}
+                      className="w-20 rounded-lg border border-border bg-background px-3 py-1.5 text-xs text-foreground text-center font-bold focus:outline-hidden focus:ring-2 focus:ring-primary"
+                    />
+                  </div>
+
+                  <label className="flex items-center gap-2 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={visible}
+                      onChange={(e) => setVisible(e.target.checked)}
+                      className="h-4 w-4 rounded-sm border-border text-primary focus:ring-primary"
+                    />
+                    <span className="text-xs sm:text-sm font-semibold text-foreground">
+                      Visibile sul sito pubblico
+                    </span>
                   </label>
-                  <input
-                    type="number"
-                    value={sortOrder}
-                    onChange={(e) => setSortOrder(e.target.value)}
-                    className="w-full rounded-lg border border-border bg-muted/40 px-3 py-1.5 text-foreground focus:outline-hidden focus:ring-2 focus:ring-primary"
-                  />
                 </div>
+              </form>
+            </div>
 
-                <label className="flex items-center gap-2 cursor-pointer pt-4">
-                  <input
-                    type="checkbox"
-                    checked={visible}
-                    onChange={(e) => setVisible(e.target.checked)}
-                    className="h-4 w-4 rounded-sm border-border text-primary focus:ring-primary"
-                  />
-                  <span className="font-medium text-foreground text-sm">
-                    Visibile sul sito
-                  </span>
-                </label>
-              </div>
-
-              <div className="flex justify-end gap-3 pt-4 border-t border-border">
+            {/* Modal Footer */}
+            <div className="flex items-center justify-between border-t border-border px-6 py-4 bg-muted/20">
+              <span className="text-xs text-muted-foreground hidden sm:inline">
+                Premi Salva per rendere operative le modifiche sul sito.
+              </span>
+              <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
                 <Button type="button" variant="outline" onClick={handleClose}>
                   Annulla
                 </Button>
-                <Button type="submit" disabled={loading} className="gap-2">
+                <Button form="faq-form" type="submit" disabled={loading} className="gap-2 px-5">
                   {loading && <Loader2 className="h-4 w-4 animate-spin" />}
                   {editingFaq ? 'Salva Modifiche' : 'Crea FAQ'}
                 </Button>
               </div>
-            </form>
+            </div>
+
           </div>
         </div>
       )}

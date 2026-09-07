@@ -152,3 +152,94 @@ export async function translateProjectData(
 
   return fallbackTranslate(input)
 }
+
+export interface FAQTranslationInput {
+  question_it?: string
+  answer_it?: string
+}
+
+export interface FAQTranslationOutput {
+  question_en: string
+  answer_en: string
+}
+
+async function translateFAQWithGemini(
+  input: FAQTranslationInput,
+  apiKey: string
+): Promise<FAQTranslationOutput | null> {
+  try {
+    const prompt = `You are a professional software engineer and bilingual translator (Italian to English).
+Translate the following FAQ question and answer from Italian to fluent, professional, and clear English suitable for a web developer and consultant portfolio.
+Maintain the exact meaning and friendly yet technical tone.
+
+Input JSON:
+${JSON.stringify({
+  question_it: input.question_it || '',
+  answer_it: input.answer_it || '',
+})}
+
+Respond ONLY with a valid raw JSON object with exactly these keys:
+{
+  "question_en": "...",
+  "answer_en": "..."
+}`
+
+    const model = 'gemini-2.5-flash'
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          temperature: 0.2,
+          responseMimeType: 'application/json',
+        },
+      }),
+    })
+
+    if (!response.ok) return null
+
+    const data = await response.json()
+    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text
+    if (!rawText) return null
+
+    const cleanedText = rawText
+      .replace(/^```json\s*/i, '')
+      .replace(/^```\s*/i, '')
+      .replace(/```\s*$/i, '')
+      .trim()
+
+    const parsed = JSON.parse(cleanedText) as FAQTranslationOutput
+    return {
+      question_en: parsed.question_en?.trim() || '',
+      answer_en: parsed.answer_en?.trim() || '',
+    }
+  } catch {
+    return null
+  }
+}
+
+export async function translateFAQData(
+  input: FAQTranslationInput
+): Promise<FAQTranslationOutput> {
+  const apiKey = process.env.GEMINI_API_KEY?.trim()
+
+  if (apiKey) {
+    const geminiResult = await translateFAQWithGemini(input, apiKey)
+    if (geminiResult && (geminiResult.question_en || geminiResult.answer_en)) {
+      return geminiResult
+    }
+  }
+
+  const [question_en, answer_en] = await Promise.all([
+    input.question_it ? translateTextWithMyMemory(input.question_it) : Promise.resolve(''),
+    input.answer_it ? translateTextWithMyMemory(input.answer_it) : Promise.resolve(''),
+  ])
+
+  return {
+    question_en,
+    answer_en,
+  }
+}
