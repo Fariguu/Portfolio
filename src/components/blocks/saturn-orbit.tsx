@@ -185,7 +185,6 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
   const isHoveredRef = useRef(false);
   const rotationRef = useRef(0);
   const scrollProgressRef = useRef(0);
-  const svgEllipseRef = useRef<SVGEllipseElement>(null);
   const [dimensions, setDimensions] = useState({ rx: 430, ry: 135 });
 
   // Calcolo raggio responsive per dare piena clearance a testi e bottoni
@@ -196,13 +195,13 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
 
       if (width < 640) {
         // Schermi piccoli (Mobile): ellisse morbida
-        setDimensions({ rx: Math.min(width * 0.48, 230), ry: 160 });
+        setDimensions({ rx: Math.min(width * 0.48, 220), ry: 150 });
       } else if (width < 1024) {
         // Tablet
-        setDimensions({ rx: Math.min(width * 0.46, 380), ry: 190 });
+        setDimensions({ rx: Math.min(width * 0.46, 370), ry: 175 });
       } else {
-        // Desktop: ellisse ampia che abbraccia l'intero blocco senza intersecare testi
-        setDimensions({ rx: 530, ry: 220 });
+        // Desktop: ellisse armoniosa e ariosa
+        setDimensions({ rx: 520, ry: 205 });
       }
     }
 
@@ -234,7 +233,7 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
   useEffect(() => {
     let animId: number;
     let lastTime = performance.now();
-    const durationSeconds = 38; // Secondi per completare una rivoluzione completa
+    const durationSeconds = 56; // Rivoluzione lenta, distensiva ed elegante
 
     function step(now: number) {
       const delta = (now - lastTime) / 1000;
@@ -254,13 +253,6 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
       const currentRx = dimensions.rx * expansionFactor;
       const currentRy = dimensions.ry * expansionFactor;
       const scrollFadeOpacity = Math.max(0, 1 - scrollProg * 1.3);
-
-      // Aggiorna in tempo reale la traccia SVG di Saturno
-      if (svgEllipseRef.current) {
-        svgEllipseRef.current.setAttribute("rx", currentRx.toFixed(1));
-        svgEllipseRef.current.setAttribute("ry", currentRy.toFixed(1));
-        svgEllipseRef.current.style.opacity = (scrollFadeOpacity * 0.15).toFixed(3);
-      }
 
       itemsRef.current.forEach((el, index) => {
         if (!el) return;
@@ -313,25 +305,6 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
       ref={containerRef}
       className="relative w-full min-h-[640px] md:min-h-[700px] flex items-center justify-center select-none overflow-visible"
     >
-      {/* Tracciato ellittico sottile di Saturno espandibile allo scroll */}
-      <svg
-        className="absolute inset-0 w-full h-full pointer-events-none -z-5"
-        aria-hidden="true"
-      >
-        <ellipse
-          ref={svgEllipseRef}
-          cx="50%"
-          cy="50%"
-          rx={dimensions.rx}
-          ry={dimensions.ry}
-          fill="none"
-          stroke="currentColor"
-          className="text-brand-accent transition-opacity duration-75"
-          strokeWidth="1.2"
-          strokeDasharray="4 6"
-        />
-      </svg>
-
       {/* Il Pianeta / Contenuto Centrale (Gabriele Farigu): z-50 prioritario assoluto per non essere MAI coperto */}
       <div className="relative z-50 flex flex-col items-center justify-center max-w-2xl text-center pointer-events-auto">
         {children}
