@@ -107,7 +107,8 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
       if (res.translation) {
         if (res.translation.question_en) setQuestionEn(res.translation.question_en)
         if (res.translation.answer_en) setAnswerEn(res.translation.answer_en)
-        setSuccessMsg('Traduzione in inglese completata con successo!')
+        setSuccessMsg('Traduzione completata con successo!')
+        setTimeout(() => setSuccessMsg(null), 3500)
         setActiveTab('en') // Switch automatically to English tab to review
       }
     } catch (err: unknown) {
@@ -322,17 +323,11 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
 
             {/* Content Body */}
             <div className="px-6 space-y-5">
-              {/* Notifiche Errore o Successo */}
+              {/* Notifiche Errore */}
               {errorMsg && (
                 <div className="p-3.5 bg-destructive/10 border border-destructive/20 rounded-xl flex items-center gap-2.5 text-destructive text-xs sm:text-sm">
                   <AlertCircle className="h-4 w-4 shrink-0" />
                   <span>{errorMsg}</span>
-                </div>
-              )}
-              {successMsg && (
-                <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center gap-2.5 text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm">
-                  <CheckCircle2 className="h-4 w-4 shrink-0" />
-                  <span>{successMsg}</span>
                 </div>
               )}
 
@@ -518,6 +513,28 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
             </div>
 
           </div>
+        </div>
+      )}
+
+      {/* Toast fluttuante in basso a destra per conferma traduzione */}
+      {successMsg && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed bottom-6 right-6 z-60 flex items-center gap-3 px-4 py-3 bg-background border border-emerald-500/40 text-foreground rounded-xl shadow-2xl text-xs sm:text-sm animate-in fade-in slide-in-from-bottom-4 duration-200"
+        >
+          <div className="flex items-center justify-center h-6 w-6 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shrink-0">
+            <CheckCircle2 className="h-4 w-4" />
+          </div>
+          <span className="font-medium text-emerald-700 dark:text-emerald-300">{successMsg}</span>
+          <button
+            type="button"
+            onClick={() => setSuccessMsg(null)}
+            className="ml-2 text-muted-foreground hover:text-foreground transition-colors p-1 rounded-md hover:bg-secondary"
+            aria-label="Chiudi notifica"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
         </div>
       )}
     </div>
