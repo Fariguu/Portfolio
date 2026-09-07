@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, type SyntheticEvent } from 'react'
+import { useState, useEffect, type SyntheticEvent } from 'react'
 import type { FAQItem } from '@/lib/database.types'
 import {
   createFAQ,
@@ -37,7 +37,7 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
   const [loading, setLoading] = useState(false)
   const [translating, setTranslating] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
-  const [successMsg, setSuccessMsg] = useState<string | null>(null)
+  const [toast, setToast] = useState<{ message: string; exiting: boolean } | null>(null)
 
   // Active language tab in modal: "it" | "en"
   const [activeTab, setActiveTab] = useState<'it' | 'en'>('it')
@@ -50,6 +50,27 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
   const [sortOrder, setSortOrder] = useState('1')
   const [visible, setVisible] = useState(true)
 
+  // Gestione timer e uscita fluida del toast
+  useEffect(() => {
+    if (!toast) return
+
+    if (!toast.exiting) {
+      const timer = setTimeout(() => {
+        setToast((prev) => (prev ? { ...prev, exiting: true } : null))
+      }, 3400)
+      return () => clearTimeout(timer)
+    }
+
+    const cleanupTimer = setTimeout(() => {
+      setToast(null)
+    }, 350)
+    return () => clearTimeout(cleanupTimer)
+  }, [toast])
+
+  const dismissToast = () => {
+    setToast((prev) => (prev ? { ...prev, exiting: true } : null))
+  }
+
   const openCreateModal = () => {
     setEditingFaq(null)
     setQuestionIt('')
@@ -61,7 +82,6 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
     setIsCreating(true)
     setActiveTab('it')
     setErrorMsg(null)
-    setSuccessMsg(null)
   }
 
   const openEditModal = (faq: FAQItem) => {
@@ -75,14 +95,12 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
     setIsCreating(true)
     setActiveTab('it')
     setErrorMsg(null)
-    setSuccessMsg(null)
   }
 
   const handleClose = () => {
     setIsCreating(false)
     setEditingFaq(null)
     setErrorMsg(null)
-    setSuccessMsg(null)
   }
 
   // Auto-translate using AI / Gemini service
@@ -94,7 +112,6 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
 
     setTranslating(true)
     setErrorMsg(null)
-    setSuccessMsg(null)
 
     const formData = new FormData()
     formData.append('question_it', questionIt)
@@ -107,8 +124,7 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
       if (res.translation) {
         if (res.translation.question_en) setQuestionEn(res.translation.question_en)
         if (res.translation.answer_en) setAnswerEn(res.translation.answer_en)
-        setSuccessMsg('Traduzione completata con successo!')
-        setTimeout(() => setSuccessMsg(null), 3500)
+        setToast({ message: 'Traduzione completata con successo!', exiting: false })
         setActiveTab('en') // Switch automatically to English tab to review
       }
     } catch (err: unknown) {
@@ -516,21 +532,26 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
         </div>
       )}
 
-      {/* Toast fluttuante in basso a destra per conferma traduzione */}
-      {successMsg && (
+      {/* Toast fluttuante ultra-smooth (pill scura elegante, mai barra bianca) */}
+      {toast && (
         <div
           role="status"
           aria-live="polite"
-          className="fixed bottom-6 right-6 z-60 flex items-center gap-3 px-4 py-3 bg-background border border-emerald-500/40 text-foreground rounded-xl shadow-2xl text-xs sm:text-sm animate-in fade-in slide-in-from-bottom-4 duration-200"
+          className={cn(
+            "fixed bottom-6 right-6 z-60 flex items-center gap-3 px-4 py-2.5 rounded-full select-none",
+            "bg-zinc-950/92 text-zinc-100 border border-zinc-800/90 shadow-[0_12px_36px_rgba(0,0,0,0.4)]",
+            "backdrop-blur-xl text-xs sm:text-sm font-medium",
+            toast.exiting ? "animate-toast-out" : "animate-toast-in"
+          )}
         >
-          <div className="flex items-center justify-center h-6 w-6 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shrink-0">
-            <CheckCircle2 className="h-4 w-4" />
+          <div className="flex items-center justify-center h-5 w-5 rounded-full bg-emerald-500/20 text-emerald-400 shrink-0">
+            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
           </div>
-          <span className="font-medium text-emerald-700 dark:text-emerald-300">{successMsg}</span>
+          <span className="text-zinc-200">{toast.message}</span>
           <button
             type="button"
-            onClick={() => setSuccessMsg(null)}
-            className="ml-2 text-muted-foreground hover:text-foreground transition-colors p-1 rounded-md hover:bg-secondary"
+            onClick={dismissToast}
+            className="text-zinc-400 hover:text-zinc-100 transition-colors p-1 rounded-full hover:bg-zinc-800/60 ml-0.5"
             aria-label="Chiudi notifica"
           >
             <X className="h-3.5 w-3.5" />
