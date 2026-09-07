@@ -1,6 +1,7 @@
+import Link from "next/link";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Lock } from "lucide-react";
+import { ExternalLink, Lock, ArrowRight } from "lucide-react";
 import { Github } from "@/components/ui/icons";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
@@ -10,6 +11,7 @@ import type { Locale } from "@/lib/i18n/config";
 
 interface ProjectDisplay {
   id?: string;
+  slug?: string;
   title: string;
   description: string;
   image: string;
@@ -27,9 +29,20 @@ interface PortfolioProps {
   readonly locale: Locale;
 }
 
+function resolveSlug(title: string, fallbackSlug?: string): string | undefined {
+  if (fallbackSlug) return fallbackSlug;
+  const lower = title.toLowerCase();
+  if (lower.includes("impresa")) return "impresa-edile";
+  if (lower.includes("edubook")) return "edubook";
+  if (lower.includes("qr")) return "qr-code-creator";
+  if (lower.includes("spider")) return "spider-tree";
+  return undefined;
+}
+
 export async function Portfolio({ dict, locale }: Readonly<PortfolioProps>) {
   let projects: ProjectDisplay[] = dict.portfolio.fallbackList.map((p, idx) => ({
     id: `fallback-${idx}`,
+    slug: p.slug,
     title: p.title,
     description: p.description,
     image: p.image,
@@ -52,10 +65,13 @@ export async function Portfolio({ dict, locale }: Readonly<PortfolioProps>) {
 
     if (!error && data && data.length > 0) {
       projects = (data as Project[]).map((p, idx) => {
+        const dictFallback = dict.portfolio.fallbackList[idx];
+        const slug = resolveSlug(p.title, dictFallback?.slug);
+
         if (locale === "en") {
-          const dictFallback = dict.portfolio.fallbackList[idx];
           return {
             id: p.id,
+            slug,
             title: p.title_en || dictFallback?.title || p.title,
             description: p.description_en || dictFallback?.description || p.description,
             image: p.image_url,
@@ -71,6 +87,7 @@ export async function Portfolio({ dict, locale }: Readonly<PortfolioProps>) {
 
         return {
           id: p.id,
+          slug,
           title: p.title,
           description: p.description,
           image: p.image_url,
@@ -147,10 +164,25 @@ export async function Portfolio({ dict, locale }: Readonly<PortfolioProps>) {
                   ))}
                 </div>
               </CardHeader>
-              <CardContent className="flex-grow">
+              <CardContent className="flex-grow flex flex-col justify-between space-y-4">
                 <CardDescription className="text-sm md:text-base leading-relaxed">
                   {project.description}
                 </CardDescription>
+                {project.slug && (
+                  <div className="pt-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full justify-between text-xs font-semibold border-brand-accent/40 text-brand-accent hover:bg-brand-accent/10 hover:text-brand-accent group/btn shadow-2xs"
+                      asChild
+                    >
+                      <Link href={locale === "en" ? `/en/progetti/${project.slug}` : `/progetti/${project.slug}`}>
+                        <span>{dict.portfolio.viewCaseStudy}</span>
+                        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-1" />
+                      </Link>
+                    </Button>
+                  </div>
+                )}
               </CardContent>
               <CardFooter className="flex items-center justify-between border-t border-border/50 pt-4 mt-auto">
                 {project.github ? (

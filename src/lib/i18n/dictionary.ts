@@ -264,8 +264,13 @@ const content = {
       it: "Anteprima del progetto",
       en: "Preview of project",
     },
+    viewCaseStudy: {
+      it: "Leggi Case Study ➔",
+      en: "Read Case Study ➔",
+    },
     fallbackList: [
       {
+        slug: "impresa-edile",
         title: {
           it: "Impresa Edile",
           en: "Construction Firm Web Platform",
@@ -297,6 +302,7 @@ const content = {
         featured: true,
       },
       {
+        slug: "edubook",
         title: "EduBook",
         statusBadge: {
           it: "In sviluppo attivo",
@@ -325,6 +331,7 @@ const content = {
         featured: false,
       },
       {
+        slug: "qr-code-creator",
         title: "QR-Code Creator",
         description: {
           it: "Applicazione web client-side per la generazione di codici QR statici ad alta risoluzione (100% privati, non scadono mai). Supporta personalizzazione dei colori, inserimento logo con calcolo intelligente della safe-zone circolare ed esportazione sia in formato PNG HD (fino a 2048px) sia in SVG vettoriale puro.",
@@ -348,6 +355,80 @@ const content = {
         featured: false,
       },
     ],
+  },
+  caseStudy: {
+    backToProjects: {
+      it: "Torna ai Progetti",
+      en: "Back to Projects",
+    },
+    overviewTitle: {
+      it: "La Genesi del Progetto (Perché è nato)",
+      en: "Project Origins (Why it was built)",
+    },
+    challengesTitle: {
+      it: "Sfide Tecniche & Soluzioni Ingegneristiche",
+      en: "Technical Challenges & Engineering Solutions",
+    },
+    architectureTitle: {
+      it: "Architettura & Scelte Tecniche",
+      en: "Architecture & Technical Decisions",
+    },
+    featuresTitle: {
+      it: "Funzionalità Chiave",
+      en: "Key Features",
+    },
+    resultsTitle: {
+      it: "Risultati & Impatto",
+      en: "Results & Impact",
+    },
+    stackTitle: {
+      it: "Stack Tecnologico & Strumenti",
+      en: "Tech Stack & Tooling",
+    },
+    linksTitle: {
+      it: "Risorse & Link",
+      en: "Resources & Links",
+    },
+    roleLabel: {
+      it: "Ruolo",
+      en: "Role",
+    },
+    clientLabel: {
+      it: "Committente / Ambito",
+      en: "Client / Context",
+    },
+    periodLabel: {
+      it: "Anno / Cronologia",
+      en: "Year / Timeline",
+    },
+    prevProject: {
+      it: "Progetto Precedente",
+      en: "Previous Project",
+    },
+    nextProject: {
+      it: "Prossimo Progetto",
+      en: "Next Project",
+    },
+    allProjects: {
+      it: "Tutti i Progetti",
+      en: "All Projects",
+    },
+    ctaBadge: {
+      it: "Inizia un Progetto",
+      en: "Start a Project",
+    },
+    ctaTitle: {
+      it: "Hai un'idea o una sfida tecnica da sviluppare?",
+      en: "Have an idea or a technical challenge to solve?",
+    },
+    ctaDescription: {
+      it: "Progetto e sviluppo applicazioni web moderne, piattaforme scalabili e architetture cloud su misura per le tue esigenze.",
+      en: "I architect and engineer modern web applications, scalable platforms, and bespoke cloud workflows tailored to your requirements.",
+    },
+    ctaButton: {
+      it: "Richiedi un Preventivo o Info",
+      en: "Request a Quote or Consultation",
+    },
   },
   contact: {
     badge: { it: "Contatti", en: "Contact" },
@@ -696,7 +777,9 @@ function buildDictionary(locale: Locale): Dictionary {
       liveDemo: t(content.portfolio.liveDemo, locale),
       exploreAllGithub: t(content.portfolio.exploreAllGithub, locale),
       previewAltPrefix: t(content.portfolio.previewAltPrefix, locale),
+      viewCaseStudy: t(content.portfolio.viewCaseStudy, locale),
       fallbackList: content.portfolio.fallbackList.map((project) => ({
+        slug: project.slug,
         title: t(project.title, locale),
         statusBadge: project.statusBadge ? t(project.statusBadge, locale) : undefined,
         description: t(project.description, locale),
@@ -707,6 +790,26 @@ function buildDictionary(locale: Locale): Dictionary {
         isPrivate: project.isPrivate,
         featured: project.featured,
       })),
+    },
+    caseStudy: {
+      backToProjects: t(content.caseStudy.backToProjects, locale),
+      overviewTitle: t(content.caseStudy.overviewTitle, locale),
+      challengesTitle: t(content.caseStudy.challengesTitle, locale),
+      architectureTitle: t(content.caseStudy.architectureTitle, locale),
+      featuresTitle: t(content.caseStudy.featuresTitle, locale),
+      resultsTitle: t(content.caseStudy.resultsTitle, locale),
+      stackTitle: t(content.caseStudy.stackTitle, locale),
+      linksTitle: t(content.caseStudy.linksTitle, locale),
+      roleLabel: t(content.caseStudy.roleLabel, locale),
+      clientLabel: t(content.caseStudy.clientLabel, locale),
+      periodLabel: t(content.caseStudy.periodLabel, locale),
+      prevProject: t(content.caseStudy.prevProject, locale),
+      nextProject: t(content.caseStudy.nextProject, locale),
+      allProjects: t(content.caseStudy.allProjects, locale),
+      ctaBadge: t(content.caseStudy.ctaBadge, locale),
+      ctaTitle: t(content.caseStudy.ctaTitle, locale),
+      ctaDescription: t(content.caseStudy.ctaDescription, locale),
+      ctaButton: t(content.caseStudy.ctaButton, locale),
     },
     contact: {
       badge: t(content.contact.badge, locale),
