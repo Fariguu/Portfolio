@@ -186,21 +186,21 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
   const rotationRef = useRef(0);
   const [dimensions, setDimensions] = useState({ rx: 430, ry: 135 });
 
-  // Calcolo raggio responsive in base alla larghezza dello stage
+  // Calcolo raggio responsive per dare piena clearance a testi e bottoni
   useEffect(() => {
     function updateDimensions() {
       if (!containerRef.current) return;
       const width = containerRef.current.clientWidth;
 
       if (width < 640) {
-        // Schermi piccoli (Mobile)
-        setDimensions({ rx: Math.min(width * 0.46, 210), ry: 85 });
+        // Schermi piccoli (Mobile): ellisse morbida
+        setDimensions({ rx: Math.min(width * 0.48, 230), ry: 160 });
       } else if (width < 1024) {
         // Tablet
-        setDimensions({ rx: Math.min(width * 0.44, 340), ry: 110 });
+        setDimensions({ rx: Math.min(width * 0.46, 380), ry: 190 });
       } else {
-        // Desktop
-        setDimensions({ rx: 430, ry: 135 });
+        // Desktop: ellisse ampia che abbraccia l'intero blocco senza intersecare testi
+        setDimensions({ rx: 530, ry: 220 });
       }
     }
 
@@ -213,7 +213,7 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
   useEffect(() => {
     let animId: number;
     let lastTime = performance.now();
-    const durationSeconds = 36; // Secondi per completare una rivoluzione completa
+    const durationSeconds = 38; // Secondi per completare una rivoluzione completa
 
     function step(now: number) {
       const delta = (now - lastTime) / 1000;
@@ -241,20 +241,20 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
 
         let scale: number;
         let opacity: number;
-        let zIndex: number;
 
         if (depth >= 0) {
-          // DAVANTI: scala reale piena, opacità 100%, z-index alto per passare sopra il glow
-          scale = 0.96 + depth * 0.12;
+          // DAVANTI (sotto ai bottoni): scala piena, opacità massima
+          scale = 0.95 + depth * 0.12;
           opacity = 0.85 + depth * 0.15;
-          zIndex = 35;
         } else {
-          // DIETRO: si rimpicciolisce progressivamente, opacità sfuma, z-index basso per passare dietro al nome
+          // DIETRO (sopra al titolo): si rimpicciolisce progressivamente e sfuma
           const absDepth = Math.abs(depth);
-          scale = 0.96 - absDepth * 0.22;
+          scale = 0.95 - absDepth * 0.22;
           opacity = 0.85 - absDepth * 0.48;
-          zIndex = 10;
         }
+
+        // z-index max 20 per l'orbita: il contenuto centrale ha z-50, quindi non può MAI essere coperto
+        const zIndex = depth >= 0 ? 25 : 5;
 
         el.style.transform = `translate3d(calc(-50% + ${x.toFixed(1)}px), calc(-50% + ${y.toFixed(1)}px), 0px) scale(${scale.toFixed(2)})`;
         el.style.opacity = opacity.toFixed(2);
@@ -271,7 +271,7 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
   return (
     <div
       ref={containerRef}
-      className="relative w-full min-h-[580px] md:min-h-[620px] flex items-center justify-center select-none overflow-visible"
+      className="relative w-full min-h-[640px] md:min-h-[700px] flex items-center justify-center select-none overflow-visible"
     >
       {/* Tracciato ellittico sottile di Saturno */}
       <svg
@@ -291,13 +291,13 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
         />
       </svg>
 
-      {/* Il Pianeta / Contenuto Centrale (Gabriele Farigu) */}
-      <div className="relative z-25 flex flex-col items-center justify-center max-w-2xl text-center pointer-events-auto">
+      {/* Il Pianeta / Contenuto Centrale (Gabriele Farigu): z-50 prioritario assoluto per non essere MAI coperto */}
+      <div className="relative z-50 flex flex-col items-center justify-center max-w-2xl text-center pointer-events-auto">
         {children}
       </div>
 
-      {/* Layer orbitante: Billboard items (sempre orizzontali) */}
-      <div className="absolute inset-0 pointer-events-none">
+      {/* Layer orbitante: Billboard items con z-index controllato (< 50) */}
+      <div className="absolute inset-0 pointer-events-none z-20">
         {TECH_ITEMS.map((item, index) => (
           <div
             key={item.name}
