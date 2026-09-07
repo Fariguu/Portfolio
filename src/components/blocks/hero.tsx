@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Mail } from "lucide-react";
 import { Github, Linkedin } from "@/components/ui/icons";
+import { SaturnOrbit } from "@/components/blocks/saturn-orbit";
 import type { Dictionary } from "@/lib/i18n/types";
 
 interface HeroProps {
@@ -9,7 +10,7 @@ interface HeroProps {
 
 export function Hero({ dict }: Readonly<HeroProps>) {
   return (
-    <section className="relative w-full overflow-hidden bg-background py-24 lg:py-32 flex items-center min-h-[90vh]">
+    <section className="relative w-full overflow-hidden bg-background py-16 lg:py-24 flex items-center min-h-[90vh]">
       {/* Background gradients */}
       <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80 pointer-events-none">
         <div
@@ -22,7 +23,8 @@ export function Hero({ dict }: Readonly<HeroProps>) {
       </div>
 
       <div className="container px-4 md:px-6 relative z-10 mx-auto">
-        <div className="flex flex-col items-center justify-center text-center space-y-8">
+        <SaturnOrbit>
+          <div className="flex flex-col items-center justify-center text-center space-y-8">
           {/* Badge con larghezza minima protetta per evitare reflow orizzontali */}
           <div className="inline-flex items-center justify-center min-w-[245px] rounded-full border border-primary/20 bg-primary/10 dark:border-emerald-500/30 dark:bg-emerald-500/10 px-3.5 py-1 text-sm font-medium text-primary dark:text-[#88fc9d] transition-colors hover:bg-primary/20 dark:hover:bg-emerald-500/20 backdrop-blur-sm cursor-pointer">
             <span className="flex h-2 w-2 rounded-full bg-emerald-500 dark:bg-[#88fc9d] mr-2 shrink-0 animate-pulse"></span>
@@ -88,6 +90,7 @@ export function Hero({ dict }: Readonly<HeroProps>) {
             </a>
           </div>
         </div>
+        </SaturnOrbit>
       </div>
     </section>
   );

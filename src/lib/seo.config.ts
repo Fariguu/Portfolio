@@ -22,8 +22,13 @@ export const siteConfig = {
     'React',
     'TypeScript',
     'Supabase',
+    'PostgreSQL',
     'Tailwind CSS',
+    'Python',
+    'Java',
+    'C',
     'web development Italia',
+    'Puglia',
     'Bari',
   ],
   socials: {
