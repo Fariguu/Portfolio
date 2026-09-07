@@ -184,6 +184,8 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
   const itemsRef = useRef<Array<HTMLDivElement | null>>([]);
   const isHoveredRef = useRef(false);
   const rotationRef = useRef(0);
+  const scrollProgressRef = useRef(0);
+  const svgEllipseRef = useRef<SVGEllipseElement>(null);
   const [dimensions, setDimensions] = useState({ rx: 430, ry: 135 });
 
   // Calcolo raggio responsive per dare piena clearance a testi e bottoni
@@ -209,6 +211,25 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
+  // Monitoraggio dello scroll per l'effetto cinematico Fly-through / Allargamento
+  useEffect(() => {
+    function handleScroll() {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight || 800;
+
+      // Calcola quanto abbiamo scrollato rispetto all'inizio della Hero
+      const scrollDistance = Math.max(0, -rect.top);
+      // Progressione da 0.0 (in cima) a 1.0 (mentre si scorre verso il basso)
+      const progress = Math.min(1, scrollDistance / (windowHeight * 0.7));
+      scrollProgressRef.current = progress;
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   // Loop di animazione a 60fps con requestAnimationFrame
   useEffect(() => {
     let animId: number;
@@ -226,6 +247,20 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
 
       const currentRot = rotationRef.current;
       const totalItems = TECH_ITEMS.length;
+      const scrollProg = scrollProgressRef.current;
+
+      // Effetto allargamento: moltiplica i raggi fino a 2.8x ed esegue il fade-out
+      const expansionFactor = 1 + scrollProg * 1.8;
+      const currentRx = dimensions.rx * expansionFactor;
+      const currentRy = dimensions.ry * expansionFactor;
+      const scrollFadeOpacity = Math.max(0, 1 - scrollProg * 1.3);
+
+      // Aggiorna in tempo reale la traccia SVG di Saturno
+      if (svgEllipseRef.current) {
+        svgEllipseRef.current.setAttribute("rx", currentRx.toFixed(1));
+        svgEllipseRef.current.setAttribute("ry", currentRy.toFixed(1));
+        svgEllipseRef.current.style.opacity = (scrollFadeOpacity * 0.15).toFixed(3);
+      }
 
       itemsRef.current.forEach((el, index) => {
         if (!el) return;
@@ -233,8 +268,8 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
         const baseAngle = (index / totalItems) * 2 * Math.PI;
         const angle = (baseAngle + currentRot) % (2 * Math.PI);
 
-        const x = Math.cos(angle) * dimensions.rx;
-        const y = Math.sin(angle) * dimensions.ry;
+        const x = Math.cos(angle) * currentRx;
+        const y = Math.sin(angle) * currentRy;
 
         // Profondità: sin(angle) > 0 davanti (sotto nello schermo), sin(angle) < 0 dietro (sopra)
         const depth = Math.sin(angle);
@@ -243,7 +278,7 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
         let opacity: number;
 
         if (depth >= 0) {
-          // DAVANTI (sotto ai bottoni): scala piena, opacità massima
+          // DAVANTI (sotto ai bottoni): scala piena
           scale = 0.95 + depth * 0.12;
           opacity = 0.85 + depth * 0.15;
         } else {
@@ -253,12 +288,17 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
           opacity = 0.85 - absDepth * 0.48;
         }
 
-        // z-index max 20 per l'orbita: il contenuto centrale ha z-50, quindi non può MAI essere coperto
+        // Effetto avvicinamento telecamera durante lo scroll (i badge crescono mentre escono)
+        const zoomScale = scale * (1 + scrollProg * 0.6);
+        const finalOpacity = opacity * scrollFadeOpacity;
+
+        // z-index max 25 per l'orbita: il contenuto centrale ha z-50, quindi non può MAI essere coperto
         const zIndex = depth >= 0 ? 25 : 5;
 
-        el.style.transform = `translate3d(calc(-50% + ${x.toFixed(1)}px), calc(-50% + ${y.toFixed(1)}px), 0px) scale(${scale.toFixed(2)})`;
-        el.style.opacity = opacity.toFixed(2);
+        el.style.transform = `translate3d(calc(-50% + ${x.toFixed(1)}px), calc(-50% + ${y.toFixed(1)}px), 0px) scale(${zoomScale.toFixed(2)})`;
+        el.style.opacity = finalOpacity.toFixed(2);
         el.style.zIndex = `${zIndex}`;
+        el.style.pointerEvents = scrollProg > 0.6 ? "none" : "auto";
       });
 
       animId = requestAnimationFrame(step);
@@ -273,19 +313,20 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
       ref={containerRef}
       className="relative w-full min-h-[640px] md:min-h-[700px] flex items-center justify-center select-none overflow-visible"
     >
-      {/* Tracciato ellittico sottile di Saturno */}
+      {/* Tracciato ellittico sottile di Saturno espandibile allo scroll */}
       <svg
         className="absolute inset-0 w-full h-full pointer-events-none -z-5"
         aria-hidden="true"
       >
         <ellipse
+          ref={svgEllipseRef}
           cx="50%"
           cy="50%"
           rx={dimensions.rx}
           ry={dimensions.ry}
           fill="none"
           stroke="currentColor"
-          className="text-brand-accent/15"
+          className="text-brand-accent transition-opacity duration-75"
           strokeWidth="1.2"
           strokeDasharray="4 6"
         />
