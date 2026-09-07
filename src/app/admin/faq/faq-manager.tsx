@@ -30,6 +30,14 @@ interface FAQManagerProps {
   readonly initialFaqs: FAQItem[]
 }
 
+type ToastType = 'success' | 'error'
+
+interface ToastState {
+  type: ToastType
+  message: string
+  exiting: boolean
+}
+
 export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
   const [faqs, setFaqs] = useState<FAQItem[]>(initialFaqs)
   const [editingFaq, setEditingFaq] = useState<FAQItem | null>(null)
@@ -37,7 +45,7 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
   const [loading, setLoading] = useState(false)
   const [translating, setTranslating] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
-  const [toast, setToast] = useState<{ message: string; exiting: boolean } | null>(null)
+  const [toast, setToast] = useState<ToastState | null>(null)
 
   // Active language tab in modal: "it" | "en"
   const [activeTab, setActiveTab] = useState<'it' | 'en'>('it')
@@ -49,6 +57,10 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
   const [answerEn, setAnswerEn] = useState('')
   const [sortOrder, setSortOrder] = useState('1')
   const [visible, setVisible] = useState(true)
+
+  const showToast = (message: string, type: ToastType = 'success') => {
+    setToast({ type, message, exiting: false })
+  }
 
   // Gestione timer e uscita fluida del toast
   useEffect(() => {
@@ -106,7 +118,7 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
   // Auto-translate using AI / Gemini service
   const handleAutoTranslate = async () => {
     if (!questionIt.trim() && !answerIt.trim()) {
-      setErrorMsg('Scrivi prima la domanda o la risposta in italiano per poterla tradurre.')
+      showToast('Scrivi prima la domanda o la risposta in italiano per poterla tradurre.', 'error')
       return
     }
 
@@ -124,11 +136,13 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
       if (res.translation) {
         if (res.translation.question_en) setQuestionEn(res.translation.question_en)
         if (res.translation.answer_en) setAnswerEn(res.translation.answer_en)
-        setToast({ message: 'Traduzione completata con successo!', exiting: false })
+        showToast('Traduzione completata con successo!', 'success')
         setActiveTab('en') // Switch automatically to English tab to review
       }
     } catch (err: unknown) {
-      setErrorMsg(err instanceof Error ? err.message : 'Errore durante la traduzione automatica')
+      const msg = err instanceof Error ? err.message : 'Errore durante la traduzione automatica'
+      setErrorMsg(msg)
+      showToast(msg, 'error')
     } finally {
       setTranslating(false)
     }
@@ -166,6 +180,7 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
               : f
           ).sort((a, b) => a.sort_order - b.sort_order)
         )
+        showToast('FAQ aggiornata con successo!', 'success')
       } else {
         const res = await createFAQ(formData)
         if (res.error) throw new Error(res.error)
@@ -173,7 +188,9 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
       }
       handleClose()
     } catch (err: unknown) {
-      setErrorMsg(err instanceof Error ? err.message : 'Si è verificato un errore')
+      const msg = err instanceof Error ? err.message : 'Si è verificato un errore'
+      setErrorMsg(msg)
+      showToast(msg, 'error')
     } finally {
       setLoading(false)
     }
@@ -185,8 +202,10 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
       const res = await deleteFAQ(id)
       if (res.error) throw new Error(res.error)
       setFaqs((prev) => prev.filter((f) => f.id !== id))
+      showToast('FAQ eliminata con successo.', 'success')
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Errore durante la cancellazione')
+      const msg = err instanceof Error ? err.message : 'Errore durante la cancellazione'
+      showToast(msg, 'error')
     }
   }
 
@@ -200,12 +219,15 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
         setFaqs((prev) =>
           prev.map((f) => (f.id === id ? { ...f, visible: current } : f))
         )
-        alert(res.error)
+        showToast(res.error, 'error')
+      } else {
+        showToast(current ? 'FAQ nascosta dal sito' : 'FAQ resa visibile sul sito', 'success')
       }
     } catch {
       setFaqs((prev) =>
         prev.map((f) => (f.id === id ? { ...f, visible: current } : f))
       )
+      showToast('Errore di comunicazione con il server', 'error')
     }
   }
 
@@ -532,32 +554,48 @@ export function FAQManager({ initialFaqs }: Readonly<FAQManagerProps>) {
         </div>
       )}
 
-      {/* Toast fluttuante ultra-smooth (pill scura elegante, mai barra bianca) */}
-      {toast && (
-        <div
-          role="status"
-          aria-live="polite"
-          className={cn(
-            "fixed bottom-6 right-6 z-60 flex items-center gap-3 px-4 py-2.5 rounded-full select-none",
-            "bg-zinc-950/92 text-zinc-100 border border-zinc-800/90 shadow-[0_12px_36px_rgba(0,0,0,0.4)]",
-            "backdrop-blur-xl text-xs sm:text-sm font-medium",
-            toast.exiting ? "animate-toast-out" : "animate-toast-in"
-          )}
-        >
-          <div className="flex items-center justify-center h-5 w-5 rounded-full bg-emerald-500/20 text-emerald-400 shrink-0">
-            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
-          </div>
-          <span className="text-zinc-200">{toast.message}</span>
-          <button
-            type="button"
-            onClick={dismissToast}
-            className="text-zinc-400 hover:text-zinc-100 transition-colors p-1 rounded-full hover:bg-zinc-800/60 ml-0.5"
-            aria-label="Chiudi notifica"
+      {/* Toast fluttuante pastello (verde per successo, rosso per errore) con contenitore isolato anti-scrollbar */}
+      <div className="fixed inset-x-0 bottom-0 pointer-events-none z-60 flex justify-end p-4 sm:p-6 overflow-hidden">
+        {toast && (
+          <div
+            role="status"
+            aria-live="polite"
+            className={cn(
+              "pointer-events-auto flex items-center gap-3 px-4 py-2.5 rounded-full select-none max-w-md shadow-lg transition-all",
+              toast.exiting ? "animate-toast-out" : "animate-toast-in",
+              toast.type === 'success'
+                ? "bg-emerald-50/95 dark:bg-emerald-950/90 text-emerald-900 dark:text-emerald-100 border border-emerald-200/90 dark:border-emerald-800/80 shadow-emerald-500/10 backdrop-blur-md"
+                : "bg-rose-50/95 dark:bg-rose-950/90 text-rose-900 dark:text-rose-100 border border-rose-200/90 dark:border-rose-800/80 shadow-rose-500/10 backdrop-blur-md"
+            )}
           >
-            <X className="h-3.5 w-3.5" />
-          </button>
-        </div>
-      )}
+            {toast.type === 'success' ? (
+              <div className="flex items-center justify-center h-5 w-5 rounded-full bg-emerald-200/60 dark:bg-emerald-800/60 text-emerald-700 dark:text-emerald-300 shrink-0">
+                <CheckCircle2 className="h-3.5 w-3.5" />
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-5 w-5 rounded-full bg-rose-200/60 dark:bg-rose-800/60 text-rose-700 dark:text-rose-300 shrink-0">
+                <AlertCircle className="h-3.5 w-3.5" />
+              </div>
+            )}
+            <span className="text-xs sm:text-sm font-medium leading-tight">
+              {toast.message}
+            </span>
+            <button
+              type="button"
+              onClick={dismissToast}
+              className={cn(
+                "p-1 rounded-full transition-colors shrink-0 ml-1",
+                toast.type === 'success'
+                  ? "text-emerald-700/60 hover:text-emerald-950 dark:text-emerald-300/60 dark:hover:text-emerald-100 hover:bg-emerald-200/50 dark:hover:bg-emerald-800/50"
+                  : "text-rose-700/60 hover:text-rose-950 dark:text-rose-300/60 dark:hover:text-rose-100 hover:bg-rose-200/50 dark:hover:bg-rose-800/50"
+              )}
+              aria-label="Chiudi notifica"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
