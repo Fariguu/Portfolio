@@ -184,20 +184,24 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
   const itemsRef = useRef<Array<HTMLDivElement | null>>([]);
   const rotationRef = useRef(0);
   const scrollProgressRef = useRef(0);
-  const [dimensions, setDimensions] = useState({ rx: 430, ry: 135 });
+  const [dimensions, setDimensions] = useState({ rx: 520, ry: 205 });
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [isInView, setIsInView] = useState(true);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
-  // Calcolo raggio responsive per dare piena clearance a testi e bottoni
+  // Rilevamento viewport desktop e calcolo raggio responsive
   useEffect(() => {
     function updateDimensions() {
       if (!containerRef.current) return;
-      const width = containerRef.current.clientWidth;
+      const width = window.innerWidth;
+      const desktop = width >= 768;
+      setIsDesktop(desktop);
 
-      if (width < 640) {
-        // Schermi piccoli (Mobile): ellisse morbida
-        setDimensions({ rx: Math.min(width * 0.48, 220), ry: 150 });
-      } else if (width < 1024) {
-        // Tablet
-        setDimensions({ rx: Math.min(width * 0.46, 370), ry: 175 });
+      if (!desktop) return;
+
+      if (width < 1024) {
+        // Tablet: ellisse media calibrata
+        setDimensions({ rx: Math.min(width * 0.44, 380), ry: 175 });
       } else {
         // Desktop: ellisse armoniosa e ariosa
         setDimensions({ rx: 520, ry: 205 });
@@ -209,16 +213,45 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
-  // Monitoraggio dello scroll per l'effetto cinematico Fly-through / Allargamento
+  // Rilevamento prefers-reduced-motion per accessibilità WCAG
   useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    function handleChange(e: MediaQueryListEvent) {
+      setPrefersReducedMotion(e.matches);
+    }
+
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
+
+  // IntersectionObserver: azzera il loop rAF quando la hero non è nel viewport
+  useEffect(() => {
+    if (!containerRef.current || typeof IntersectionObserver === "undefined") return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.05 }
+    );
+
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  // Monitoraggio dello scroll per l'effetto cinematico (solo desktop)
+  useEffect(() => {
+    if (!isDesktop) return;
+
     function handleScroll() {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight || 800;
 
-      // Calcola quanto abbiamo scrollato rispetto all'inizio della Hero
       const scrollDistance = Math.max(0, -rect.top);
-      // Progressione da 0.0 (in cima) a 1.0 (mentre si scorre verso il basso)
       const progress = Math.min(1, scrollDistance / (windowHeight * 0.7));
       scrollProgressRef.current = progress;
     }
@@ -226,10 +259,12 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isDesktop]);
 
-  // Loop di animazione a 60fps con requestAnimationFrame
+  // Loop di animazione a 60fps con requestAnimationFrame - solo desktop in view senza reduced-motion
   useEffect(() => {
+    if (!isDesktop || !isInView || prefersReducedMotion) return;
+
     let animId: number;
     let lastTime = performance.now();
     const durationSeconds = 56; // Rivoluzione lenta, distensiva ed elegante
@@ -267,21 +302,16 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
         let opacity: number;
 
         if (depth >= 0) {
-          // DAVANTI (sotto ai bottoni): scala piena
           scale = 0.95 + depth * 0.12;
           opacity = 0.85 + depth * 0.15;
         } else {
-          // DIETRO (sopra al titolo): si rimpicciolisce progressivamente e sfuma
           const absDepth = Math.abs(depth);
           scale = 0.95 - absDepth * 0.22;
           opacity = 0.85 - absDepth * 0.48;
         }
 
-        // Effetto avvicinamento telecamera durante lo scroll (i badge crescono mentre escono)
         const zoomScale = scale * (1 + scrollProg * 0.6);
         const finalOpacity = opacity * scrollFadeOpacity;
-
-        // z-index max 25 per l'orbita: il contenuto centrale ha z-50, quindi non può MAI essere coperto
         const zIndex = depth >= 0 ? 25 : 5;
 
         el.style.transform = `translate3d(calc(-50% + ${x.toFixed(1)}px), calc(-50% + ${y.toFixed(1)}px), 0px) scale(${zoomScale.toFixed(2)})`;
@@ -295,20 +325,41 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
 
     animId = requestAnimationFrame(step);
     return () => cancelAnimationFrame(animId);
-  }, [dimensions]);
+  }, [dimensions, isDesktop, isInView, prefersReducedMotion]);
 
   return (
     <div
       ref={containerRef}
-      className="relative w-full min-h-[640px] md:min-h-[700px] flex items-center justify-center select-none overflow-visible"
+      className="relative w-full min-h-0 py-6 md:py-0 md:min-h-[700px] flex items-center justify-center select-none overflow-visible"
     >
       {/* Il Pianeta / Contenuto Centrale (Gabriele Farigu): z-50 prioritario assoluto per non essere MAI coperto */}
       <div className="relative z-50 flex flex-col items-center justify-center max-w-2xl text-center pointer-events-auto">
         {children}
+
+        {/* Tech Stack Chips visibili su schermi mobile (< md) o con reduced motion: puliti, ordinati e super leggibili */}
+        <div className={`mt-8 w-full max-w-xl mx-auto ${prefersReducedMotion ? "block" : "md:hidden"}`}>
+          <div className="flex flex-wrap items-center justify-center gap-2 px-2">
+            {TECH_ITEMS.map((item) => (
+              <div
+                key={item.name}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border/70 bg-card/70 backdrop-blur-xs text-xs font-medium text-foreground/85 shadow-2xs transition-colors hover:border-brand-accent/40 hover:text-brand-accent"
+              >
+                <div className="w-3.5 h-3.5 flex items-center justify-center shrink-0">
+                  {item.svg(uniqueId)}
+                </div>
+                <span className="whitespace-nowrap">{item.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* Layer orbitante: Billboard items con z-index controllato (< 50) */}
-      <div className="absolute inset-0 pointer-events-none z-20">
+      {/* Layer orbitante 3D: visibile esclusivamente su desktop (>= md) e se prefers-reduced-motion è falso */}
+      <div
+        className={`hidden md:block absolute inset-0 pointer-events-none z-20 ${
+          prefersReducedMotion ? "!hidden" : ""
+        }`}
+      >
         {TECH_ITEMS.map((item, index) => (
           <div
             key={item.name}

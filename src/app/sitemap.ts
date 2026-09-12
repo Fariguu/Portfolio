@@ -74,6 +74,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         },
       },
     },
+    {
+      url: `${baseUrl}/preventivo`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.9,
+      alternates: {
+        languages: {
+          it: `${baseUrl}/preventivo`,
+          en: `${baseUrl}/en/preventivo`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/en/preventivo`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.9,
+      alternates: {
+        languages: {
+          it: `${baseUrl}/preventivo`,
+          en: `${baseUrl}/en/preventivo`,
+        },
+      },
+    },
   ];
 
   const projectRoutes: MetadataRoute.Sitemap = Array.from(slugs).flatMap((projectSlug) => {
