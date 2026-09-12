@@ -270,4 +270,12 @@ export interface Dictionary {
       button: string;
     };
   };
+  testimonials: {
+    badge: string;
+    title: string;
+    description: string;
+    verifiedReview: string;
+    viewProject: string;
+    swipeHint: string;
+  };
 }

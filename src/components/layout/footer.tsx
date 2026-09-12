@@ -15,7 +15,7 @@ export function Footer({ dict, locale }: Readonly<FooterProps>) {
   return (
     <footer className="w-full border-t border-border/40 bg-background py-12">
       <div className="container px-4 md:px-6 mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center space-x-2">
             <Code2 className="h-6 w-6 text-brand-accent" />
             <span className="text-xl font-bold tracking-tight">
@@ -51,8 +51,8 @@ export function Footer({ dict, locale }: Readonly<FooterProps>) {
             </Link>
           </div>
 
-          <div className="flex flex-col md:items-end space-y-1">
-            <p className="text-sm text-muted-foreground">
+          <div className="flex flex-col items-center md:items-end space-y-1 text-center md:text-right">
+            <p className="text-[11px] sm:text-xs md:text-sm text-muted-foreground whitespace-nowrap">
               © {new Date().getFullYear()} Gabriele Farigu. {dict.footer.creatorTagline}
             </p>
             <Link
