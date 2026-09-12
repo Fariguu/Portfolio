@@ -96,7 +96,7 @@ export function JourneyManager({ initialItems }: Readonly<JourneyManagerProps>) 
     setTitle(item.title)
     setInstitution(item.institution)
     setDescription(item.description)
-    setType((item.type as any) || 'education')
+    setType((item.type as 'education' | 'certification' | 'milestone') || 'education')
     setStartDate(item.start_date ? item.start_date.substring(0, 10) : '')
     setEndDate(item.end_date ? item.end_date.substring(0, 10) : '')
     setIsCurrent(!item.end_date)
@@ -164,8 +164,8 @@ export function JourneyManager({ initialItems }: Readonly<JourneyManagerProps>) 
         window.location.reload()
       }
       handleClose()
-    } catch (err: any) {
-      setErrorMsg(err.message || 'Si è verificato un errore')
+    } catch (err: unknown) {
+      setErrorMsg(err instanceof Error ? err.message : 'Si è verificato un errore')
     } finally {
       setLoading(false)
     }
@@ -180,8 +180,8 @@ export function JourneyManager({ initialItems }: Readonly<JourneyManagerProps>) 
       const res = await deleteJourneyItem(id)
       if (res.error) throw new Error(res.error)
       setItems((prev) => prev.filter((it) => it.id !== id))
-    } catch (err: any) {
-      alert(err.message || 'Errore durante l\'eliminazione')
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Errore durante l\'eliminazione')
     }
   }
 
@@ -192,8 +192,8 @@ export function JourneyManager({ initialItems }: Readonly<JourneyManagerProps>) 
       )
       const res = await toggleJourneyVisibility(id, currentVisible)
       if (res.error) throw new Error(res.error)
-    } catch (err: any) {
-      alert(err.message || 'Errore nel cambio di visibilità')
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Errore nel cambio di visibilità')
       setItems((prev) =>
         prev.map((it) => (it.id === id ? { ...it, visible: currentVisible } : it))
       )
@@ -277,7 +277,7 @@ export function JourneyManager({ initialItems }: Readonly<JourneyManagerProps>) 
                 <select
                   id="journey_type"
                   value={type}
-                  onChange={(e) => setType(e.target.value as any)}
+                  onChange={(e) => setType(e.target.value as 'education' | 'certification' | 'milestone')}
                   className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                   <option value="education">Istruzione / Laurea / Diploma</option>

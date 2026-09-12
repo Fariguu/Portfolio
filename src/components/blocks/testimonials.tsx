@@ -4,6 +4,7 @@ import type { Locale } from "@/lib/i18n/config";
 import type { Testimonial } from "@/lib/database.types";
 import { Star, Quote, CheckCircle2, ArrowRight, ExternalLink } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { getBaseUrl } from "@/lib/url";
 
 interface TestimonialsProps {
@@ -168,11 +169,13 @@ export async function Testimonials({ dict, locale = "it" }: Readonly<Testimonial
                     <div className="flex items-center justify-between gap-3">
                       <div className="flex items-center gap-3 min-w-0">
                         {item.avatar_url ? (
-                          <img
+                          <Image
                             src={item.avatar_url}
                             alt={item.author_name}
+                            width={40}
+                            height={40}
                             className="h-10 w-10 rounded-full object-cover border border-border shrink-0"
-                            loading="lazy"
+                            unoptimized
                           />
                         ) : (
                           <div className="h-10 w-10 rounded-full bg-primary/10 text-primary font-bold text-sm flex items-center justify-center shrink-0 border border-primary/20">

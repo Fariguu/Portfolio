@@ -1,4 +1,4 @@
-﻿interface TurnstileVerifyResponse {
+interface TurnstileVerifyResponse {
   success: boolean;
   "error-codes"?: string[];
   challenge_ts?: string;
@@ -62,7 +62,7 @@ export async function verifyTurnstileToken(
       success: false,
       error: "Verifica anti-bot fallita. Per favore, riprova.",
     };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("[Turnstile] Errore durante la verifica con Cloudflare:", err);
     return {
       success: false,

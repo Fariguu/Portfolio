@@ -204,8 +204,8 @@ export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerPro
         if (res.translation.github_label_en) setGithubLabelEn(res.translation.github_label_en)
         if (res.translation.status_badge_en) setStatusBadgeEn(res.translation.status_badge_en)
       }
-    } catch (err: any) {
-      setErrorMsg(err.message || 'Errore durante la traduzione')
+    } catch (err: unknown) {
+      setErrorMsg(err instanceof Error ? err.message : 'Errore durante la traduzione')
     } finally {
       setTranslating(false)
     }
@@ -272,8 +272,8 @@ export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerPro
         window.location.reload()
       }
       handleClose()
-    } catch (err: any) {
-      const msg = err.message || ''
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : ''
       if (msg.toLowerCase().includes('unexpected response') || msg.toLowerCase().includes('failed to fetch')) {
         setErrorMsg('Errore di comunicazione con il server. La sessione potrebbe essere scaduta o il file selezionato è troppo grande. Riprova ad accedere o seleziona un file più leggero.')
       } else {
@@ -293,8 +293,8 @@ export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerPro
       const res = await deleteProject(id)
       if (res.error) throw new Error(res.error)
       setProjects((prev) => prev.filter((p) => p.id !== id))
-    } catch (err: any) {
-      alert(err.message || 'Errore durante l\'eliminazione')
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Errore durante l\'eliminazione')
     }
   }
 
@@ -305,8 +305,8 @@ export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerPro
       )
       const res = await toggleProjectVisibility(id, currentVisible)
       if (res.error) throw new Error(res.error)
-    } catch (err: any) {
-      alert(err.message || 'Errore nel cambio di visibilità')
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Errore nel cambio di visibilità')
       setProjects((prev) =>
         prev.map((p) => (p.id === id ? { ...p, visible: currentVisible } : p))
       )
@@ -320,8 +320,8 @@ export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerPro
       )
       const res = await toggleProjectFeatured(id, currentFeatured)
       if (res.error) throw new Error(res.error)
-    } catch (err: any) {
-      alert(err.message || 'Errore nel cambio evidenza')
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Errore nel cambio evidenza')
       setProjects((prev) =>
         prev.map((p) => (p.id === id ? { ...p, featured: currentFeatured } : p))
       )

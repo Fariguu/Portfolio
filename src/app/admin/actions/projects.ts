@@ -57,8 +57,8 @@ export async function translateProjectFields(formData: FormData) {
     })
 
     return { success: true, translation }
-  } catch (err: any) {
-    return { error: err.message || 'Errore durante la traduzione' }
+  } catch (err: unknown) {
+    return { error: err instanceof Error ? err.message : 'Errore durante la traduzione' }
   }
 }
 
@@ -151,8 +151,8 @@ export async function createProject(formData: FormData) {
     revalidatePath('/admin/projects')
     revalidatePath('/admin')
     return { success: true }
-  } catch (err: any) {
-    return { error: err.message || 'Errore durante il salvataggio del progetto' }
+  } catch (err: unknown) {
+    return { error: err instanceof Error ? err.message : 'Errore durante il salvataggio del progetto' }
   }
 }
 
@@ -252,8 +252,8 @@ export async function updateProject(id: string, formData: FormData) {
     revalidatePath('/admin/projects')
     revalidatePath('/admin')
     return { success: true }
-  } catch (err: any) {
-    return { error: err.message || 'Errore durante l\'aggiornamento del progetto' }
+  } catch (err: unknown) {
+    return { error: err instanceof Error ? err.message : 'Errore durante l\'aggiornamento del progetto' }
   }
 }
 
@@ -370,8 +370,8 @@ export async function saveProjectCaseStudy({
     revalidatePath(`/en/progetti/${cleanSlug}`)
     revalidatePath('/admin/projects')
     return { success: true, slug: cleanSlug, caseStudyMdEn: cleanMdEn }
-  } catch (err: any) {
-    return { error: err.message || 'Errore durante il salvataggio del caso di studio' }
+  } catch (err: unknown) {
+    return { error: err instanceof Error ? err.message : 'Errore durante il salvataggio del caso di studio' }
   }
 }
 
@@ -400,8 +400,8 @@ export async function deleteProjectCaseStudy(projectId: string) {
     revalidatePath('/[locale]', 'layout')
     revalidatePath('/admin/projects')
     return { success: true }
-  } catch (err: any) {
-    return { error: err.message || 'Errore durante l\'eliminazione del caso di studio' }
+  } catch (err: unknown) {
+    return { error: err instanceof Error ? err.message : 'Errore durante l\'eliminazione del caso di studio' }
   }
 }
 
@@ -414,8 +414,8 @@ export async function translateCaseStudyMarkdownAction(markdown: string) {
 
     const translated = await translateMarkdownCaseStudy(markdown)
     return { success: true, translated }
-  } catch (err: any) {
-    return { error: err.message || 'Errore durante la traduzione del Markdown' }
+  } catch (err: unknown) {
+    return { error: err instanceof Error ? err.message : 'Errore durante la traduzione del Markdown' }
   }
 }
 

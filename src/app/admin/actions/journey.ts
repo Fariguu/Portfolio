@@ -13,7 +13,9 @@ export async function createJourneyItem(formData: FormData) {
   const title = formData.get('title') as string
   const institution = formData.get('institution') as string
   const description = formData.get('description') as string
-  const type = (formData.get('type') as any) || 'education'
+  const rawType = (formData.get('type') as string) || 'education'
+  const type: 'education' | 'certification' | 'milestone' =
+    rawType === 'certification' || rawType === 'milestone' ? rawType : 'education'
   const start_date = formData.get('start_date') as string
   const is_current = formData.get('is_current') === 'true' || formData.get('is_current') === 'on'
   const raw_end_date = formData.get('end_date') as string
@@ -39,7 +41,7 @@ export async function createJourneyItem(formData: FormData) {
     title,
     institution,
     description,
-    type: type as 'education' | 'certification' | 'milestone',
+    type,
     start_date,
     end_date,
     tags,
@@ -47,7 +49,7 @@ export async function createJourneyItem(formData: FormData) {
     link_url,
     sort_order,
     visible,
-  } as any)
+  })
 
   if (error) {
     return { error: error.message }
@@ -68,7 +70,9 @@ export async function updateJourneyItem(id: string, formData: FormData) {
   const title = formData.get('title') as string
   const institution = formData.get('institution') as string
   const description = formData.get('description') as string
-  const type = (formData.get('type') as any) || 'education'
+  const rawType = (formData.get('type') as string) || 'education'
+  const type: 'education' | 'certification' | 'milestone' =
+    rawType === 'certification' || rawType === 'milestone' ? rawType : 'education'
   const start_date = formData.get('start_date') as string
   const is_current = formData.get('is_current') === 'true' || formData.get('is_current') === 'on'
   const raw_end_date = formData.get('end_date') as string
@@ -96,7 +100,7 @@ export async function updateJourneyItem(id: string, formData: FormData) {
       title,
       institution,
       description,
-      type: type as 'education' | 'certification' | 'milestone',
+      type,
       start_date,
       end_date,
       tags,
@@ -105,7 +109,7 @@ export async function updateJourneyItem(id: string, formData: FormData) {
       sort_order,
       visible,
       updated_at: new Date().toISOString(),
-    } as any)
+    })
     .eq('id', id)
 
   if (error) {

@@ -27,8 +27,8 @@ export default function LoginPage() {
         },
       })
       if (error) throw error
-    } catch (err: any) {
-      setErrorMsg(err.message || 'Errore durante l\'accesso con GitHub')
+    } catch (err: unknown) {
+      setErrorMsg(err instanceof Error ? err.message : 'Errore durante l\'accesso con GitHub')
       setGithubLoading(false)
     }
   }
@@ -52,8 +52,8 @@ export default function LoginPage() {
 
       router.push('/admin')
       router.refresh()
-    } catch (err: any) {
-      setErrorMsg(err.message || 'Credenziali non valide')
+    } catch (err: unknown) {
+      setErrorMsg(err instanceof Error ? err.message : 'Credenziali non valide')
       setLoading(false)
     }
   }

@@ -104,8 +104,8 @@ export function SkillsManager({ initialSkills }: Readonly<SkillsManagerProps>) {
         window.location.reload()
       }
       handleClose()
-    } catch (err: any) {
-      setErrorMsg(err.message || 'Si è verificato un errore')
+    } catch (err: unknown) {
+      setErrorMsg(err instanceof Error ? err.message : 'Si è verificato un errore')
     } finally {
       setLoading(false)
     }
@@ -120,8 +120,8 @@ export function SkillsManager({ initialSkills }: Readonly<SkillsManagerProps>) {
       const res = await deleteSkill(id)
       if (res.error) throw new Error(res.error)
       setSkills((prev) => prev.filter((s) => s.id !== id))
-    } catch (err: any) {
-      alert(err.message || 'Errore durante l\'eliminazione')
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Errore durante l\'eliminazione')
     }
   }
 
@@ -132,8 +132,8 @@ export function SkillsManager({ initialSkills }: Readonly<SkillsManagerProps>) {
       )
       const res = await toggleSkillVisibility(id, currentVisible)
       if (res.error) throw new Error(res.error)
-    } catch (err: any) {
-      alert(err.message || 'Errore nel cambio di visibilità')
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Errore nel cambio di visibilità')
       setSkills((prev) =>
         prev.map((s) => (s.id === id ? { ...s, visible: currentVisible } : s))
       )
