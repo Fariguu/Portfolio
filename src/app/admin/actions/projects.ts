@@ -3,7 +3,7 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import { verifyAdminSession } from '@/lib/auth-guard'
 import { revalidatePath } from 'next/cache'
-import { translateProjectData } from '@/lib/translate'
+import { translateProjectData, translateMarkdownCaseStudy } from '@/lib/translate'
 
 async function uploadImageIfPresent(file: File | null, existingUrl?: string): Promise<string> {
   if (!file || file.size === 0) {
@@ -317,3 +317,105 @@ export async function toggleProjectFeatured(id: string, currentFeatured: boolean
   revalidatePath('/admin/projects')
   return { success: true }
 }
+
+export async function saveProjectCaseStudy({
+  projectId,
+  slug,
+  caseStudyMd,
+  caseStudyMdEn,
+}: {
+  projectId: string
+  slug: string
+  caseStudyMd: string
+  caseStudyMdEn?: string
+}) {
+  try {
+    const authCheck = await verifyAdminSession()
+    if (!authCheck.authorized) {
+      return { error: authCheck.error || 'Non autorizzato' }
+    }
+
+    const cleanSlug = slug.trim().toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/(^-|-$)+/g, '')
+    if (!cleanSlug) {
+      return { error: 'Lo slug del progetto è obbligatorio per il caso di studio' }
+    }
+
+    const cleanMd = caseStudyMd.trim()
+    let cleanMdEn = (caseStudyMdEn || '').trim()
+
+    // Se la versione inglese è vuota, traduciamo automaticamente
+    if (!cleanMdEn && cleanMd) {
+      cleanMdEn = await translateMarkdownCaseStudy(cleanMd)
+    }
+
+    const supabase = createAdminClient()
+    const { error } = await supabase
+      .from('projects')
+      .update({
+        slug: cleanSlug,
+        case_study_md: cleanMd || null,
+        case_study_md_en: cleanMdEn || null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', projectId)
+
+    if (error) {
+      return { error: error.message }
+    }
+
+    revalidatePath('/')
+    revalidatePath('/[locale]', 'layout')
+    revalidatePath('/progetti/[slug]', 'page')
+    revalidatePath(`/progetti/${cleanSlug}`)
+    revalidatePath(`/en/progetti/${cleanSlug}`)
+    revalidatePath('/admin/projects')
+    return { success: true, slug: cleanSlug, caseStudyMdEn: cleanMdEn }
+  } catch (err: any) {
+    return { error: err.message || 'Errore durante il salvataggio del caso di studio' }
+  }
+}
+
+export async function deleteProjectCaseStudy(projectId: string) {
+  try {
+    const authCheck = await verifyAdminSession()
+    if (!authCheck.authorized) {
+      return { error: authCheck.error || 'Non autorizzato' }
+    }
+
+    const supabase = createAdminClient()
+    const { error } = await supabase
+      .from('projects')
+      .update({
+        case_study_md: null,
+        case_study_md_en: null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', projectId)
+
+    if (error) {
+      return { error: error.message }
+    }
+
+    revalidatePath('/')
+    revalidatePath('/[locale]', 'layout')
+    revalidatePath('/admin/projects')
+    return { success: true }
+  } catch (err: any) {
+    return { error: err.message || 'Errore durante l\'eliminazione del caso di studio' }
+  }
+}
+
+export async function translateCaseStudyMarkdownAction(markdown: string) {
+  try {
+    const authCheck = await verifyAdminSession()
+    if (!authCheck.authorized) {
+      return { error: authCheck.error || 'Non autorizzato' }
+    }
+
+    const translated = await translateMarkdownCaseStudy(markdown)
+    return { success: true, translated }
+  } catch (err: any) {
+    return { error: err.message || 'Errore durante la traduzione del Markdown' }
+  }
+}
+

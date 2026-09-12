@@ -60,7 +60,9 @@ export interface Dictionary {
     liveDemo: string;
     exploreAllGithub: string;
     previewAltPrefix: string;
+    viewCaseStudy: string;
     fallbackList: Array<{
+      slug: string;
       title: string;
       statusBadge?: string;
       description: string;
@@ -72,6 +74,26 @@ export interface Dictionary {
       featured?: boolean;
       demo?: string;
     }>;
+  };
+  caseStudy: {
+    backToProjects: string;
+    overviewTitle: string;
+    challengesTitle: string;
+    architectureTitle: string;
+    featuresTitle: string;
+    resultsTitle: string;
+    stackTitle: string;
+    linksTitle: string;
+    roleLabel: string;
+    clientLabel: string;
+    periodLabel: string;
+    prevProject: string;
+    nextProject: string;
+    allProjects: string;
+    ctaBadge: string;
+    ctaTitle: string;
+    ctaDescription: string;
+    ctaButton: string;
   };
   contact: {
     badge: string;

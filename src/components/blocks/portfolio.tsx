@@ -1,15 +1,19 @@
+import Link from "next/link";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Lock } from "lucide-react";
+import { ExternalLink, Lock, ArrowRight } from "lucide-react";
 import { Github } from "@/components/ui/icons";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import type { Project } from "@/lib/database.types";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
+import { hasCaseStudyDescription } from "@/lib/data/case-studies";
 
 interface ProjectDisplay {
   id?: string;
+  slug?: string;
+  hasCaseStudy: boolean;
   title: string;
   description: string;
   image: string;
@@ -27,20 +31,35 @@ interface PortfolioProps {
   readonly locale: Locale;
 }
 
+function resolveProjectSlug(title: string, candidateSlug?: string): string | undefined {
+  if (candidateSlug) return candidateSlug;
+  const lower = title.toLowerCase().trim();
+  if (lower.includes("impresa")) return "impresa-edile";
+  if (lower.includes("edubook")) return "edubook";
+  if (lower.includes("qr")) return "qr-code-creator";
+  return undefined;
+}
+
 export async function Portfolio({ dict, locale }: Readonly<PortfolioProps>) {
-  let projects: ProjectDisplay[] = dict.portfolio.fallbackList.map((p, idx) => ({
-    id: `fallback-${idx}`,
-    title: p.title,
-    description: p.description,
-    image: p.image,
-    tags: p.tags,
-    statusBadge: p.statusBadge,
-    demo: p.demo,
-    github: p.github,
-    githubLabel: p.githubLabel || dict.portfolio.codeLabel,
-    isPrivate: p.isPrivate,
-    featured: p.featured,
-  }));
+  let projects: ProjectDisplay[] = dict.portfolio.fallbackList.map((p, idx) => {
+    const slug = resolveProjectSlug(p.title, p.slug);
+    const hasCaseStudy = Boolean(slug && hasCaseStudyDescription(slug, locale));
+    return {
+      id: `fallback-${idx}`,
+      slug,
+      hasCaseStudy,
+      title: p.title,
+      description: p.description,
+      image: p.image,
+      tags: p.tags,
+      statusBadge: p.statusBadge,
+      demo: p.demo,
+      github: p.github,
+      githubLabel: p.githubLabel || dict.portfolio.codeLabel,
+      isPrivate: p.isPrivate,
+      featured: p.featured,
+    };
+  });
 
   try {
     const supabase = await createClient();
@@ -51,11 +70,23 @@ export async function Portfolio({ dict, locale }: Readonly<PortfolioProps>) {
       .order("sort_order", { ascending: true });
 
     if (!error && data && data.length > 0) {
-      projects = (data as Project[]).map((p, idx) => {
+      projects = (data as Project[]).map((p) => {
+        // Find matching fallback item by exact title match or slug
+        const dictFallback = dict.portfolio.fallbackList.find(
+          (f) => f.title.toLowerCase() === p.title.toLowerCase() ||
+                 (f.slug && p.title.toLowerCase().includes(f.slug.replace(/-/g, " ")))
+        );
+        const slug = p.slug || resolveProjectSlug(p.title, dictFallback?.slug);
+        const hasDbCaseStudy = Boolean(
+          (locale === "en" ? (p.case_study_md_en || p.case_study_md) : p.case_study_md)?.trim()
+        );
+        const hasCaseStudy = hasDbCaseStudy || Boolean(slug && hasCaseStudyDescription(slug, locale));
+
         if (locale === "en") {
-          const dictFallback = dict.portfolio.fallbackList[idx];
           return {
             id: p.id,
+            slug,
+            hasCaseStudy,
             title: p.title_en || dictFallback?.title || p.title,
             description: p.description_en || dictFallback?.description || p.description,
             image: p.image_url,
@@ -71,6 +102,8 @@ export async function Portfolio({ dict, locale }: Readonly<PortfolioProps>) {
 
         return {
           id: p.id,
+          slug,
+          hasCaseStudy,
           title: p.title,
           description: p.description,
           image: p.image_url,
@@ -147,10 +180,25 @@ export async function Portfolio({ dict, locale }: Readonly<PortfolioProps>) {
                   ))}
                 </div>
               </CardHeader>
-              <CardContent className="flex-grow">
+              <CardContent className="flex-grow flex flex-col justify-between space-y-4">
                 <CardDescription className="text-sm md:text-base leading-relaxed">
                   {project.description}
                 </CardDescription>
+                {project.hasCaseStudy && project.slug && (
+                  <div className="pt-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full justify-between text-xs font-semibold border-brand-accent/40 text-brand-accent hover:bg-brand-accent/10 hover:text-brand-accent group/btn shadow-2xs"
+                      asChild
+                    >
+                      <Link href={locale === "en" ? `/en/progetti/${project.slug}` : `/progetti/${project.slug}`}>
+                        <span>{dict.portfolio.viewCaseStudy}</span>
+                        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-1" />
+                      </Link>
+                    </Button>
+                  </div>
+                )}
               </CardContent>
               <CardFooter className="flex items-center justify-between border-t border-border/50 pt-4 mt-auto">
                 {project.github ? (

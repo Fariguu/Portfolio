@@ -108,6 +108,9 @@ export type Database = {
           description_en: string | null
           github_label_en: string | null
           status_badge_en: string | null
+          slug: string | null
+          case_study_md: string | null
+          case_study_md_en: string | null
           is_private: boolean
           featured: boolean
           visible: boolean
@@ -129,6 +132,9 @@ export type Database = {
           description_en?: string | null
           github_label_en?: string | null
           status_badge_en?: string | null
+          slug?: string | null
+          case_study_md?: string | null
+          case_study_md_en?: string | null
           is_private?: boolean
           featured?: boolean
           visible?: boolean
@@ -150,6 +156,9 @@ export type Database = {
           description_en?: string | null
           github_label_en?: string | null
           status_badge_en?: string | null
+          slug?: string | null
+          case_study_md?: string | null
+          case_study_md_en?: string | null
           is_private?: boolean
           featured?: boolean
           visible?: boolean
