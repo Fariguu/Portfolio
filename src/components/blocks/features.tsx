@@ -43,14 +43,14 @@ export async function Features({ dict, locale }: Readonly<FeaturesProps>) {
             {dict.skills.description}
           </p>
         </div>
-        <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
-          <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-4">
+        <div className="mx-auto mt-12 sm:mt-16 lg:mt-24 lg:max-w-none">
+          <dl className="flex overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden gap-4 pb-4 pt-1 -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-6 lg:gap-8 md:overflow-visible">
             {features.map((feature) => {
               const Icon = getIconComponent(feature.icon_name);
               return (
                 <div
                   key={feature.name}
-                  className="flex flex-col bg-background p-6 rounded-2xl shadow-xs border border-border/50 hover:border-brand-accent/40 hover:shadow-md transition-all min-h-[190px]"
+                  className="w-[82vw] max-w-[320px] shrink-0 snap-center md:w-auto md:max-w-none md:shrink flex flex-col bg-background p-6 rounded-2xl shadow-xs border border-border/50 hover:border-brand-accent/40 hover:shadow-md transition-all min-h-[190px]"
                   style={{ contain: "layout" }}
                 >
                   <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-foreground">
@@ -59,13 +59,21 @@ export async function Features({ dict, locale }: Readonly<FeaturesProps>) {
                     </div>
                     <span>{feature.name}</span>
                   </dt>
-                  <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-muted-foreground">
+                  <dd className="mt-4 flex flex-auto flex-col text-sm sm:text-base leading-relaxed text-muted-foreground">
                     <p className="flex-auto">{feature.description}</p>
                   </dd>
                 </div>
               );
             })}
           </dl>
+
+          {/* Indicatore scorrimento orizzontale mobile */}
+          <div className="flex md:hidden items-center justify-center gap-2 mt-3 text-xs text-muted-foreground">
+            <span className="text-[11px] font-medium tracking-wide text-muted-foreground flex items-center gap-1">
+              <span>{locale === "en" ? "Swipe to explore skills" : "Scorri per esplorare le competenze"}</span>
+              <span className="text-brand-accent font-bold">➔</span>
+            </span>
+          </div>
         </div>
       </div>
     </section>

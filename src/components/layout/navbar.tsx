@@ -17,7 +17,8 @@ const MobileMenu = dynamic(
     loading: () => (
       <Button
         variant="ghost"
-        className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+        size="icon"
+        className="h-10 w-10 text-foreground hover:bg-muted/80"
         aria-label="Menu"
       >
         <Menu className="h-6 w-6" />

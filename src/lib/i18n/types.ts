@@ -181,4 +181,93 @@ export interface Dictionary {
     selectLanguage: string;
     currentLanguage: string;
   };
+  quote: {
+    meta: {
+      title: string;
+      description: string;
+      keywords: string[];
+    };
+    badge: string;
+    title: string;
+    subtitle: string;
+    stepIndicator: string;
+    nextButton: string;
+    backButton: string;
+    submitButton: string;
+    submitting: string;
+    turnstileError: string;
+    genericError: string;
+    step1: {
+      title: string;
+      subtitle: string;
+      types: {
+        webApp: { title: string; description: string };
+        showcaseSite: { title: string; description: string };
+        bookingSystem: { title: string; description: string };
+        restylingSpeed: { title: string; description: string };
+      };
+    };
+    step2: {
+      title: string;
+      subtitle: string;
+      features: {
+        auth: { title: string; description: string };
+        database: { title: string; description: string };
+        payments: { title: string; description: string };
+        maps: { title: string; description: string };
+        multilang: { title: string; description: string };
+        cms: { title: string; description: string };
+      };
+    };
+    step3: {
+      title: string;
+      subtitle: string;
+      timelineLabel: string;
+      timelineOptions: {
+        urgent: { title: string; description: string };
+        standard: { title: string; description: string };
+        flexible: { title: string; description: string };
+      };
+      materialsLabel: string;
+      materialsOptions: {
+        ready: { title: string; description: string };
+        inProgress: { title: string; description: string };
+        none: { title: string; description: string };
+      };
+      budgetLabel: string;
+      budgetOptions: {
+        tier1: { title: string; description: string };
+        tier2: { title: string; description: string };
+        tier3: { title: string; description: string };
+        tier4: { title: string; description: string };
+        undecided: { title: string; description: string };
+      };
+    };
+    step4: {
+      title: string;
+      subtitle: string;
+      firstNameLabel: string;
+      firstNamePlaceholder: string;
+      lastNameLabel: string;
+      lastNamePlaceholder: string;
+      emailLabel: string;
+      emailPlaceholder: string;
+      phoneLabel: string;
+      phonePlaceholder: string;
+      notesLabel: string;
+      notesPlaceholder: string;
+      privacyNotice: string;
+    };
+    success: {
+      title: string;
+      message: string;
+      recapTitle: string;
+      backHome: string;
+    };
+    ctaBanner: {
+      title: string;
+      description: string;
+      button: string;
+    };
+  };
 }

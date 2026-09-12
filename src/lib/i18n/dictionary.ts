@@ -706,6 +706,365 @@ const content = {
       en: "Current language",
     },
   },
+  quote: {
+    meta: {
+      title: {
+        it: "Configuratore Preventivo Online | Gabriele Farigu",
+        en: "Online Quote Configurator | Gabriele Farigu",
+      },
+      description: {
+        it: "Configura la tua soluzione web ideale in 4 semplici passaggi: web app, siti vetrina, sistemi di prenotazione o restyling. Ricevi una stima trasparente e su misura.",
+        en: "Configure your ideal web solution in 4 easy steps: web apps, showcase sites, booking systems, or redesigns. Get a transparent, tailored quote.",
+      },
+      keywords: {
+        it: [
+          "preventivo sito web",
+          "calcolo costo web app",
+          "sviluppatore software preventivo",
+          "costo sito vetrina Next.js",
+          "sviluppo web app personalizzata",
+        ],
+        en: [
+          "website quote calculator",
+          "web app cost estimate",
+          "hire software developer quote",
+          "custom Next.js website pricing",
+          "web development inquiry",
+        ],
+      },
+    },
+    badge: {
+      it: "Preventivo Rapido",
+      en: "Quick Estimate",
+    },
+    title: {
+      it: "Configura il Tuo Progetto",
+      en: "Configure Your Project",
+    },
+    subtitle: {
+      it: "Rispondi a poche domande guidate per definire la tua idea. Riceverai un'analisi di fattibilità e un preventivo trasparente entro 24 ore.",
+      en: "Answer a few guided questions to shape your idea. You will receive a feasibility analysis and a transparent quote within 24 hours.",
+    },
+    stepIndicator: {
+      it: "Step {current} di {total}",
+      en: "Step {current} of {total}",
+    },
+    nextButton: {
+      it: "Continua ➔",
+      en: "Continue ➔",
+    },
+    backButton: {
+      it: "Indietro",
+      en: "Back",
+    },
+    submitButton: {
+      it: "Invia Richiesta Preventivo",
+      en: "Submit Quote Request",
+    },
+    submitting: {
+      it: "Invio in corso...",
+      en: "Sending request...",
+    },
+    turnstileError: {
+      it: "Verifica di sicurezza non riuscita. Riprova.",
+      en: "Security verification failed. Please try again.",
+    },
+    genericError: {
+      it: "Si è verificato un errore durante l'invio. Riprova tra poco.",
+      en: "An error occurred while sending. Please try again shortly.",
+    },
+    step1: {
+      title: {
+        it: "Che tipo di soluzione desideri realizzare?",
+        en: "What type of solution do you want to build?",
+      },
+      subtitle: {
+        it: "Seleziona la categoria che meglio descrive il tuo obiettivo principale.",
+        en: "Select the category that best matches your primary goal.",
+      },
+      types: {
+        webApp: {
+          title: {
+            it: "Web App / Piattaforma",
+            en: "Web App / Platform",
+          },
+          description: {
+            it: "Applicazione interattiva con logiche su misura, dashboard, login utenti e gestione dati.",
+            en: "Interactive application with custom logic, dashboards, user accounts, and data management.",
+          },
+        },
+        showcaseSite: {
+          title: {
+            it: "Sito Vetrina ad Alte Prestazioni",
+            en: "High-Performance Showcase Site",
+          },
+          description: {
+            it: "Sito moderno, ultraveloce e ottimizzato per SEO e lead generation aziendale.",
+            en: "Modern, ultra-fast website optimized for SEO, conversions, and brand identity.",
+          },
+        },
+        bookingSystem: {
+          title: {
+            it: "Sistema di Prenotazione / Calendario",
+            en: "Booking & Scheduling System",
+          },
+          description: {
+            it: "Piattaforma per gestione slot, prenotazioni appuntamenti, lezioni o servizi in tempo reale.",
+            en: "Platform for real-time slot management, appointment booking, lessons, or services.",
+          },
+        },
+        restylingSpeed: {
+          title: {
+            it: "Restyling & Ottimizzazione Velocità",
+            en: "Redesign & Speed Optimization",
+          },
+          description: {
+            it: "Modernizzazione grafica di un sito esistente, miglioramento Core Web Vitals e accessibilità.",
+            en: "Visual redesign of an existing site, Core Web Vitals speed boost, and accessibility audit.",
+          },
+        },
+      },
+    },
+    step2: {
+      title: {
+        it: "Quali funzionalità chiave ti servono?",
+        en: "Which key features do you need?",
+      },
+      subtitle: {
+        it: "Puoi selezionare una o più opzioni in base alle tue esigenze.",
+        en: "You can select one or more options based on your requirements.",
+      },
+      features: {
+        auth: {
+          title: {
+            it: "Area Riservata & Utenti",
+            en: "User Accounts & Protected Area",
+          },
+          description: {
+            it: "Registrazione, login sicuro, ruoli e permessi dedicati.",
+            en: "Secure registration, login, role-based permissions.",
+          },
+        },
+        database: {
+          title: {
+            it: "Database Cloud & Storico Dati",
+            en: "Cloud Database & Records",
+          },
+          description: {
+            it: "Salvataggio sicuro di schede, ordini, anagrafiche e report su Supabase.",
+            en: "Reliable storage for records, orders, and customer data on Supabase.",
+          },
+        },
+        payments: {
+          title: {
+            it: "Calcolatore Prezzi / Pagamenti Online",
+            en: "Price Calculator / Online Payments",
+          },
+          description: {
+            it: "Stripe, PayPal, preventivatori automatici o checkout per servizi.",
+            en: "Stripe, PayPal, automated price estimation, or digital checkout.",
+          },
+        },
+        maps: {
+          title: {
+            it: "Mappe Interattive & Geocoding",
+            en: "Interactive Maps & Geocoding",
+          },
+          description: {
+            it: "Mappe dinamiche Leaflet, calcolo distanze e punti di interesse.",
+            en: "Leaflet dynamic maps, radius calculation, and points of interest.",
+          },
+        },
+        multilang: {
+          title: {
+            it: "Supporto Multilingua (i18n)",
+            en: "Multilingual Support (i18n)",
+          },
+          description: {
+            it: "Navigazione e indicizzazione separata in Italiano, Inglese o altre lingue.",
+            en: "Separate routing and SEO indexing in Italian, English, or other languages.",
+          },
+        },
+        cms: {
+          title: {
+            it: "Pannello di Controllo Admin / CMS",
+            en: "Admin Dashboard / Custom CMS",
+          },
+          description: {
+            it: "Interfaccia riservata per creare, modificare o eliminare contenuti in autonomia.",
+            en: "Private interface to independently create, update, or publish content.",
+          },
+        },
+      },
+    },
+    step3: {
+      title: {
+        it: "Tempistiche, Materiali e Budget",
+        en: "Timeline, Content & Budget",
+      },
+      subtitle: {
+        it: "Aiutami a capire il contesto per fornirti una stima precisa e realistica.",
+        en: "Help me understand the scope to give you a precise, realistic estimate.",
+      },
+      timelineLabel: {
+        it: "Quando vorresti lanciare il progetto?",
+        en: "When would you like to launch?",
+      },
+      timelineOptions: {
+        urgent: {
+          title: { it: "Urgente (< 1 mese)", en: "Urgent (< 1 month)" },
+          description: {
+            it: "Ho una scadenza ravvicinata e prioritaria.",
+            en: "I have an imminent, high-priority deadline.",
+          },
+        },
+        standard: {
+          title: { it: "Standard (1 - 2 mesi)", en: "Standard (1 - 2 months)" },
+          description: {
+            it: "Pianificazione ordinaria con rilasci graduali.",
+            en: "Standard schedule with milestone releases.",
+          },
+        },
+        flexible: {
+          title: { it: "Flessibile / Senza fretta", en: "Flexible / No rush" },
+          description: {
+            it: "Priorità alla massima qualità e rifinitura.",
+            en: "Focus on utmost quality and refinement.",
+          },
+        },
+      },
+      materialsLabel: {
+        it: "Hai già testi, logo o grafica pronti?",
+        en: "Do you already have copy, branding, or designs?",
+      },
+      materialsOptions: {
+        ready: {
+          title: { it: "Sì, tutto pronto", en: "Yes, ready to go" },
+          description: {
+            it: "Ho testi, immagini e linee guida definite.",
+            en: "I have copy, imagery, and brand guidelines.",
+          },
+        },
+        inProgress: {
+          title: { it: "In fase di lavorazione", en: "In progress" },
+          description: {
+            it: "Ho una bozza da perfezionare insieme.",
+            en: "I have rough drafts we can refine together.",
+          },
+        },
+        none: {
+          title: { it: "Da definire da zero", en: "Need to create from scratch" },
+          description: {
+            it: "Mi serve supporto anche sulla struttura dei contenuti.",
+            en: "I need guidance on copy and content structure too.",
+          },
+        },
+      },
+      budgetLabel: {
+        it: "Fascia di budget indicativa (opzionale)",
+        en: "Approximate budget range (optional)",
+      },
+      budgetOptions: {
+        tier1: {
+          title: { it: "< €1.500", en: "< €1,500" },
+          description: {
+            it: "Landing page o restyling mirato.",
+            en: "Landing page or targeted redesign.",
+          },
+        },
+        tier2: {
+          title: { it: "€1.500 - €3.000", en: "€1,500 - €3,000" },
+          description: {
+            it: "Sito vetrina avanzato o MVP di servizio.",
+            en: "Advanced showcase site or service MVP.",
+          },
+        },
+        tier3: {
+          title: { it: "€3.000 - €6.000", en: "€3,000 - €6,000" },
+          description: {
+            it: "Web App completa, dashboard o gestionale.",
+            en: "Full web app, dashboard, or internal tool.",
+          },
+        },
+        tier4: {
+          title: { it: "€6.000+", en: "€6,000+" },
+          description: {
+            it: "Architettura complessa multi-modulo su misura.",
+            en: "Complex multi-module custom architecture.",
+          },
+        },
+        undecided: {
+          title: { it: "Da valutare insieme", en: "To be evaluated together" },
+          description: {
+            it: "Preferisco confrontarmi prima sulle specifiche.",
+            en: "Prefer to discuss specifications first.",
+          },
+        },
+      },
+    },
+    step4: {
+      title: {
+        it: "Dove posso ricontattarti?",
+        en: "Where can I get back to you?",
+      },
+      subtitle: {
+        it: "Inserisci i tuoi recapiti per ricevere il riepilogo e la stima dettagliata.",
+        en: "Enter your contact details to receive the recap and detailed estimate.",
+      },
+      firstNameLabel: { it: "Nome", en: "First Name" },
+      firstNamePlaceholder: { it: "Mario", en: "John" },
+      lastNameLabel: { it: "Cognome", en: "Last Name" },
+      lastNamePlaceholder: { it: "Rossi", en: "Doe" },
+      emailLabel: { it: "Email aziendale o personale", en: "Email address" },
+      emailPlaceholder: { it: "mario.rossi@azienda.it", en: "john.doe@company.com" },
+      phoneLabel: { it: "Telefono (opzionale)", en: "Phone (optional)" },
+      phonePlaceholder: { it: "+39 333 1234567", en: "+1 (555) 0123" },
+      notesLabel: {
+        it: "Note aggiuntive o link di riferimento (opzionale)",
+        en: "Additional notes or reference links (optional)",
+      },
+      notesPlaceholder: {
+        it: "Descrivi eventuali dettagli specifici, siti web che ti piacciono o obiettivi particolari...",
+        en: "Describe any specific details, websites you like, or special goals...",
+      },
+      privacyNotice: {
+        it: "I tuoi dati saranno trattati nel rispetto della privacy e utilizzati esclusivamente per ricontattarti in merito a questo preventivo.",
+        en: "Your data will be processed confidentially and used solely to respond regarding this quote request.",
+      },
+    },
+    success: {
+      title: {
+        it: "Richiesta Preventivo Inviata con Successo!",
+        en: "Quote Request Sent Successfully!",
+      },
+      message: {
+        it: "Grazie per aver dedicato del tempo a configurare il tuo progetto. Ho ricevuto tutti i dettagli e ti risponderò con una proposta chiara entro 24 ore.",
+        en: "Thank you for taking the time to configure your project. I have received all the details and will get back to you with a clear proposal within 24 hours.",
+      },
+      recapTitle: {
+        it: "Riepilogo delle tue scelte:",
+        en: "Summary of your selections:",
+      },
+      backHome: {
+        it: "Torna alla Home",
+        en: "Back to Home",
+      },
+    },
+    ctaBanner: {
+      title: {
+        it: "Vuoi una stima guidata per il tuo progetto?",
+        en: "Looking for a guided project estimate?",
+      },
+      description: {
+        it: "Configura la tua soluzione ideale in 4 rapidi passaggi per ricevere una proposta trasparente e personalizzata.",
+        en: "Configure your ideal solution in 4 quick steps to receive a transparent, tailored proposal.",
+      },
+      button: {
+        it: "Calcola Preventivo Online ➔",
+        en: "Calculate Quote Online ➔",
+      },
+    },
+  },
 };
 
 function buildDictionary(locale: Locale): Dictionary {
@@ -896,6 +1255,158 @@ function buildDictionary(locale: Locale): Dictionary {
     languageSwitcher: {
       selectLanguage: t(content.languageSwitcher.selectLanguage, locale),
       currentLanguage: t(content.languageSwitcher.currentLanguage, locale),
+    },
+    quote: {
+      meta: {
+        title: t(content.quote.meta.title, locale),
+        description: t(content.quote.meta.description, locale),
+        keywords: t(content.quote.meta.keywords, locale),
+      },
+      badge: t(content.quote.badge, locale),
+      title: t(content.quote.title, locale),
+      subtitle: t(content.quote.subtitle, locale),
+      stepIndicator: t(content.quote.stepIndicator, locale),
+      nextButton: t(content.quote.nextButton, locale),
+      backButton: t(content.quote.backButton, locale),
+      submitButton: t(content.quote.submitButton, locale),
+      submitting: t(content.quote.submitting, locale),
+      turnstileError: t(content.quote.turnstileError, locale),
+      genericError: t(content.quote.genericError, locale),
+      step1: {
+        title: t(content.quote.step1.title, locale),
+        subtitle: t(content.quote.step1.subtitle, locale),
+        types: {
+          webApp: {
+            title: t(content.quote.step1.types.webApp.title, locale),
+            description: t(content.quote.step1.types.webApp.description, locale),
+          },
+          showcaseSite: {
+            title: t(content.quote.step1.types.showcaseSite.title, locale),
+            description: t(content.quote.step1.types.showcaseSite.description, locale),
+          },
+          bookingSystem: {
+            title: t(content.quote.step1.types.bookingSystem.title, locale),
+            description: t(content.quote.step1.types.bookingSystem.description, locale),
+          },
+          restylingSpeed: {
+            title: t(content.quote.step1.types.restylingSpeed.title, locale),
+            description: t(content.quote.step1.types.restylingSpeed.description, locale),
+          },
+        },
+      },
+      step2: {
+        title: t(content.quote.step2.title, locale),
+        subtitle: t(content.quote.step2.subtitle, locale),
+        features: {
+          auth: {
+            title: t(content.quote.step2.features.auth.title, locale),
+            description: t(content.quote.step2.features.auth.description, locale),
+          },
+          database: {
+            title: t(content.quote.step2.features.database.title, locale),
+            description: t(content.quote.step2.features.database.description, locale),
+          },
+          payments: {
+            title: t(content.quote.step2.features.payments.title, locale),
+            description: t(content.quote.step2.features.payments.description, locale),
+          },
+          maps: {
+            title: t(content.quote.step2.features.maps.title, locale),
+            description: t(content.quote.step2.features.maps.description, locale),
+          },
+          multilang: {
+            title: t(content.quote.step2.features.multilang.title, locale),
+            description: t(content.quote.step2.features.multilang.description, locale),
+          },
+          cms: {
+            title: t(content.quote.step2.features.cms.title, locale),
+            description: t(content.quote.step2.features.cms.description, locale),
+          },
+        },
+      },
+      step3: {
+        title: t(content.quote.step3.title, locale),
+        subtitle: t(content.quote.step3.subtitle, locale),
+        timelineLabel: t(content.quote.step3.timelineLabel, locale),
+        timelineOptions: {
+          urgent: {
+            title: t(content.quote.step3.timelineOptions.urgent.title, locale),
+            description: t(content.quote.step3.timelineOptions.urgent.description, locale),
+          },
+          standard: {
+            title: t(content.quote.step3.timelineOptions.standard.title, locale),
+            description: t(content.quote.step3.timelineOptions.standard.description, locale),
+          },
+          flexible: {
+            title: t(content.quote.step3.timelineOptions.flexible.title, locale),
+            description: t(content.quote.step3.timelineOptions.flexible.description, locale),
+          },
+        },
+        materialsLabel: t(content.quote.step3.materialsLabel, locale),
+        materialsOptions: {
+          ready: {
+            title: t(content.quote.step3.materialsOptions.ready.title, locale),
+            description: t(content.quote.step3.materialsOptions.ready.description, locale),
+          },
+          inProgress: {
+            title: t(content.quote.step3.materialsOptions.inProgress.title, locale),
+            description: t(content.quote.step3.materialsOptions.inProgress.description, locale),
+          },
+          none: {
+            title: t(content.quote.step3.materialsOptions.none.title, locale),
+            description: t(content.quote.step3.materialsOptions.none.description, locale),
+          },
+        },
+        budgetLabel: t(content.quote.step3.budgetLabel, locale),
+        budgetOptions: {
+          tier1: {
+            title: t(content.quote.step3.budgetOptions.tier1.title, locale),
+            description: t(content.quote.step3.budgetOptions.tier1.description, locale),
+          },
+          tier2: {
+            title: t(content.quote.step3.budgetOptions.tier2.title, locale),
+            description: t(content.quote.step3.budgetOptions.tier2.description, locale),
+          },
+          tier3: {
+            title: t(content.quote.step3.budgetOptions.tier3.title, locale),
+            description: t(content.quote.step3.budgetOptions.tier3.description, locale),
+          },
+          tier4: {
+            title: t(content.quote.step3.budgetOptions.tier4.title, locale),
+            description: t(content.quote.step3.budgetOptions.tier4.description, locale),
+          },
+          undecided: {
+            title: t(content.quote.step3.budgetOptions.undecided.title, locale),
+            description: t(content.quote.step3.budgetOptions.undecided.description, locale),
+          },
+        },
+      },
+      step4: {
+        title: t(content.quote.step4.title, locale),
+        subtitle: t(content.quote.step4.subtitle, locale),
+        firstNameLabel: t(content.quote.step4.firstNameLabel, locale),
+        firstNamePlaceholder: t(content.quote.step4.firstNamePlaceholder, locale),
+        lastNameLabel: t(content.quote.step4.lastNameLabel, locale),
+        lastNamePlaceholder: t(content.quote.step4.lastNamePlaceholder, locale),
+        emailLabel: t(content.quote.step4.emailLabel, locale),
+        emailPlaceholder: t(content.quote.step4.emailPlaceholder, locale),
+        phoneLabel: t(content.quote.step4.phoneLabel, locale),
+        phonePlaceholder: t(content.quote.step4.phonePlaceholder, locale),
+        notesLabel: t(content.quote.step4.notesLabel, locale),
+        notesPlaceholder: t(content.quote.step4.notesPlaceholder, locale),
+        privacyNotice: t(content.quote.step4.privacyNotice, locale),
+      },
+      success: {
+        title: t(content.quote.success.title, locale),
+        message: t(content.quote.success.message, locale),
+        recapTitle: t(content.quote.success.recapTitle, locale),
+        backHome: t(content.quote.success.backHome, locale),
+      },
+      ctaBanner: {
+        title: t(content.quote.ctaBanner.title, locale),
+        description: t(content.quote.ctaBanner.description, locale),
+        button: t(content.quote.ctaBanner.button, locale),
+      },
     },
   };
 }
