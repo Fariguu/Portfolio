@@ -95,20 +95,21 @@ function handleI18nRouting(request: NextRequest, pathname: string) {
     return NextResponse.redirect(url, { status: 307 });
   }
 
-  // D. Percorsi predefiniti in lingua italiana (/ o /privacy): rewrite interno su [locale=it]
-  if (pathname === "/" || pathname === "/privacy") {
-    requestHeaders.set("x-locale", "it");
-    const targetUrl = request.nextUrl.clone();
-    targetUrl.pathname = `/it${pathname === "/" ? "" : pathname}`;
-
-    return NextResponse.rewrite(targetUrl, {
-      request: {
-        headers: requestHeaders,
-      },
-    });
+  // D. Se la richiesta punta direttamente a un file con estensione (es. .png, .jpg), non riscrivere
+  if (pathname.includes(".")) {
+    return NextResponse.next();
   }
 
-  return NextResponse.next();
+  // E. Percorsi predefiniti in lingua italiana (senza prefisso di lingua, es. /, /privacy, /progetti/...): rewrite interno su [locale=it]
+  requestHeaders.set("x-locale", "it");
+  const targetUrl = request.nextUrl.clone();
+  targetUrl.pathname = `/it${pathname === "/" ? "" : pathname}`;
+
+  return NextResponse.rewrite(targetUrl, {
+    request: {
+      headers: requestHeaders,
+    },
+  });
 }
 
 export async function middleware(request: NextRequest) {

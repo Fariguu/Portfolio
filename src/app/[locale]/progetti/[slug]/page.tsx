@@ -156,9 +156,9 @@ export default async function ProjectCaseStudyPage({ params }: PageProps) {
   const caseStudy = getCaseStudyBySlug(slug);
 
   const isEn = locale === "en";
-  const markdown = project
-    ? (isEn && project.case_study_md_en ? project.case_study_md_en : (project.case_study_md || ""))
-    : "";
+  const preferredMarkdown = isEn ? project?.case_study_md_en : project?.case_study_md;
+  const fallbackMarkdown = isEn ? project?.case_study_md : project?.case_study_md_en;
+  const markdown = preferredMarkdown || fallbackMarkdown || "";
 
   // Se non c'è né un case study markdown nel database né un fallback statico, 404
   if (!markdown && !caseStudy) {
