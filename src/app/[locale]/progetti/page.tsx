@@ -105,8 +105,8 @@ export default async function ProgettiPage({
       <Navbar dict={dict} locale={locale} />
 
       <main className="flex-1">
-        {/* Componente Portfolio con griglia progetti, filtri e case study */}
-        <Portfolio dict={dict} locale={locale} />
+        {/* Componente Portfolio con griglia progetti, filtri e case study (senza pulsante circolare esplora progetti) */}
+        <Portfolio dict={dict} locale={locale} showExploreLink={false} />
 
         {/* Banner CTA preventivo per convertire i visitatori del portfolio */}
         <section className="w-full py-16 bg-muted/40 border-t border-border/40">

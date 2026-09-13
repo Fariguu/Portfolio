@@ -11,6 +11,7 @@ import { PortfolioCards, type ProjectDisplay } from "./portfolio-cards";
 interface PortfolioProps {
   readonly dict: Dictionary;
   readonly locale: Locale;
+  readonly showExploreLink?: boolean;
 }
 
 function resolveProjectSlug(title: string, candidateSlug?: string): string | undefined {
@@ -22,7 +23,11 @@ function resolveProjectSlug(title: string, candidateSlug?: string): string | und
   return undefined;
 }
 
-export async function Portfolio({ dict, locale }: Readonly<PortfolioProps>) {
+export async function Portfolio({
+  dict,
+  locale,
+  showExploreLink = true,
+}: Readonly<PortfolioProps>) {
   let projects: ProjectDisplay[] = dict.portfolio.fallbackList.map((p, idx) => {
     const slug = resolveProjectSlug(p.title, p.slug);
     const hasCaseStudy = false;
@@ -121,17 +126,19 @@ export async function Portfolio({ dict, locale }: Readonly<PortfolioProps>) {
         <PortfolioCards projects={projects} dict={dict} locale={locale} />
 
         <div className="mt-10 sm:mt-14 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Button
-            variant="outline"
-            size="lg"
-            className="group rounded-full h-11 sm:h-12 px-6 sm:px-8 border-border/80 bg-background/90 hover:bg-muted/80 hover:border-brand-accent/50 hover:text-foreground shadow-xs transition-all duration-200 font-medium text-xs sm:text-sm w-full sm:w-auto"
-            asChild
-          >
-            <Link href={locale === "en" ? "/en/progetti" : "/progetti"}>
-              <span>{dict.explore.projects}</span>
-              <CornerDownRight className="ml-2.5 h-4 w-4 text-brand-accent transition-transform duration-200 group-hover:translate-x-1 group-hover:scale-110" />
-            </Link>
-          </Button>
+          {showExploreLink && (
+            <Button
+              variant="outline"
+              size="lg"
+              className="group rounded-full h-11 sm:h-12 px-6 sm:px-8 border-border/80 bg-background/90 hover:bg-muted/80 hover:border-brand-accent/50 hover:text-foreground shadow-xs transition-all duration-200 font-medium text-xs sm:text-sm w-full sm:w-auto"
+              asChild
+            >
+              <Link href={locale === "en" ? "/en/progetti" : "/progetti"}>
+                <span>{dict.explore.projects}</span>
+                <CornerDownRight className="ml-2.5 h-4 w-4 text-brand-accent transition-transform duration-200 group-hover:translate-x-1 group-hover:scale-110" />
+              </Link>
+            </Button>
+          )}
 
           <Button
             variant="secondary"

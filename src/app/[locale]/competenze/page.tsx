@@ -98,8 +98,8 @@ export default async function CompetenzePage({
       <Navbar dict={dict} locale={locale} />
 
       <main className="flex-1">
-        {/* Componente Features principale con griglia competenze */}
-        <Features dict={dict} locale={locale} />
+        {/* Componente Features principale con griglia competenze (senza link di approfondimento circolare) */}
+        <Features dict={dict} locale={locale} showExploreLink={false} />
 
         {/* Approfondimento sull'Approccio Ingegneristico */}
         <section className="w-full py-20 bg-background border-t border-border/40">

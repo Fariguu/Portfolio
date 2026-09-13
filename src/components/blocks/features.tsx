@@ -7,9 +7,14 @@ import type { Locale } from "@/lib/i18n/config";
 interface FeaturesProps {
   readonly dict: Dictionary;
   readonly locale: Locale;
+  readonly showExploreLink?: boolean;
 }
 
-export async function Features({ dict, locale }: Readonly<FeaturesProps>) {
+export async function Features({
+  dict,
+  locale,
+  showExploreLink = true,
+}: Readonly<FeaturesProps>) {
   let features = dict.skills.fallbackList;
 
   // Se siamo in lingua italiana proviamo a recuperare eventuali aggiornamenti dal DB Supabase
@@ -77,10 +82,12 @@ export async function Features({ dict, locale }: Readonly<FeaturesProps>) {
           </div>
 
           {/* Pulsante di approfondimento per la pagina dedicata /competenze */}
-          <SectionExploreButton
-            href={locale === "en" ? "/en/competenze" : "/competenze"}
-            label={dict.explore.skills}
-          />
+          {showExploreLink && (
+            <SectionExploreButton
+              href={locale === "en" ? "/en/competenze" : "/competenze"}
+              label={dict.explore.skills}
+            />
+          )}
         </div>
       </div>
     </section>
