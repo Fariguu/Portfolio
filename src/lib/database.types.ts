@@ -261,6 +261,33 @@ export type Database = {
         }
         Relationships: []
       }
+      profile: {
+        Row: {
+          id: string
+          headline_it: string | null
+          headline_en: string | null
+          bio_it: string
+          bio_en: string | null
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          headline_it?: string | null
+          headline_en?: string | null
+          bio_it: string
+          bio_en?: string | null
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          headline_it?: string | null
+          headline_en?: string | null
+          bio_it?: string
+          bio_en?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -282,4 +309,5 @@ export type JourneyItem = Database['public']['Tables']['journey_items']['Row']
 export type Project = Database['public']['Tables']['projects']['Row']
 export type FAQItem = Database['public']['Tables']['faqs']['Row']
 export type Testimonial = Database['public']['Tables']['testimonials']['Row']
+export type Profile = Database['public']['Tables']['profile']['Row']
 

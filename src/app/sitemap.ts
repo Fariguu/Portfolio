@@ -80,10 +80,130 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
     },
     {
+      url: `${baseUrl}/progetti`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+      alternates: {
+        languages: {
+          it: `${baseUrl}/progetti`,
+          en: `${baseUrl}/en/progetti`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/en/progetti`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+      alternates: {
+        languages: {
+          it: `${baseUrl}/progetti`,
+          en: `${baseUrl}/en/progetti`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/competenze`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+      alternates: {
+        languages: {
+          it: `${baseUrl}/competenze`,
+          en: `${baseUrl}/en/competenze`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/en/competenze`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+      alternates: {
+        languages: {
+          it: `${baseUrl}/competenze`,
+          en: `${baseUrl}/en/competenze`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/chi-sono`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+      alternates: {
+        languages: {
+          it: `${baseUrl}/chi-sono`,
+          en: `${baseUrl}/en/chi-sono`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/en/chi-sono`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+      alternates: {
+        languages: {
+          it: `${baseUrl}/chi-sono`,
+          en: `${baseUrl}/en/chi-sono`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/percorso`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+      alternates: {
+        languages: {
+          it: `${baseUrl}/percorso`,
+          en: `${baseUrl}/en/percorso`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/en/percorso`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+      alternates: {
+        languages: {
+          it: `${baseUrl}/percorso`,
+          en: `${baseUrl}/en/percorso`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/contatti`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+      alternates: {
+        languages: {
+          it: `${baseUrl}/contatti`,
+          en: `${baseUrl}/en/contatti`,
+        },
+      },
+    },
+    {
+      url: `${baseUrl}/en/contatti`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+      alternates: {
+        languages: {
+          it: `${baseUrl}/contatti`,
+          en: `${baseUrl}/en/contatti`,
+        },
+      },
+    },
+    {
       url: `${baseUrl}/preventivo`,
       lastModified: new Date(),
       changeFrequency: "monthly",
-      priority: 0.9,
+      priority: 0.8,
       alternates: {
         languages: {
           it: `${baseUrl}/preventivo`,
@@ -95,7 +215,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${baseUrl}/en/preventivo`,
       lastModified: new Date(),
       changeFrequency: "monthly",
-      priority: 0.9,
+      priority: 0.8,
       alternates: {
         languages: {
           it: `${baseUrl}/preventivo`,

@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { getIconComponent } from "@/lib/icons";
+import { SectionExploreButton } from "@/components/ui/section-explore-button";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
 
@@ -74,6 +75,12 @@ export async function Features({ dict, locale }: Readonly<FeaturesProps>) {
               <span className="text-brand-accent font-bold">➔</span>
             </span>
           </div>
+
+          {/* Pulsante di approfondimento per la pagina dedicata /competenze */}
+          <SectionExploreButton
+            href={locale === "en" ? "/en/competenze" : "/competenze"}
+            label={dict.explore.skills}
+          />
         </div>
       </div>
     </section>

@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Github } from "@/components/ui/icons";
+import { CornerDownRight } from "lucide-react";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import type { Project } from "@/lib/database.types";
 import type { Dictionary } from "@/lib/i18n/types";
@@ -118,11 +120,23 @@ export async function Portfolio({ dict, locale }: Readonly<PortfolioProps>) {
 
         <PortfolioCards projects={projects} dict={dict} locale={locale} />
 
-        <div className="mt-8 sm:mt-12 text-center">
+        <div className="mt-10 sm:mt-14 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Button
+            variant="outline"
+            size="lg"
+            className="group rounded-full h-11 sm:h-12 px-6 sm:px-8 border-border/80 bg-background/90 hover:bg-muted/80 hover:border-brand-accent/50 hover:text-foreground shadow-xs transition-all duration-200 font-medium text-xs sm:text-sm w-full sm:w-auto"
+            asChild
+          >
+            <Link href={locale === "en" ? "/en/progetti" : "/progetti"}>
+              <span>{dict.explore.projects}</span>
+              <CornerDownRight className="ml-2.5 h-4 w-4 text-brand-accent transition-transform duration-200 group-hover:translate-x-1 group-hover:scale-110" />
+            </Link>
+          </Button>
+
           <Button
             variant="secondary"
             size="lg"
-            className="rounded-full shadow-xs w-full sm:w-auto sm:min-w-[280px] h-12 justify-center font-medium"
+            className="rounded-full shadow-xs w-full sm:w-auto sm:min-w-[240px] h-11 sm:h-12 px-6 justify-center font-medium text-xs sm:text-sm"
             asChild
           >
             <a

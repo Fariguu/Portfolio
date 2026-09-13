@@ -376,7 +376,7 @@ export function QuoteConfigurator({
   const progressPercent = (currentStep / 4) * 100;
 
   return (
-    <div className="w-full max-w-3xl mx-auto">
+    <div className="w-full max-w-3xl mx-auto" data-nosnippet>
       {/* Sticky Progress Indicator on Mobile */}
       <div className="sticky top-16 z-30 bg-background/95 backdrop-blur py-3 mb-6 border-b border-border/40 px-2 sm:px-4">
         <div className="flex items-center justify-between text-xs sm:text-sm font-medium text-muted-foreground mb-2">

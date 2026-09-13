@@ -10,6 +10,7 @@ import {
   ExternalLink,
   LogOut,
   LayoutDashboard,
+  User,
 } from 'lucide-react'
 import { signOutAction } from '@/app/admin/actions/auth'
 import { Button } from '@/components/ui/button'
@@ -62,6 +63,12 @@ export default async function AdminLayout({
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
                 >
                   <LayoutDashboard className="h-4 w-4" /> Overview
+                </Link>
+                <Link
+                  href="/admin/profile"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                >
+                  <User className="h-4 w-4" /> Biografia
                 </Link>
                 <Link
                   href="/admin/skills"
@@ -126,6 +133,12 @@ export default async function AdminLayout({
               className="px-3 py-1.5 rounded-md bg-secondary/60 text-foreground whitespace-nowrap"
             >
               Overview
+            </Link>
+            <Link
+              href="/admin/profile"
+              className="px-3 py-1.5 rounded-md bg-secondary/60 text-foreground whitespace-nowrap"
+            >
+              Biografia
             </Link>
             <Link
               href="/admin/skills"

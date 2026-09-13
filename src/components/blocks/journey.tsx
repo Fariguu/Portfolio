@@ -1,5 +1,6 @@
 import { GraduationCap, Award, BookOpen, ExternalLink, Calendar } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+import { SectionExploreButton } from "@/components/ui/section-explore-button";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
 
@@ -50,9 +51,14 @@ function TimelineTypeIcon({ type }: { readonly type?: TimelineItemType }) {
 interface JourneyProps {
   readonly dict: Dictionary;
   readonly locale: Locale;
+  readonly showExploreLink?: boolean;
 }
 
-export async function Journey({ dict, locale }: Readonly<JourneyProps>) {
+export async function Journey({
+  dict,
+  locale,
+  showExploreLink = true,
+}: Readonly<JourneyProps>) {
   let timelineData: TimelineItemDisplay[] = dict.journey.fallbackList.map(
     (item, index) => ({
       id: `fallback-${index}`,
@@ -201,6 +207,14 @@ export async function Journey({ dict, locale }: Readonly<JourneyProps>) {
               );
             })}
           </div>
+
+          {/* Pulsante di approfondimento per la pagina dedicata /chi-sono */}
+          {showExploreLink && (
+            <SectionExploreButton
+              href={locale === "en" ? "/en/chi-sono#percorso" : "/chi-sono#percorso"}
+              label={dict.explore.journey}
+            />
+          )}
         </div>
       </div>
     </section>

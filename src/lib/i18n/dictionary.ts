@@ -63,6 +63,7 @@ const content = {
   },
   nav: {
     home: "Home",
+    about: { it: "Chi Sono", en: "About" },
     skills: { it: "Competenze", en: "Skills" },
     journey: { it: "Percorso", en: "Journey" },
     projects: { it: "Progetti", en: "Projects" },
@@ -72,6 +73,8 @@ const content = {
       it: "Apri menu di navigazione",
       en: "Toggle navigation menu",
     },
+    quote: { it: "Preventivo", en: "Quote" },
+    backHome: { it: "Torna alla Home", en: "Back to Home" },
   },
   hero: {
     badge: {
@@ -1147,6 +1150,184 @@ const content = {
       en: "Swipe to read more reviews ➔",
     },
   },
+  bio: {
+    badge: {
+      it: "Chi Sono",
+      en: "About Me",
+    },
+    title: {
+      it: "Biografia & Visione Professionale",
+      en: "Biography & Engineering Vision",
+    },
+    fallbackHeadline: {
+      it: "Sviluppatore Web & Software a Turi (Bari)",
+      en: "Web & Software Developer based in Bari, Italy",
+    },
+    fallbackBio: {
+      it: "Sono Gabriele Farigu, sviluppatore web e software con sede a Turi (Bari). Studio Informatica e Tecnologie per la Produzione del Software (ITPS) presso l'Università degli Studi di Bari Aldo Moro, dopo aver conseguito il diploma in Sistemi Informativi Aziendali (SIA).\n\nMi dedico alla progettazione e allo sviluppo di applicazioni web moderne, veloci e accessibili. Il mio stack principale comprende Next.js, React, TypeScript, Tailwind CSS e Supabase (PostgreSQL), con una forte attenzione alle performance, alla sicurezza e all'architettura serverless.\n\nChe si tratti di una piattaforma web interattiva, un sistema di prenotazione o un sito aziendale ad alte prestazioni, curo ogni fase dello sviluppo dal design dell'interfaccia alla modellazione dei dati.",
+      en: "I am Gabriele Farigu, a web and software developer based in Turi (Bari), Italy. I study Computer Science & Software Production Technologies (ITPS) at the University of Bari Aldo Moro, following a high school diploma in Business Information Systems (SIA).\n\nI specialize in designing and engineering modern, fast, and accessible web applications. My core stack includes Next.js, React, TypeScript, Tailwind CSS, and Supabase (PostgreSQL), with a deep focus on performance, security, and serverless architecture.\n\nWhether developing an interactive web platform, a booking system, or a high-performance business website, I oversee every development phase from UI design to data modeling.",
+    },
+    studiesTitle: {
+      it: "Percorso di Studi ed Esperienze",
+      en: "Education & Professional Milestones",
+    },
+    ctaContact: {
+      it: "Inizia un Progetto Insieme",
+      en: "Start a Project Together",
+    },
+    ctaProjects: {
+      it: "Esplora i Miei Progetti",
+      en: "Explore My Projects",
+    },
+    adminNotice: {
+      it: "Testo modificabile dal pannello admin",
+      en: "Editable from admin panel",
+    },
+  },
+  pages: {
+    skills: {
+      title: {
+        it: "Competenze Tecniche & Stack | Gabriele Farigu",
+        en: "Technical Skills & Stack | Gabriele Farigu",
+      },
+      description: {
+        it: "Panoramica dettagliata delle tecnologie e metodologie di Gabriele Farigu: Next.js, React, TypeScript, Supabase, PostgreSQL e sviluppo web full-stack.",
+        en: "Detailed overview of technical skills and technologies used by Gabriele Farigu: Next.js, React, TypeScript, Supabase, PostgreSQL, and full-stack web development.",
+      },
+      keywords: {
+        it: [
+          "competenze sviluppatore web",
+          "stack next.js react",
+          "typescript supabase developer",
+          "sviluppatore frontend backend bari",
+          "full stack developer puglia",
+        ],
+        en: [
+          "web developer skills",
+          "next.js react stack",
+          "typescript supabase developer",
+          "frontend backend developer bari",
+          "full stack developer italy",
+        ],
+      },
+    },
+    journey: {
+      title: {
+        it: "Percorso Formativo & Traguardi | Gabriele Farigu",
+        en: "Academic Journey & Milestones | Gabriele Farigu",
+      },
+      description: {
+        it: "Formazione accademica e tappe professionali di Gabriele Farigu: studi in Informatica (ITPS) all'Università di Bari e diploma in Sistemi Informativi Aziendali.",
+        en: "Academic background and milestones of Gabriele Farigu: Computer Science studies (ITPS) at the University of Bari and Business Information Systems diploma.",
+      },
+      keywords: {
+        it: [
+          "percorso formativo gabriele farigu",
+          "università di bari informatica itps",
+          "diploma sistemi informativi aziendali",
+          "curriculum sviluppatore web",
+        ],
+        en: [
+          "education gabriele farigu",
+          "university of bari computer science",
+          "business information systems diploma",
+          "software developer background",
+        ],
+      },
+    },
+    projects: {
+      title: {
+        it: "Progetti & Applicazioni Web Realizzate | Gabriele Farigu",
+        en: "Projects & Web Applications | Gabriele Farigu",
+      },
+      description: {
+        it: "Portfolio dei progetti web e casi studio sviluppati da Gabriele Farigu: web app, gestionali di prenotazione, piattaforme per aziende e soluzioni full-stack.",
+        en: "Portfolio of web projects and engineering case studies developed by Gabriele Farigu: web applications, booking systems, enterprise platforms, and full-stack solutions.",
+      },
+      keywords: {
+        it: [
+          "progetti web app",
+          "portfolio progetti next.js",
+          "casi studio web development",
+          "applicazioni web bari",
+          "sviluppatore siti web progetti",
+        ],
+        en: [
+          "web app projects",
+          "next.js portfolio projects",
+          "web development case studies",
+          "web applications bari italy",
+          "software developer projects",
+        ],
+      },
+    },
+    contact: {
+      title: {
+        it: "Contatti & Richiesta Informazioni | Gabriele Farigu",
+        en: "Contact & Inquiries | Gabriele Farigu",
+      },
+      description: {
+        it: "Mettiti in contatto con Gabriele Farigu per proposte di lavoro, collaborazioni freelance o preventivi su misura per il tuo progetto web.",
+        en: "Get in touch with Gabriele Farigu for project inquiries, freelance collaborations, or engineering opportunities.",
+      },
+      keywords: {
+        it: [
+          "contatta sviluppatore web",
+          "sviluppatore web bari contatti",
+          "preventivo sito web bari",
+          "collaborazione freelance web",
+        ],
+        en: [
+          "contact web developer",
+          "hire web developer bari",
+          "freelance web developer quote",
+          "software engineer contact",
+        ],
+      },
+    },
+    about: {
+      title: {
+        it: "Chi Sono — Biografia & Profilo | Gabriele Farigu",
+        en: "About Me — Biography & Profile | Gabriele Farigu",
+      },
+      description: {
+        it: "Chi è Gabriele Farigu: sviluppatore web e software da Turi (Bari). Scopri la mia storia, la passione per il codice e il percorso accademico in Informatica.",
+        en: "Who is Gabriele Farigu: web and software developer from Bari, Italy. Learn about my background, passion for software engineering, and academic path.",
+      },
+      keywords: {
+        it: [
+          "chi è gabriele farigu",
+          "gabriele farigu bio",
+          "sviluppatore web turi bari",
+          "profilo programmatore puglia",
+        ],
+        en: [
+          "about gabriele farigu",
+          "gabriele farigu bio",
+          "web developer bari italy",
+          "software engineer profile",
+        ],
+      },
+    },
+  },
+  explore: {
+    about: {
+      it: "Esplora biografia e profilo completo",
+      en: "Explore full profile & biography",
+    },
+    skills: {
+      it: "Esplora tutte le competenze e lo stack",
+      en: "Explore all technical skills & stack",
+    },
+    journey: {
+      it: "Esplora biografia e percorso completo",
+      en: "Explore full profile & journey",
+    },
+    projects: {
+      it: "Esplora tutti i progetti e casi studio",
+      en: "Explore all projects & case studies",
+    },
+  },
 };
 
 function buildDictionary(locale: Locale): Dictionary {
@@ -1167,12 +1348,15 @@ function buildDictionary(locale: Locale): Dictionary {
     },
     nav: {
       home: t(content.nav.home, locale),
+      about: t(content.nav.about, locale),
       skills: t(content.nav.skills, locale),
       journey: t(content.nav.journey, locale),
       projects: t(content.nav.projects, locale),
       contact: t(content.nav.contact, locale),
       contactCta: t(content.nav.contactCta, locale),
       toggleMenu: t(content.nav.toggleMenu, locale),
+      quote: t(content.nav.quote, locale),
+      backHome: t(content.nav.backHome, locale),
     },
     hero: {
       badge: t(content.hero.badge, locale),
@@ -1497,6 +1681,49 @@ function buildDictionary(locale: Locale): Dictionary {
       verifiedReview: t(content.testimonials.verifiedReview, locale),
       viewProject: t(content.testimonials.viewProject, locale),
       swipeHint: t(content.testimonials.swipeHint, locale),
+    },
+    bio: {
+      badge: t(content.bio.badge, locale),
+      title: t(content.bio.title, locale),
+      fallbackHeadline: t(content.bio.fallbackHeadline, locale),
+      fallbackBio: t(content.bio.fallbackBio, locale),
+      studiesTitle: t(content.bio.studiesTitle, locale),
+      ctaContact: t(content.bio.ctaContact, locale),
+      ctaProjects: t(content.bio.ctaProjects, locale),
+      adminNotice: t(content.bio.adminNotice, locale),
+    },
+    pages: {
+      skills: {
+        title: t(content.pages.skills.title, locale),
+        description: t(content.pages.skills.description, locale),
+        keywords: [...t(content.pages.skills.keywords, locale)],
+      },
+      journey: {
+        title: t(content.pages.journey.title, locale),
+        description: t(content.pages.journey.description, locale),
+        keywords: [...t(content.pages.journey.keywords, locale)],
+      },
+      projects: {
+        title: t(content.pages.projects.title, locale),
+        description: t(content.pages.projects.description, locale),
+        keywords: [...t(content.pages.projects.keywords, locale)],
+      },
+      contact: {
+        title: t(content.pages.contact.title, locale),
+        description: t(content.pages.contact.description, locale),
+        keywords: [...t(content.pages.contact.keywords, locale)],
+      },
+      about: {
+        title: t(content.pages.about.title, locale),
+        description: t(content.pages.about.description, locale),
+        keywords: [...t(content.pages.about.keywords, locale)],
+      },
+    },
+    explore: {
+      about: t(content.explore.about, locale),
+      skills: t(content.explore.skills, locale),
+      journey: t(content.explore.journey, locale),
+      projects: t(content.explore.projects, locale),
     },
   };
 }

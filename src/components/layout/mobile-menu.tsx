@@ -9,10 +9,16 @@ import { Menu } from "lucide-react";
 interface MobileMenuProps {
   readonly navigations: ReadonlyArray<{ readonly title: string; readonly href: string }>;
   readonly contactCta: string;
+  readonly contactHref?: string;
   readonly toggleMenuLabel: string;
 }
 
-export function MobileMenu({ navigations, contactCta, toggleMenuLabel }: Readonly<MobileMenuProps>) {
+export function MobileMenu({
+  navigations,
+  contactCta,
+  contactHref = "#contatti",
+  toggleMenuLabel,
+}: Readonly<MobileMenuProps>) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
@@ -44,7 +50,7 @@ export function MobileMenu({ navigations, contactCta, toggleMenuLabel }: Readonl
             asChild
             onClick={() => setIsOpen(false)}
           >
-            <Link href="#contatti">{contactCta}</Link>
+            <Link href={contactHref}>{contactCta}</Link>
           </Button>
         </div>
       </SheetContent>
