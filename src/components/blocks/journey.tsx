@@ -208,10 +208,10 @@ export async function Journey({
             })}
           </div>
 
-          {/* Pulsante di approfondimento per la pagina dedicata /chi-sono */}
+          {/* Pulsante di approfondimento per la pagina dedicata /percorso */}
           {showExploreLink && (
             <SectionExploreButton
-              href={locale === "en" ? "/en/chi-sono#percorso" : "/chi-sono#percorso"}
+              href={locale === "en" ? "/en/percorso" : "/percorso"}
               label={dict.explore.journey}
             />
           )}

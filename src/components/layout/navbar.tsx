@@ -19,11 +19,12 @@ const MobileMenu = dynamic(
     loading: () => (
       <Button
         variant="ghost"
-        size="icon"
-        className="h-10 w-10 text-foreground hover:bg-muted/80"
+        size="sm"
+        className="h-10 w-10 md:w-auto md:h-9 px-0 md:px-3.5 md:rounded-full md:border md:border-border/80 text-foreground"
         aria-label="Menu"
       >
-        <Menu className="h-6 w-6" />
+        <Menu className="h-5 w-5 md:h-4 md:w-4" />
+        <span className="hidden md:inline-block ml-1.5 text-xs font-medium">Menu</span>
       </Button>
     ),
   }
@@ -42,52 +43,24 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
   const homeHref = locale === "en" ? "/en" : "/";
   const prefix = locale === "en" ? "/en" : "";
 
+  // Desktop drawer: all other options (Home is kept centered in the desktop navbar)
   const desktopNavigations = [
-    { title: dict.nav.home, href: isHomePage ? "#chi-sono" : homeHref },
-    {
-      title: dict.nav.skills,
-      href: isHomePage ? "#competenze" : `${prefix}/competenze`,
-    },
-    {
-      title: dict.nav.journey,
-      href: isHomePage ? "#percorso" : `${prefix}/chi-sono#percorso`,
-    },
-    {
-      title: dict.nav.projects,
-      href: isHomePage ? "#progetti" : `${prefix}/progetti`,
-    },
-    {
-      title: dict.nav.contact,
-      href: isHomePage ? "#contatti" : `${prefix}/contatti`,
-    },
+    { title: dict.nav.about, href: `${prefix}/chi-sono` },
+    { title: dict.nav.skills, href: `${prefix}/competenze` },
+    { title: dict.nav.journey, href: `${prefix}/percorso` },
+    { title: dict.nav.projects, href: `${prefix}/progetti` },
+    { title: dict.nav.contact, href: `${prefix}/contatti` },
   ];
 
-  // On mobile devices, user scrolls through sections: provide direct section links
+  // Mobile drawer: all options including Home
   const mobileNavigations = [
-    {
-      title: dict.nav.home,
-      href: isHomePage ? "#chi-sono" : `${homeHref}#chi-sono`,
-    },
-    {
-      title: dict.nav.skills,
-      href: isHomePage ? "#competenze" : `${homeHref}#competenze`,
-    },
-    {
-      title: dict.nav.journey,
-      href: isHomePage ? "#percorso" : `${homeHref}#percorso`,
-    },
-    {
-      title: dict.nav.projects,
-      href: isHomePage ? "#progetti" : `${homeHref}#progetti`,
-    },
-    {
-      title: dict.nav.contact,
-      href: isHomePage ? "#contatti" : `${homeHref}#contatti`,
-    },
+    { title: dict.nav.home, href: homeHref },
+    { title: dict.nav.about, href: `${prefix}/chi-sono` },
+    { title: dict.nav.skills, href: `${prefix}/competenze` },
+    { title: dict.nav.journey, href: `${prefix}/percorso` },
+    { title: dict.nav.projects, href: `${prefix}/progetti` },
+    { title: dict.nav.contact, href: `${prefix}/contatti` },
   ];
-
-  const contactHref = isHomePage ? "#contatti" : `${prefix}/contatti`;
-  const mobileContactHref = isHomePage ? "#contatti" : `${homeHref}#contatti`;
 
   // Dynamic show/hide on scroll:
   // When scrolling down, hide navbar; when scrolling up, reveal smoothly.
@@ -133,46 +106,35 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
           </Link>
         </div>
 
-        {/* Center: Desktop Nav - Absolute center relative to the entire page */}
+        {/* Center: Desktop Nav - Mantieni solo il pulsante Home al centro della barra */}
         <nav
           aria-label="Desktop Navigation"
           className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center justify-center text-sm font-medium select-none pointer-events-auto"
         >
-          <div className="flex items-center space-x-0.5">
-            {desktopNavigations.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="px-2.5 lg:px-3 text-center py-1.5 transition-colors hover:text-brand-accent text-muted-foreground whitespace-nowrap text-xs lg:text-sm"
-              >
-                {item.title}
-              </Link>
-            ))}
-          </div>
+          <Link
+            href={homeHref}
+            className={cn(
+              "px-4 py-1.5 rounded-full text-center transition-all font-medium text-xs lg:text-sm",
+              isHomePage
+                ? "text-brand-accent bg-brand-accent/10 border border-brand-accent/25 shadow-2xs"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+            )}
+          >
+            {dict.nav.home}
+          </Link>
         </nav>
 
-        {/* Right: Actions with fixed dimensions to guarantee zero layout shift */}
-        <div className="hidden md:flex items-center justify-end space-x-3 z-10 min-w-[240px]">
-          <ThemeToggle />
-          <LanguageSwitcher currentLocale={locale} />
-          <Button
-            asChild
-            variant="default"
-            className="rounded-full w-[120px] justify-center text-center font-medium"
-          >
-            <Link href={contactHref}>{dict.nav.contactCta}</Link>
-          </Button>
-        </div>
-
-        {/* Mobile Nav */}
-        <div className="flex md:hidden items-center gap-2">
+        {/* Right: Actions & Side Menu Trigger */}
+        <div className="flex items-center justify-end space-x-2 md:space-x-3 z-10">
           <ThemeToggle />
           <LanguageSwitcher currentLocale={locale} />
           <MobileMenu
-            navigations={mobileNavigations}
+            desktopNavigations={desktopNavigations}
+            mobileNavigations={mobileNavigations}
             contactCta={dict.nav.contactCta}
-            contactHref={mobileContactHref}
+            contactHref={`${prefix}/contatti`}
             toggleMenuLabel={dict.nav.toggleMenu}
+            locale={locale}
           />
         </div>
       </div>

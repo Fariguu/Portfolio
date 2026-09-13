@@ -1312,20 +1312,20 @@ const content = {
   },
   explore: {
     about: {
-      it: "Scopri di più su di me e sulla mia storia",
-      en: "Learn more about me and my background",
+      it: "Chi sono",
+      en: "About me",
     },
     skills: {
-      it: "Esplora tutte le competenze e lo stack",
-      en: "Explore all technical skills & stack",
+      it: "Tutte le competenze",
+      en: "All skills",
     },
     journey: {
-      it: "Approfondisci tutti i traguardi e la formazione",
-      en: "Explore all milestones & academic background",
+      it: "Il mio percorso",
+      en: "My journey",
     },
     projects: {
-      it: "Esplora tutti i progetti e casi studio",
-      en: "Explore all projects & case studies",
+      it: "Tutti i progetti",
+      en: "All projects",
     },
   },
 };
