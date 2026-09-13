@@ -4,7 +4,6 @@ import { createClient } from "@/lib/supabase/server";
 import type { Project } from "@/lib/database.types";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
-import { hasCaseStudyDescription } from "@/lib/data/case-studies";
 import { PortfolioCards, type ProjectDisplay } from "./portfolio-cards";
 
 interface PortfolioProps {
@@ -24,7 +23,7 @@ function resolveProjectSlug(title: string, candidateSlug?: string): string | und
 export async function Portfolio({ dict, locale }: Readonly<PortfolioProps>) {
   let projects: ProjectDisplay[] = dict.portfolio.fallbackList.map((p, idx) => {
     const slug = resolveProjectSlug(p.title, p.slug);
-    const hasCaseStudy = Boolean(slug && hasCaseStudyDescription(slug, locale));
+    const hasCaseStudy = false;
     return {
       id: `fallback-${idx}`,
       slug,
@@ -59,9 +58,9 @@ export async function Portfolio({ dict, locale }: Readonly<PortfolioProps>) {
         );
         const slug = p.slug || resolveProjectSlug(p.title, dictFallback?.slug);
         const hasDbCaseStudy = Boolean(
-          (locale === "en" ? (p.case_study_md_en || p.case_study_md) : p.case_study_md)?.trim()
+          (locale === "en" ? (p.case_study_md_en || p.case_study_md) : (p.case_study_md || p.case_study_md_en))?.trim()
         );
-        const hasCaseStudy = hasDbCaseStudy || Boolean(slug && hasCaseStudyDescription(slug, locale));
+        const hasCaseStudy = Boolean(slug && hasDbCaseStudy);
 
         if (locale === "en") {
           return {

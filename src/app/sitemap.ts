@@ -1,24 +1,27 @@
 import type { MetadataRoute } from "next";
 import { getBaseUrl } from "@/lib/url";
-import { getAllCaseStudies } from "@/lib/data/case-studies";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = getBaseUrl();
-  const caseStudies = getAllCaseStudies();
-  const slugs = new Set<string>(caseStudies.map((cs) => cs.slug));
+  const slugs = new Set<string>();
 
   try {
     const supabase = await createClient();
     const { data } = await supabase
       .from("projects")
-      .select("slug")
-      .not("case_study_md", "is", null)
+      .select("slug, case_study_md, case_study_md_en")
       .eq("visible", true);
 
     if (data) {
       for (const p of data) {
-        if (p.slug) slugs.add(p.slug);
+        const hasCaseStudy = Boolean(
+          (p.case_study_md && p.case_study_md.trim().length > 0) ||
+          (p.case_study_md_en && p.case_study_md_en.trim().length > 0)
+        );
+        if (p.slug && hasCaseStudy) {
+          slugs.add(p.slug);
+        }
       }
     }
   } catch {

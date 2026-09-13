@@ -4,7 +4,17 @@ import type { CaseStudy } from "@/lib/data/case-studies";
 import type { Locale } from "@/lib/i18n/config";
 
 interface ProjectJsonLdProps {
-  readonly caseStudy: CaseStudy;
+  readonly caseStudy?: CaseStudy | null;
+  readonly project?: {
+    title: string;
+    title_en?: string | null;
+    description: string;
+    description_en?: string | null;
+    image_url?: string | null;
+    slug?: string | null;
+    tags?: string[];
+    demo_url?: string | null;
+  } | null;
   readonly locale: Locale;
 }
 
@@ -12,22 +22,37 @@ interface ProjectJsonLdProps {
  * Inietta gli structured data JSON-LD conformi a Schema.org per il singolo Case Study.
  * Genera lo schema SoftwareApplication / CreativeWork per Google Rich Snippets.
  */
-export function ProjectJsonLd({ caseStudy, locale }: Readonly<ProjectJsonLdProps>) {
+export function ProjectJsonLd({ caseStudy, project, locale }: Readonly<ProjectJsonLdProps>) {
   const baseUrl = getBaseUrl();
-  const currentUrl = `${baseUrl}${locale === "en" ? "/en" : ""}/progetti/${caseStudy.slug}`;
+  const slug = project?.slug || caseStudy?.slug || "";
+  const currentUrl = `${baseUrl}${locale === "en" ? "/en" : ""}/progetti/${slug}`;
   const inLanguage = locale === "en" ? "en-US" : "it-IT";
+
+  const isEn = locale === "en";
+  const name = project
+    ? (isEn && project.title_en ? project.title_en : project.title)
+    : caseStudy?.title[locale] || "";
+  const headline = project
+    ? (isEn && project.description_en ? project.description_en : project.description)
+    : caseStudy?.subtitle[locale] || "";
+  const description = project
+    ? (isEn && project.description_en ? project.description_en : project.description)
+    : caseStudy?.metaDescription[locale] || "";
+  const image = project?.image_url || caseStudy?.coverImage || "";
+  const demoUrl = project?.demo_url || caseStudy?.demoUrl;
+  const tags = project?.tags || caseStudy?.tags || [];
 
   const schema = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "@id": `${currentUrl}#software`,
-    name: caseStudy.title[locale],
-    headline: caseStudy.subtitle[locale],
-    description: caseStudy.metaDescription[locale],
-    applicationCategory: caseStudy.schemaOrg.applicationCategory,
-    operatingSystem: caseStudy.schemaOrg.operatingSystem,
+    name,
+    headline,
+    description,
+    applicationCategory: caseStudy?.schemaOrg?.applicationCategory || "WebApplication",
+    operatingSystem: caseStudy?.schemaOrg?.operatingSystem || "Any (Web Browser)",
     url: currentUrl,
-    image: caseStudy.coverImage,
+    image,
     inLanguage,
     author: {
       "@type": "Person",
@@ -43,9 +68,9 @@ export function ProjectJsonLd({ caseStudy, locale }: Readonly<ProjectJsonLdProps
       "@type": "Person",
       name: siteConfig.name,
     },
-    featureList: caseStudy.features[locale].join(", "),
-    softwareRequirements: caseStudy.stack.map((s) => s.name).join(", "),
-    ...(caseStudy.demoUrl ? { installUrl: caseStudy.demoUrl } : {}),
+    featureList: caseStudy?.features?.[locale]?.join(", ") || tags.join(", "),
+    softwareRequirements: caseStudy?.stack?.map((s) => s.name).join(", ") || tags.join(", "),
+    ...(demoUrl ? { installUrl: demoUrl } : {}),
     offers: {
       "@type": "Offer",
       price: "0",

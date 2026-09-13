@@ -54,28 +54,31 @@ async function getProjectFromDb(slug: string) {
 }
 
 export async function generateStaticParams() {
-  const caseStudies = getAllCaseStudies();
-  const params: Array<{ locale: string; slug: string }> = [];
-
-  const slugs = new Set<string>(caseStudies.map((cs) => cs.slug));
+  const slugs = new Set<string>();
 
   try {
     const supabase = await createClient();
     const { data } = await supabase
       .from("projects")
-      .select("slug")
-      .not("case_study_md", "is", null)
+      .select("slug, case_study_md, case_study_md_en")
       .eq("visible", true);
 
     if (data) {
       for (const p of data) {
-        if (p.slug) slugs.add(p.slug);
+        const hasCaseStudy = Boolean(
+          (p.case_study_md && p.case_study_md.trim().length > 0) ||
+          (p.case_study_md_en && p.case_study_md_en.trim().length > 0)
+        );
+        if (p.slug && hasCaseStudy) {
+          slugs.add(p.slug);
+        }
       }
     }
   } catch {
     // Supabase offline o build-time fallback
   }
 
+  const params: Array<{ locale: string; slug: string }> = [];
   for (const locale of locales) {
     for (const slug of slugs) {
       params.push({ locale, slug });
@@ -91,13 +94,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const project = await getProjectFromDb(slug);
   const caseStudy = getCaseStudyBySlug(slug);
 
+  const isEn = locale === "en";
+  const preferredMarkdown = isEn ? project?.case_study_md_en : project?.case_study_md;
+  const fallbackMarkdown = isEn ? project?.case_study_md : project?.case_study_md_en;
+  const markdown = (preferredMarkdown || fallbackMarkdown || "").trim();
+
+  // Se il progetto esiste nel database ma non ha un case study compilato, restituisci 404/non trovato
+  if (project && !markdown) {
+    return {
+      title: "Progetto non trovato | Gabriele Farigu",
+    };
+  }
+
   if (!project && !caseStudy) {
     return {
       title: "Progetto non trovato | Gabriele Farigu",
     };
   }
 
-  const isEn = locale === "en";
   const titleText = project
     ? (isEn && project.title_en ? project.title_en : project.title)
     : caseStudy?.title[locale];
@@ -147,6 +161,42 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
+async function getAdjacentProjectsFromDb(currentSlug: string) {
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from("projects")
+      .select("slug, title, title_en, case_study_md, case_study_md_en")
+      .eq("visible", true)
+      .order("sort_order", { ascending: true });
+
+    if (!data) return { prev: null, next: null };
+    const withCaseStudy = data.filter(
+      (p) =>
+        Boolean((p.case_study_md || p.case_study_md_en)?.trim()) &&
+        Boolean(p.slug)
+    );
+
+    if (withCaseStudy.length <= 1) {
+      return { prev: null, next: null };
+    }
+
+    const index = withCaseStudy.findIndex(
+      (p) => p.slug?.toLowerCase() === currentSlug.toLowerCase()
+    );
+    const safeIndex = index === -1 ? 0 : index;
+    const prevIndex = (safeIndex - 1 + withCaseStudy.length) % withCaseStudy.length;
+    const nextIndex = (safeIndex + 1) % withCaseStudy.length;
+
+    return {
+      prev: withCaseStudy[prevIndex],
+      next: withCaseStudy[nextIndex],
+    };
+  } catch {
+    return { prev: null, next: null };
+  }
+}
+
 export default async function ProjectCaseStudyPage({ params }: PageProps) {
   const { locale: rawLocale, slug } = await params;
   const locale: Locale = isValidLocale(rawLocale) ? rawLocale : defaultLocale;
@@ -156,22 +206,55 @@ export default async function ProjectCaseStudyPage({ params }: PageProps) {
   const isEn = locale === "en";
   const preferredMarkdown = isEn ? project?.case_study_md_en : project?.case_study_md;
   const fallbackMarkdown = isEn ? project?.case_study_md : project?.case_study_md_en;
-  const markdown = preferredMarkdown || fallbackMarkdown || "";
+  const markdown = (preferredMarkdown || fallbackMarkdown || "").trim();
 
-  // Se non c'è né un case study markdown nel database né un fallback statico, 404
-  if (!markdown && !caseStudy) {
+  // Se il progetto esiste nel database ma non ha un case study markdown compilato, 404
+  if (project) {
+    if (!markdown) {
+      notFound();
+    }
+  } else if (!markdown && !caseStudy) {
     notFound();
   }
 
   const dict = getDictionary(locale);
-  const { prev, next } = getAdjacentCaseStudies(caseStudy?.slug || slug);
+  const { prev: dbPrev, next: dbNext } = await getAdjacentProjectsFromDb(project?.slug || slug);
+  const staticAdjacent = caseStudy ? getAdjacentCaseStudies(caseStudy.slug || slug) : null;
 
   const homeHref = locale === "en" ? "/en" : "/";
   const projectsHref = locale === "en" ? "/en#progetti" : "/#progetti";
   const contactHref = locale === "en" ? "/en#contatti" : "/#contatti";
 
-  const prevHref = locale === "en" ? `/en/progetti/${prev.slug}` : `/progetti/${prev.slug}`;
-  const nextHref = locale === "en" ? `/en/progetti/${next.slug}` : `/progetti/${next.slug}`;
+  const prev = dbPrev
+    ? {
+        slug: dbPrev.slug,
+        title: isEn && dbPrev.title_en ? dbPrev.title_en : dbPrev.title,
+      }
+    : staticAdjacent
+    ? {
+        slug: staticAdjacent.prev.slug,
+        title: staticAdjacent.prev.title[locale],
+      }
+    : null;
+
+  const next = dbNext
+    ? {
+        slug: dbNext.slug,
+        title: isEn && dbNext.title_en ? dbNext.title_en : dbNext.title,
+      }
+    : staticAdjacent
+    ? {
+        slug: staticAdjacent.next.slug,
+        title: staticAdjacent.next.title[locale],
+      }
+    : null;
+
+  const prevHref = prev?.slug
+    ? `${locale === "en" ? "/en" : ""}/progetti/${prev.slug}`
+    : projectsHref;
+  const nextHref = next?.slug
+    ? `${locale === "en" ? "/en" : ""}/progetti/${next.slug}`
+    : projectsHref;
 
   const title = project
     ? (isEn && project.title_en ? project.title_en : project.title)
@@ -192,7 +275,7 @@ export default async function ProjectCaseStudyPage({ params }: PageProps) {
 
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground selection:bg-brand-accent selection:text-brand-accent-foreground font-sans">
-      {caseStudy && <ProjectJsonLd caseStudy={caseStudy} locale={locale} />}
+      <ProjectJsonLd project={project} caseStudy={caseStudy} locale={locale} />
       <Navbar dict={dict} locale={locale} />
 
       <main className="flex-1">
@@ -435,37 +518,39 @@ export default async function ProjectCaseStudyPage({ params }: PageProps) {
           <div className="container mx-auto px-4 sm:px-6 max-w-6xl space-y-12">
             
             {/* Prev / Next Project Switcher */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Link
-                href={prevHref}
-                className="p-5 rounded-2xl border border-border bg-card hover:border-brand-accent/50 hover:shadow-xs transition-all group flex items-center justify-between"
-              >
-                <div className="space-y-1 text-left">
-                  <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
-                    <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-0.5" />
-                    {dict.caseStudy.prevProject}
-                  </span>
-                  <h4 className="font-bold text-foreground text-sm sm:text-base group-hover:text-brand-accent transition-colors">
-                    {prev.title[locale]}
-                  </h4>
-                </div>
-              </Link>
+            {prev && next && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Link
+                  href={prevHref}
+                  className="p-5 rounded-2xl border border-border bg-card hover:border-brand-accent/50 hover:shadow-xs transition-all group flex items-center justify-between"
+                >
+                  <div className="space-y-1 text-left">
+                    <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
+                      <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-0.5" />
+                      {dict.caseStudy.prevProject}
+                    </span>
+                    <h4 className="font-bold text-foreground text-sm sm:text-base group-hover:text-brand-accent transition-colors">
+                      {prev.title}
+                    </h4>
+                  </div>
+                </Link>
 
-              <Link
-                href={nextHref}
-                className="p-5 rounded-2xl border border-border bg-card hover:border-brand-accent/50 hover:shadow-xs transition-all group flex items-center justify-between text-right"
-              >
-                <div className="space-y-1 text-right ml-auto">
-                  <span className="text-xs font-semibold text-muted-foreground flex items-center justify-end gap-1">
-                    {dict.caseStudy.nextProject}
-                    <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
-                  </span>
-                  <h4 className="font-bold text-foreground text-sm sm:text-base group-hover:text-brand-accent transition-colors">
-                    {next.title[locale]}
-                  </h4>
-                </div>
-              </Link>
-            </div>
+                <Link
+                  href={nextHref}
+                  className="p-5 rounded-2xl border border-border bg-card hover:border-brand-accent/50 hover:shadow-xs transition-all group flex items-center justify-between text-right"
+                >
+                  <div className="space-y-1 text-right ml-auto">
+                    <span className="text-xs font-semibold text-muted-foreground flex items-center justify-end gap-1">
+                      {dict.caseStudy.nextProject}
+                      <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+                    </span>
+                    <h4 className="font-bold text-foreground text-sm sm:text-base group-hover:text-brand-accent transition-colors">
+                      {next.title}
+                    </h4>
+                  </div>
+                </Link>
+              </div>
+            )}
 
             {/* Banner Call to Action */}
             <div className="p-8 sm:p-12 rounded-3xl bg-linear-to-br from-secondary/60 via-card to-background border border-border text-center space-y-5 shadow-lg">

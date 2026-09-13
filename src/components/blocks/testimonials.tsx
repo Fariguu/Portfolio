@@ -14,6 +14,7 @@ interface TestimonialsProps {
 
 export async function Testimonials({ dict, locale = "it" }: Readonly<TestimonialsProps>) {
   let testimonials: Testimonial[] = [];
+  let validCaseStudySlugs = new Set<string>();
 
   try {
     const supabase = await createClient();
@@ -25,6 +26,26 @@ export async function Testimonials({ dict, locale = "it" }: Readonly<Testimonial
 
     if (!error && data) {
       testimonials = data;
+    }
+
+    if (testimonials.length > 0) {
+      const { data: projectsData } = await supabase
+        .from("projects")
+        .select("slug, case_study_md, case_study_md_en")
+        .eq("visible", true);
+
+      if (projectsData) {
+        validCaseStudySlugs = new Set(
+          projectsData
+            .filter((p) =>
+              Boolean(
+                (p.case_study_md && p.case_study_md.trim().length > 0) ||
+                (p.case_study_md_en && p.case_study_md_en.trim().length > 0)
+              ) && Boolean(p.slug)
+            )
+            .map((p) => p.slug as string)
+        );
+      }
     }
   } catch {
     // In caso di errore di connessione DB o assenza tabella, testimonials resta vuoto
@@ -131,9 +152,10 @@ export async function Testimonials({ dict, locale = "it" }: Readonly<Testimonial
                   ? item.quote_en
                   : item.quote_it;
 
-              const caseStudyUrl = item.project_slug
-                ? `/${locale === "en" ? "en/" : ""}progetti/${item.project_slug}`
-                : null;
+              const caseStudyUrl =
+                item.project_slug && validCaseStudySlugs.has(item.project_slug)
+                  ? `/${locale === "en" ? "en/" : ""}progetti/${item.project_slug}`
+                  : null;
 
               return (
                 <div
