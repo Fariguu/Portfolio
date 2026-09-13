@@ -150,6 +150,7 @@ export async function createProject(formData: FormData) {
     revalidatePath('/[locale]', 'layout')
     revalidatePath('/admin/projects')
     revalidatePath('/admin')
+    revalidatePath('/sitemap.xml')
     return { success: true }
   } catch (err: unknown) {
     return { error: err instanceof Error ? err.message : 'Errore durante il salvataggio del progetto' }
@@ -251,6 +252,7 @@ export async function updateProject(id: string, formData: FormData) {
     revalidatePath('/[locale]', 'layout')
     revalidatePath('/admin/projects')
     revalidatePath('/admin')
+    revalidatePath('/sitemap.xml')
     return { success: true }
   } catch (err: unknown) {
     return { error: err instanceof Error ? err.message : 'Errore durante l\'aggiornamento del progetto' }
@@ -273,6 +275,7 @@ export async function deleteProject(id: string) {
   revalidatePath('/')
   revalidatePath('/admin/projects')
   revalidatePath('/admin')
+  revalidatePath('/sitemap.xml')
   return { success: true }
 }
 
@@ -294,6 +297,7 @@ export async function toggleProjectVisibility(id: string, currentVisible: boolea
 
   revalidatePath('/')
   revalidatePath('/admin/projects')
+  revalidatePath('/sitemap.xml')
   return { success: true }
 }
 
@@ -374,6 +378,7 @@ export async function saveProjectCaseStudy({
     revalidatePath(`/progetti/${cleanSlug}`)
     revalidatePath(`/en/progetti/${cleanSlug}`)
     revalidatePath('/admin/projects')
+    revalidatePath('/sitemap.xml')
     return { success: true, slug: cleanSlug, caseStudyMdEn: cleanMdEn }
   } catch (err: unknown) {
     return { error: err instanceof Error ? err.message : 'Errore durante il salvataggio del caso di studio' }
@@ -404,6 +409,7 @@ export async function deleteProjectCaseStudy(projectId: string) {
     revalidatePath('/')
     revalidatePath('/[locale]', 'layout')
     revalidatePath('/admin/projects')
+    revalidatePath('/sitemap.xml')
     return { success: true }
   } catch (err: unknown) {
     return { error: err instanceof Error ? err.message : 'Errore durante l\'eliminazione del caso di studio' }
