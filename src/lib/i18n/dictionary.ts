@@ -1312,16 +1312,16 @@ const content = {
   },
   explore: {
     about: {
-      it: "Esplora biografia e profilo completo",
-      en: "Explore full profile & biography",
+      it: "Scopri di più su di me e sulla mia storia",
+      en: "Learn more about me and my background",
     },
     skills: {
       it: "Esplora tutte le competenze e lo stack",
       en: "Explore all technical skills & stack",
     },
     journey: {
-      it: "Esplora biografia e percorso completo",
-      en: "Explore full profile & journey",
+      it: "Approfondisci tutti i traguardi e la formazione",
+      en: "Explore all milestones & academic background",
     },
     projects: {
       it: "Esplora tutti i progetti e casi studio",

@@ -42,7 +42,7 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
   const homeHref = locale === "en" ? "/en" : "/";
   const prefix = locale === "en" ? "/en" : "";
 
-  const navigations = [
+  const desktopNavigations = [
     { title: dict.nav.home, href: isHomePage ? "#chi-sono" : homeHref },
     {
       title: dict.nav.skills,
@@ -50,7 +50,7 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
     },
     {
       title: dict.nav.journey,
-      href: isHomePage ? "#percorso" : `${prefix}/percorso`,
+      href: isHomePage ? "#percorso" : `${prefix}/chi-sono#percorso`,
     },
     {
       title: dict.nav.projects,
@@ -62,7 +62,32 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
     },
   ];
 
+  // On mobile devices, user scrolls through sections: provide direct section links
+  const mobileNavigations = [
+    {
+      title: dict.nav.home,
+      href: isHomePage ? "#chi-sono" : `${homeHref}#chi-sono`,
+    },
+    {
+      title: dict.nav.skills,
+      href: isHomePage ? "#competenze" : `${homeHref}#competenze`,
+    },
+    {
+      title: dict.nav.journey,
+      href: isHomePage ? "#percorso" : `${homeHref}#percorso`,
+    },
+    {
+      title: dict.nav.projects,
+      href: isHomePage ? "#progetti" : `${homeHref}#progetti`,
+    },
+    {
+      title: dict.nav.contact,
+      href: isHomePage ? "#contatti" : `${homeHref}#contatti`,
+    },
+  ];
+
   const contactHref = isHomePage ? "#contatti" : `${prefix}/contatti`;
+  const mobileContactHref = isHomePage ? "#contatti" : `${homeHref}#contatti`;
 
   // Dynamic show/hide on scroll:
   // When scrolling down, hide navbar; when scrolling up, reveal smoothly.
@@ -114,7 +139,7 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
           className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center justify-center text-sm font-medium select-none pointer-events-auto"
         >
           <div className="flex items-center space-x-0.5">
-            {navigations.map((item) => (
+            {desktopNavigations.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -144,9 +169,9 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
           <ThemeToggle />
           <LanguageSwitcher currentLocale={locale} />
           <MobileMenu
-            navigations={navigations}
+            navigations={mobileNavigations}
             contactCta={dict.nav.contactCta}
-            contactHref={contactHref}
+            contactHref={mobileContactHref}
             toggleMenuLabel={dict.nav.toggleMenu}
           />
         </div>
