@@ -23,9 +23,9 @@ export interface ProjectTranslationOutput {
  * Se un modello viene deprecato (es. 404), viene automaticamente testato il successivo.
  */
 const GEMINI_MODELS = [
+  'gemini-3.5-flash-lite',
   'gemini-3.6-flash',
   'gemini-flash-latest',
-  'gemini-3.5-flash',
   'gemini-3.7-flash',
 ]
 

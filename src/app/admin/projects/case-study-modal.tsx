@@ -104,15 +104,30 @@ export function CaseStudyModal({
     setErrorMsg(null)
 
     try {
-      const res = await translateCaseStudyMarkdownAction(markdownIt)
-      if (res.error) {
-        setErrorMsg(res.error)
-      } else if (res.translated) {
-        setMarkdownEn(res.translated)
-        setActiveLang('en')
+      const response = await fetch('/admin/api/translate-markdown', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ markdown: markdownIt }),
+      })
+
+      const data = await response.json().catch(() => null)
+
+      if (!response.ok) {
+        setErrorMsg(
+          data?.error || `Errore del server (${response.status}). Riprova o ricarica la pagina.`
+        )
+        return
       }
-    } catch {
-      setErrorMsg('Errore di connessione durante la traduzione')
+
+      if (data?.translated) {
+        setMarkdownEn(data.translated)
+        setActiveLang('en')
+      } else {
+        setErrorMsg('Nessun testo tradotto restituito dal server.')
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err)
+      setErrorMsg(`Errore di connessione: ${msg}. Se hai la schermata aperta da prima del deploy, prova a ricaricare la pagina (F5).`)
     } finally {
       setTranslating(false)
     }
