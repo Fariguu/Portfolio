@@ -33,12 +33,12 @@ const SHARED_KEYWORDS = [
 const content = {
   meta: {
     title: {
-      it: "Gabriele Farigu | Sviluppatore Web & Software",
-      en: "Gabriele Farigu | Web & Software Developer",
+      it: "Gabriele Farigu — Sviluppatore Web & Software | Bari, Puglia",
+      en: "Gabriele Farigu — Web & Software Developer | Bari, Italy",
     },
     description: {
-      it: "Portfolio di Gabriele Farigu, sviluppatore web e software specializzato in Next.js, React, TypeScript e Supabase. Progetti full-stack, architetture scalabili e codice pulito.",
-      en: "Portfolio of Gabriele Farigu, web and software developer specializing in Next.js, React, TypeScript, and Supabase. Full-stack projects, scalable architectures, and clean code.",
+      it: "Sono Gabriele Farigu, sviluppatore web e software da Turi (Bari). Costruisco applicazioni web con Next.js, React, TypeScript e Supabase. Guarda i miei progetti e scrivimi.",
+      en: "I'm Gabriele Farigu, a web and software developer from Bari, Italy. I build web applications with Next.js, React, TypeScript, and Supabase. Check out my projects and get in touch.",
     },
     roleKeyword: {
       it: "sviluppatore web",
@@ -49,12 +49,12 @@ const content = {
       en: "web development Italy",
     },
     ogTitle: {
-      it: "Gabriele Farigu | Sviluppatore Web & Software",
-      en: "Gabriele Farigu | Web & Software Developer",
+      it: "Gabriele Farigu — Sviluppatore Web & Software | Bari, Puglia",
+      en: "Gabriele Farigu — Web & Software Developer | Bari, Italy",
     },
     ogDescription: {
-      it: "Progetto e realizzo soluzioni web moderne, veloci e su misura. Esplora il mio portfolio con progetti Next.js, React e Supabase.",
-      en: "I design and build modern, fast, and bespoke web solutions. Explore my portfolio featuring Next.js, React, and Supabase projects.",
+      it: "Sviluppatore web da Bari. Lavoro con Next.js, React e Supabase — qui trovi i miei progetti reali e come contattarmi.",
+      en: "Web developer from Bari, Italy. I work with Next.js, React, and Supabase — check out my real projects and reach out.",
     },
     localeCode: {
       it: "it_IT",
@@ -75,13 +75,13 @@ const content = {
   },
   hero: {
     badge: {
-      it: "Disponibile per nuovi progetti",
-      en: "Available for new projects",
+      it: "Disponibile per progetti e collaborazioni",
+      en: "Open for projects & opportunities",
     },
     name: AUTHOR_NAME,
     tagline: {
-      it: "Progetto e realizzo soluzioni web moderne, veloci e su misura. Aiuto progetti e attività a trasformare esigenze concrete in prodotti digitali intuitivi, affidabili e curati in ogni dettaglio.",
-      en: "I design and build modern, fast, and tailored web solutions. I help projects and businesses transform concrete ideas into intuitive, reliable, and meticulously crafted digital products.",
+      it: "Sviluppo applicazioni web con Next.js, React e Supabase. Lavoro su siti vetrina, piattaforme di prenotazione e web app — dalla progettazione al deploy su Vercel.",
+      en: "I build web applications with Next.js, React, and Supabase. I work on showcase sites, booking platforms, and web apps — from planning to deployment on Vercel.",
     },
     ctaProjects: {
       it: "Guarda i miei progetti",
@@ -547,6 +547,56 @@ const content = {
           en: "I guide you step-by-step in registering the domain in your name. For hosting and database, I leverage modern cloud infrastructure (such as Vercel and Supabase), which for most initial projects operate within generous free tiers with zero recurring fees.",
         },
       },
+      {
+        question: {
+          it: "Dove lavori? Accetti progetti solo dalla Puglia?",
+          en: "Where are you based? Do you only accept projects from Puglia?",
+        },
+        answer: {
+          it: "Sono di Turi, in provincia di Bari, ma lavoro interamente da remoto. Accetto progetti da tutta Italia e dall'estero — la maggior parte delle comunicazioni avviene tramite email, videochiamate e repository condivisi.",
+          en: "I'm based in Turi, near Bari (Puglia, Italy), but I work entirely remotely. I accept projects from anywhere in Italy and internationally — most communication happens via email, video calls, and shared repositories.",
+        },
+      },
+      {
+        question: {
+          it: "Quali tecnologie usi per sviluppare un sito o una web app?",
+          en: "What technologies do you use to build websites and web apps?",
+        },
+        answer: {
+          it: "Il mio stack principale è Next.js con React e TypeScript per il frontend, Supabase con PostgreSQL per il database, Tailwind CSS per lo stile e Vercel per il deploy. Per funzionalità specifiche uso anche Resend per le email transazionali e Cloudflare Turnstile per la protezione anti-bot.",
+          en: "My main stack is Next.js with React and TypeScript for the frontend, Supabase with PostgreSQL for the database, Tailwind CSS for styling, and Vercel for deployment. For specific features I also use Resend for transactional emails and Cloudflare Turnstile for bot protection.",
+        },
+      },
+      {
+        question: {
+          it: "Posso chiederti un preventivo gratuito per il mio progetto?",
+          en: "Can I request a free quote for my project?",
+        },
+        answer: {
+          it: "Sì, puoi usare il configuratore online nella pagina Preventivo per descrivere la tua idea in pochi passaggi. Riceverai un'analisi di fattibilità e un preventivo dettagliato entro 24 ore, senza nessun impegno.",
+          en: "Yes, you can use the online configurator on the Quote page to describe your idea in a few steps. You'll receive a feasibility analysis and detailed quote within 24 hours, with no commitment required.",
+        },
+      },
+      {
+        question: {
+          it: "Sei disponibile per assunzioni o collaborazioni a lungo termine?",
+          en: "Are you available for employment or long-term collaborations?",
+        },
+        answer: {
+          it: "Sì, sono aperto sia a progetti freelance che a opportunità lavorative (stage, collaborazioni, posizioni junior). Attualmente studio Informatica all'Università di Bari e lavoro in parallelo su progetti reali. Scrivimi o contattami su LinkedIn.",
+          en: "Yes, I'm open to both freelance projects and employment opportunities (internships, collaborations, junior positions). I'm currently studying Computer Science at the University of Bari while working on real-world projects. Reach out via the contact form or LinkedIn.",
+        },
+      },
+      {
+        question: {
+          it: "Cosa include un sito vetrina che sviluppi?",
+          en: "What does a showcase website you build include?",
+        },
+        answer: {
+          it: "Un sito vetrina tipico include design responsive, ottimizzazione SEO e performance (Lighthouse 95+), modulo contatti con email automatiche, supporto multilingua se necessario, hosting su Vercel con dominio personalizzato e certificato HTTPS. I tempi di consegna sono di solito 1-2 settimane.",
+          en: "A typical showcase website includes responsive design, SEO and performance optimization (Lighthouse 95+), a contact form with automated emails, multilingual support if needed, hosting on Vercel with a custom domain and HTTPS certificate. Delivery usually takes 1-2 weeks.",
+        },
+      },
     ],
   },
   footer: {
@@ -719,17 +769,23 @@ const content = {
       keywords: {
         it: [
           "preventivo sito web",
-          "calcolo costo web app",
-          "sviluppatore software preventivo",
-          "costo sito vetrina Next.js",
-          "sviluppo web app personalizzata",
+          "quanto costa un sito web",
+          "preventivo sviluppo web app",
+          "sviluppatore web bari preventivo",
+          "costo sito vetrina",
+          "creare sito web puglia",
+          "preventivo web app su misura",
+          "sviluppatore freelance preventivo gratis",
         ],
         en: [
-          "website quote calculator",
-          "web app cost estimate",
-          "hire software developer quote",
-          "custom Next.js website pricing",
-          "web development inquiry",
+          "website quote",
+          "how much does a website cost",
+          "web app development quote",
+          "web developer italy quote",
+          "website cost estimate",
+          "hire web developer bari",
+          "freelance web developer quote",
+          "next.js website pricing",
         ],
       },
     },

@@ -21,7 +21,6 @@ import { Footer } from "@/components/layout/footer";
 import { ProjectJsonLd } from "@/components/seo/project-json-ld";
 import { MarkdownContent } from "@/components/ui/markdown-content";
 import {
-  getAllCaseStudies,
   getCaseStudyBySlug,
   getAdjacentCaseStudies,
 } from "@/lib/data/case-studies";
@@ -273,9 +272,42 @@ export default async function ProjectCaseStudyPage({ params }: PageProps) {
   const coverImage = project?.image_url || caseStudy?.coverImage || "";
   const tags = project?.tags || caseStudy?.tags || [];
 
+  const currentSlug = project?.slug || caseStudy?.slug || slug;
+  const baseUrl = getBaseUrl();
+  const currentUrl = `${baseUrl}${locale === "en" ? "/en" : ""}/progetti/${currentSlug}`;
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: baseUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: dict.nav.projects,
+        item: `${baseUrl}${locale === "en" ? "/en" : ""}#progetti`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: title,
+        item: currentUrl,
+      },
+    ],
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground selection:bg-brand-accent selection:text-brand-accent-foreground font-sans">
       <ProjectJsonLd project={project} caseStudy={caseStudy} locale={locale} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <Navbar dict={dict} locale={locale} />
 
       <main className="flex-1">

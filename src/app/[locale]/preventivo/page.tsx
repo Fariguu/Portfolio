@@ -76,37 +76,91 @@ export default async function PreventivoPage({
     description: dict.quote.meta.description,
     url: locale === "it" ? `${baseUrl}/preventivo` : `${baseUrl}/en/preventivo`,
     mainEntity: {
-      "@type": "Service",
-      name: "Sviluppo Web e Software Personalizzato",
+      "@type": "ProfessionalService",
+      name:
+        locale === "en"
+          ? "Gabriele Farigu — Web & Software Development"
+          : "Gabriele Farigu — Sviluppo Web & Software",
       provider: {
         "@type": "Person",
         name: "Gabriele Farigu",
         url: baseUrl,
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Turi",
+          addressRegion: "BA",
+          addressCountry: "IT",
+        },
       },
-      areaServed: "IT",
+      areaServed: [
+        { "@type": "Country", name: "Italy" },
+        { "@type": "AdministrativeArea", name: "Puglia" },
+        { "@type": "City", name: "Bari" },
+      ],
+      serviceType: [
+        "Web Application Development",
+        "Website Design",
+        "Booking System Development",
+        "Website Redesign & Speed Optimization",
+      ],
       hasOfferCatalog: {
         "@type": "OfferCatalog",
-        name: "Servizi di Sviluppo",
+        name: locale === "en" ? "Development Services" : "Servizi di Sviluppo",
         itemListElement: [
           {
             "@type": "Offer",
             itemOffered: {
               "@type": "Service",
-              name: "Sviluppo Web App & Piattaforme su Misura",
+              name:
+                locale === "en"
+                  ? "Custom Web App & Platform Development"
+                  : "Sviluppo Web App & Piattaforme su Misura",
+              description:
+                locale === "en"
+                  ? "Interactive web applications with Next.js, React, TypeScript, and Supabase"
+                  : "Applicazioni web interattive con Next.js, React, TypeScript e Supabase",
             },
           },
           {
             "@type": "Offer",
             itemOffered: {
               "@type": "Service",
-              name: "Sviluppo Siti Vetrina ad Alte Prestazioni",
+              name:
+                locale === "en"
+                  ? "High-Performance Showcase Website"
+                  : "Sviluppo Siti Vetrina ad Alte Prestazioni",
+              description:
+                locale === "en"
+                  ? "Modern, fast websites optimized for SEO and lead generation"
+                  : "Siti web moderni e veloci, ottimizzati per SEO e lead generation",
             },
           },
           {
             "@type": "Offer",
             itemOffered: {
               "@type": "Service",
-              name: "Sistemi di Prenotazione e Calendario",
+              name:
+                locale === "en"
+                  ? "Booking & Scheduling System"
+                  : "Sistemi di Prenotazione e Calendario",
+              description:
+                locale === "en"
+                  ? "Real-time booking platforms with calendar management and automated notifications"
+                  : "Piattaforme di prenotazione in tempo reale con gestione calendario e notifiche",
+            },
+          },
+          {
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name:
+                locale === "en"
+                  ? "Website Redesign & Speed Optimization"
+                  : "Restyling & Ottimizzazione Prestazioni",
+              description:
+                locale === "en"
+                  ? "Core Web Vitals improvement, accessibility audit, and modern visual redesign"
+                  : "Miglioramento Core Web Vitals, audit accessibilità e restyling grafico moderno",
             },
           },
         ],

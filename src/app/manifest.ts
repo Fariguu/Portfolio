@@ -1,11 +1,11 @@
-﻿import type { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Gabriele Farigu | Sviluppatore Web & Software",
+    name: "Gabriele Farigu — Sviluppatore Web | Bari",
     short_name: "GF Portfolio",
     description:
-      "Portfolio di Gabriele Farigu, sviluppatore web e software specializzato in Next.js, React, TypeScript e Supabase.",
+      "Portfolio di Gabriele Farigu, sviluppatore web e software da Bari. Progetti, competenze e contatti.",
     start_url: "/",
     display: "standalone",
     background_color: "#09090b",

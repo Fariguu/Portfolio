@@ -10,7 +10,10 @@ interface HeroProps {
 
 export function Hero({ dict }: Readonly<HeroProps>) {
   return (
-    <section className="relative w-full overflow-hidden bg-background pt-8 pb-10 sm:pt-10 sm:pb-12 lg:pt-10 lg:pb-14 flex items-center min-h-[85vh] sm:min-h-[90vh]">
+    <section
+      id="chi-sono"
+      className="relative w-full overflow-hidden bg-background pt-8 pb-10 sm:pt-10 sm:pb-12 lg:pt-10 lg:pb-14 flex items-center min-h-[85vh] sm:min-h-[90vh]"
+    >
       {/* Background gradients */}
       <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80 pointer-events-none">
         <div
