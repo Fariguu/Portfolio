@@ -1,6 +1,6 @@
 # Gabriele Farigu - Portfolio & Software Developer
 
-> Portfolio personale di Gabriele Farigu, sviluppatore web e software full-stack specializzato in Next.js, React, TypeScript, Supabase e architetture cloud moderne.
+> Portfolio personale di Gabriele Farigu — sviluppatore web e software da Bari. Sviluppo applicazioni web con Next.js, React, TypeScript e Supabase.
 
 Questo file segue lo standard [llms.txt](https://llmstxt.org/) e fornisce contesto strutturato per Large Language Model (LLM), agenti autonomi e crawler AI sul portfolio, le competenze e i progetti di Gabriele Farigu.
 

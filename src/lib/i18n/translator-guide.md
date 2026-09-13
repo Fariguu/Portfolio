@@ -21,7 +21,7 @@ Puoi scegliere se:
 | Chiave | Testo Italiano Originale | Bozza Inglese Attuale | Note / Contesto |
 | :--- | :--- | :--- | :--- |
 | `meta.title` | `Gabriele Farigu \| Sviluppatore Web & Software` | `Gabriele Farigu \| Web & Software Developer` | Titolo mostrato nelle schede del browser e su Google (< 60 car.) |
-| `meta.description` | `Portfolio di Gabriele Farigu, sviluppatore web e software specializzato in Next.js, React, TypeScript e Supabase. Progetti full-stack, architetture scalabili e codice pulito.` | `Portfolio of Gabriele Farigu, web and software developer specializing in Next.js, React, TypeScript, and Supabase. Full-stack projects, scalable architectures, and clean code.` | Meta description per i motori di ricerca (< 160 car.) |
+| `meta.description` | `Sono Gabriele Farigu, sviluppatore web e software da Turi (Bari). Costruisco applicazioni web con Next.js, React, TypeScript e Supabase. Guarda i miei progetti e scrivimi.` | `I'm Gabriele Farigu, a web and software developer from Bari, Italy. I build web applications with Next.js, React, TypeScript, and Supabase. Check out my projects and get in touch.` | Meta description per i motori di ricerca (< 160 car.) |
 | `meta.ogTitle` | `Gabriele Farigu \| Sviluppatore Web & Software` | `Gabriele Farigu \| Web & Software Developer` | Titolo per anteprime OpenGraph (LinkedIn, WhatsApp, ecc.) |
 | `meta.ogDescription`| `Progetto e realizzo soluzioni web moderne, veloci e su misura. Esplora il mio portfolio con progetti Next.js, React e Supabase.` | `I design and build modern, fast, and bespoke web solutions. Explore my portfolio featuring Next.js, React, and Supabase projects.` | Descrizione social |
 
