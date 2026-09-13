@@ -198,7 +198,7 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
   const itemsRef = useRef<Array<HTMLDivElement | null>>([]);
   const rotationRef = useRef(0);
   const scrollProgressRef = useRef(0);
-  const [dimensions, setDimensions] = useState({ rx: 540, ry: 240 });
+  const [dimensions, setDimensions] = useState({ rx: 540, ry: 220 });
   const [isDesktop, setIsDesktop] = useState(false);
   const [isInView, setIsInView] = useState(true);
   const prefersReducedMotion = useSyncExternalStore(
@@ -219,10 +219,10 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
 
       if (width < 1024) {
         // Tablet: ellisse equilibrata con piena clearance da testi e bottoni
-        setDimensions({ rx: Math.min(width * 0.44, 390), ry: 205 });
+        setDimensions({ rx: Math.min(width * 0.44, 390), ry: 195 });
       } else {
         // Desktop: ellisse ampia e ariosa che orbita con generosa clearance attorno a testi, CTA e social
-        setDimensions({ rx: Math.min(width * 0.46, 540), ry: 240 });
+        setDimensions({ rx: Math.min(width * 0.46, 540), ry: 220 });
       }
     }
 
@@ -335,7 +335,7 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
   return (
     <div
       ref={containerRef}
-      className="relative w-full min-h-0 py-6 md:py-0 md:min-h-[640px] flex items-center justify-center select-none overflow-visible"
+      className="relative w-full min-h-0 py-6 md:py-0 md:min-h-[550px] flex items-center justify-center select-none overflow-visible"
     >
       {/* Il Pianeta / Contenuto Centrale (Gabriele Farigu): z-50 prioritario assoluto per non essere MAI coperto */}
       <div className="relative z-50 flex flex-col items-center justify-center max-w-2xl text-center pointer-events-auto">

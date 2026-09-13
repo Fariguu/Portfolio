@@ -10,7 +10,7 @@ interface HeroProps {
 
 export function Hero({ dict }: Readonly<HeroProps>) {
   return (
-    <section className="relative w-full overflow-hidden bg-background py-12 sm:py-16 lg:py-24 flex items-center min-h-[85vh] sm:min-h-[90vh]">
+    <section className="relative w-full overflow-hidden bg-background pt-8 pb-10 sm:pt-10 sm:pb-12 lg:pt-10 lg:pb-14 flex items-center min-h-[85vh] sm:min-h-[90vh]">
       {/* Background gradients */}
       <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80 pointer-events-none">
         <div
@@ -24,7 +24,7 @@ export function Hero({ dict }: Readonly<HeroProps>) {
 
       <div className="container px-4 md:px-6 relative z-10 mx-auto flex flex-col items-center">
         <SaturnOrbit>
-          <div className="flex flex-col items-center justify-center text-center space-y-6 sm:space-y-8 w-full">
+          <div className="flex flex-col items-center justify-center text-center space-y-5 sm:space-y-6 w-full">
             {/* Badge disponibilità: compatto e protetto da overflow su schermi piccoli */}
             <div className="inline-flex items-center justify-center min-w-0 sm:min-w-[245px] max-w-full rounded-full border border-primary/20 bg-primary/10 dark:border-emerald-500/30 dark:bg-emerald-500/10 px-3.5 py-1 text-xs sm:text-sm font-medium text-primary dark:text-[#88fc9d] transition-colors hover:bg-primary/20 dark:hover:bg-emerald-500/20 backdrop-blur-sm cursor-pointer">
               <span className="flex h-2 w-2 rounded-full bg-emerald-500 dark:bg-[#88fc9d] mr-2 shrink-0 animate-pulse"></span>
@@ -65,7 +65,7 @@ export function Hero({ dict }: Readonly<HeroProps>) {
         </SaturnOrbit>
 
         {/* Social Icons posizionati all'esterno dell'orbita per eliminare qualsiasi sovrapposizione visiva */}
-        <div className="flex items-center gap-6 pt-4 sm:pt-6 text-muted-foreground relative z-30">
+        <div className="flex items-center gap-6 pt-2 sm:pt-4 text-muted-foreground relative z-30">
           <a
             href="https://github.com/Fariguu"
             target="_blank"
