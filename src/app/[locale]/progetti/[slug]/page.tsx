@@ -7,11 +7,9 @@ import {
   Lock,
   ArrowLeft,
   ArrowRight,
-  CheckCircle2,
   Cpu,
   Layers,
   Sparkles,
-  TrendingUp,
   AlertTriangle,
   Lightbulb,
 } from "lucide-react";

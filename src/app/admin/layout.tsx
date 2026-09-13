@@ -6,6 +6,7 @@ import {
   GraduationCap,
   FolderGit2,
   HelpCircle,
+  MessageSquareQuote,
   ExternalLink,
   LogOut,
   LayoutDashboard,
@@ -86,6 +87,12 @@ export default async function AdminLayout({
                 >
                   <HelpCircle className="h-4 w-4" /> FAQ
                 </Link>
+                <Link
+                  href="/admin/testimonials"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                >
+                  <MessageSquareQuote className="h-4 w-4" /> Testimonianze
+                </Link>
               </nav>
             </div>
 
@@ -143,6 +150,12 @@ export default async function AdminLayout({
               className="px-3 py-1.5 rounded-md bg-secondary/60 text-foreground whitespace-nowrap"
             >
               FAQ
+            </Link>
+            <Link
+              href="/admin/testimonials"
+              className="px-3 py-1.5 rounded-md bg-secondary/60 text-foreground whitespace-nowrap"
+            >
+              Testimonianze
             </Link>
             <Link
               href="/"

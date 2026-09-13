@@ -1,6 +1,20 @@
 "use client";
 
-import React, { useEffect, useRef, useState, useId } from "react";
+import React, { useEffect, useRef, useState, useId, useSyncExternalStore } from "react";
+
+function subscribeReducedMotion(callback: () => void) {
+  const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  mediaQuery.addEventListener("change", callback);
+  return () => mediaQuery.removeEventListener("change", callback);
+}
+
+function getReducedMotionSnapshot() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function getReducedMotionServerSnapshot() {
+  return false;
+}
 
 interface TechItem {
   name: string;
@@ -187,7 +201,11 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
   const [dimensions, setDimensions] = useState({ rx: 520, ry: 205 });
   const [isDesktop, setIsDesktop] = useState(false);
   const [isInView, setIsInView] = useState(true);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const prefersReducedMotion = useSyncExternalStore(
+    subscribeReducedMotion,
+    getReducedMotionSnapshot,
+    getReducedMotionServerSnapshot
+  );
 
   // Rilevamento viewport desktop e calcolo raggio responsive
   useEffect(() => {
@@ -211,19 +229,6 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
     updateDimensions();
     window.addEventListener("resize", updateDimensions);
     return () => window.removeEventListener("resize", updateDimensions);
-  }, []);
-
-  // Rilevamento prefers-reduced-motion per accessibilità WCAG
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setPrefersReducedMotion(mediaQuery.matches);
-
-    function handleChange(e: MediaQueryListEvent) {
-      setPrefersReducedMotion(e.matches);
-    }
-
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
   // IntersectionObserver: azzera il loop rAF quando la hero non è nel viewport

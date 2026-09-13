@@ -299,3 +299,85 @@ ${markdown}`
   return markdown
 }
 
+export interface TestimonialTranslationInput {
+  role_or_project_it?: string
+  quote_it?: string
+}
+
+export interface TestimonialTranslationOutput {
+  role_or_project_en: string
+  quote_en: string
+}
+
+/**
+ * Traduce i dati di una testimonianza (ruolo/commessa e citazione) da Italiano a Inglese.
+ */
+export async function translateTestimonialData(
+  input: TestimonialTranslationInput
+): Promise<TestimonialTranslationOutput> {
+  const apiKey = process.env.GEMINI_API_KEY?.trim()
+  if (apiKey) {
+    try {
+      const prompt = `You are a professional bilingual translator (Italian to English) specialized in professional recommendations, client testimonials, and endorsements for software engineers and web developers.
+Translate the following testimonial fields from Italian to fluent, authentic, idiomatic English suitable for a professional software engineer's portfolio.
+Maintain the exact sentiment, authenticity, and enthusiasm of the client's review.
+
+Input JSON:
+${JSON.stringify({
+  role_or_project: input.role_or_project_it || '',
+  quote: input.quote_it || '',
+})}
+
+Respond ONLY with a valid raw JSON object with exactly these keys:
+{
+  "role_or_project_en": "...",
+  "quote_en": "..."
+}`
+
+      const model = 'gemini-2.5-flash'
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            responseMimeType: 'application/json',
+            temperature: 0.2,
+          },
+        }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        const rawJson = data?.candidates?.[0]?.content?.parts?.[0]?.text
+        if (rawJson) {
+          const parsed = JSON.parse(rawJson)
+          return {
+            role_or_project_en: parsed.role_or_project_en || '',
+            quote_en: parsed.quote_en || '',
+          }
+        }
+      }
+    } catch {
+      // Fallback
+    }
+  }
+
+  // Fallback se Gemini non è disponibile
+  let role_or_project_en = ''
+  let quote_en = ''
+  if (input.role_or_project_it) {
+    role_or_project_en = await translateTextWithMyMemory(input.role_or_project_it)
+  }
+  if (input.quote_it) {
+    quote_en = await translateTextWithMyMemory(input.quote_it)
+  }
+
+  return {
+    role_or_project_en,
+    quote_en,
+  }
+}
+

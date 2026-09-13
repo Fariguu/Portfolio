@@ -1065,6 +1065,32 @@ const content = {
       },
     },
   },
+  testimonials: {
+    badge: {
+      it: "Dicono di me",
+      en: "Testimonials",
+    },
+    title: {
+      it: "La fiducia si costruisce con i risultati",
+      en: "Trust is built on real outcomes",
+    },
+    description: {
+      it: "Feedback e testimonianze di clienti e colleghi con cui ho sviluppato progetti e soluzioni digitali.",
+      en: "Feedback and reviews from clients and colleagues I've collaborated with on digital projects.",
+    },
+    verifiedReview: {
+      it: "Recensione Verificata",
+      en: "Verified Review",
+    },
+    viewProject: {
+      it: "Vedi caso di studio",
+      en: "View case study",
+    },
+    swipeHint: {
+      it: "Scorri per leggere le altre recensioni ➔",
+      en: "Swipe to read more reviews ➔",
+    },
+  },
 };
 
 function buildDictionary(locale: Locale): Dictionary {
@@ -1407,6 +1433,14 @@ function buildDictionary(locale: Locale): Dictionary {
         description: t(content.quote.ctaBanner.description, locale),
         button: t(content.quote.ctaBanner.button, locale),
       },
+    },
+    testimonials: {
+      badge: t(content.testimonials.badge, locale),
+      title: t(content.testimonials.title, locale),
+      description: t(content.testimonials.description, locale),
+      verifiedReview: t(content.testimonials.verifiedReview, locale),
+      viewProject: t(content.testimonials.viewProject, locale),
+      swipeHint: t(content.testimonials.swipeHint, locale),
     },
   };
 }

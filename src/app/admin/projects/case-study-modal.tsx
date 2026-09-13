@@ -28,7 +28,6 @@ import {
   Save,
   FileText,
   Globe,
-  ExternalLink,
 } from 'lucide-react'
 
 interface CaseStudyModalProps {

@@ -18,11 +18,9 @@ import {
   Coins,
   Send,
   ArrowLeft,
-  ArrowRight,
   CheckCircle2,
   AlertCircle,
   Loader2,
-  Sparkles,
   Check,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";

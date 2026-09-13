@@ -21,7 +21,6 @@ import {
   Loader2,
   AlertCircle,
   Sparkles,
-  Languages,
   CheckCircle2,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'

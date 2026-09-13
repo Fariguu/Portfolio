@@ -204,6 +204,63 @@ export type Database = {
         }
         Relationships: []
       }
+      testimonials: {
+        Row: {
+          id: string
+          author_name: string
+          role_or_project_it: string
+          role_or_project_en: string | null
+          quote_it: string
+          quote_en: string | null
+          rating: number
+          date: string
+          avatar_url: string | null
+          company_logo_url: string | null
+          company_url: string | null
+          project_slug: string | null
+          sort_order: number
+          visible: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          author_name: string
+          role_or_project_it: string
+          role_or_project_en?: string | null
+          quote_it: string
+          quote_en?: string | null
+          rating?: number
+          date: string
+          avatar_url?: string | null
+          company_logo_url?: string | null
+          company_url?: string | null
+          project_slug?: string | null
+          sort_order?: number
+          visible?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          author_name?: string
+          role_or_project_it?: string
+          role_or_project_en?: string | null
+          quote_it?: string
+          quote_en?: string | null
+          rating?: number
+          date?: string
+          avatar_url?: string | null
+          company_logo_url?: string | null
+          company_url?: string | null
+          project_slug?: string | null
+          sort_order?: number
+          visible?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -224,3 +281,5 @@ export type Skill = Database['public']['Tables']['skills']['Row']
 export type JourneyItem = Database['public']['Tables']['journey_items']['Row']
 export type Project = Database['public']['Tables']['projects']['Row']
 export type FAQItem = Database['public']['Tables']['faqs']['Row']
+export type Testimonial = Database['public']['Tables']['testimonials']['Row']
+

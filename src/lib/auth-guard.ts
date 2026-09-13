@@ -1,4 +1,4 @@
-﻿import { createClient } from '@/lib/supabase/server'
+import { createClient } from '@/lib/supabase/server'
 
 export interface AuthCheckResult {
   authorized: boolean
@@ -37,10 +37,10 @@ export async function verifyAdminSession(): Promise<AuthCheckResult> {
       authorized: true,
       userEmail: user.email,
     }
-  } catch (err: any) {
+  } catch (err: unknown) {
     return {
       authorized: false,
-      error: err.message || 'Errore durante la verifica della sessione amministrativa.',
+      error: err instanceof Error ? err.message : 'Errore durante la verifica della sessione amministrativa.',
     }
   }
 }
