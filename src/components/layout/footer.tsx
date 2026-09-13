@@ -10,22 +10,11 @@ interface FooterProps {
 }
 
 export function Footer({ dict, locale }: Readonly<FooterProps>) {
-  const prefix = locale === "en" ? "/en" : "";
   const privacyHref = locale === "en" ? "/en/privacy" : "/privacy";
 
-  const footerLinks = [
-    { title: dict.nav.about, href: `${prefix}/chi-sono` },
-    { title: dict.nav.skills, href: `${prefix}/competenze` },
-    { title: dict.nav.projects, href: `${prefix}/progetti` },
-    { title: dict.nav.journey, href: `${prefix}/percorso` },
-    { title: dict.nav.quote, href: `${prefix}/preventivo` },
-    { title: dict.nav.contact, href: `${prefix}/contatti` },
-    { title: dict.footer.privacyPolicy, href: privacyHref },
-  ];
-
   return (
-    <footer className="w-full border-t border-border/40 bg-background py-10">
-      <div className="container px-4 md:px-6 mx-auto space-y-8">
+    <footer className="w-full border-t border-border/40 bg-background py-12">
+      <div className="container px-4 md:px-6 mx-auto">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center space-x-2">
             <Code2 className="h-6 w-6 text-brand-accent" />
@@ -33,22 +22,6 @@ export function Footer({ dict, locale }: Readonly<FooterProps>) {
               Gabriele Farigu
             </span>
           </div>
-
-          {/* Crawlable Internal Links for Googlebot & Users */}
-          <nav
-            aria-label="Footer Navigation"
-            className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs sm:text-sm text-muted-foreground"
-          >
-            {footerLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="hover:text-brand-accent transition-colors underline-offset-4 hover:underline"
-              >
-                {link.title}
-              </Link>
-            ))}
-          </nav>
 
           <div className="flex justify-center space-x-4">
             <Link
@@ -77,19 +50,21 @@ export function Footer({ dict, locale }: Readonly<FooterProps>) {
               <span className="sr-only">Email</span>
             </Link>
           </div>
-        </div>
 
-        <div className="pt-6 border-t border-border/40 flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left text-xs text-muted-foreground">
-          <p>
-            © {new Date().getFullYear()} Gabriele Farigu. {dict.footer.creatorTagline}
-          </p>
-          <p className="text-[11px] text-muted-foreground/70">
-            {locale === "en"
-              ? "All rights reserved. Designed & built with Next.js."
-              : "Tutti i diritti riservati. Progettato e sviluppato con Next.js."}
-          </p>
+          <div className="flex flex-col items-center md:items-end space-y-1 text-center md:text-right">
+            <p className="text-[11px] sm:text-xs md:text-sm text-muted-foreground whitespace-nowrap">
+              © {new Date().getFullYear()} Gabriele Farigu. {dict.footer.creatorTagline}
+            </p>
+            <Link
+              href={privacyHref}
+              className="text-xs text-muted-foreground hover:text-brand-accent transition-colors underline-offset-4 hover:underline"
+            >
+              {dict.footer.privacyPolicy}
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
   );
 }
+
