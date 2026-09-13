@@ -156,7 +156,7 @@ export function JsonLd({ locale = "it" }: Readonly<JsonLdProps>) {
           locale === "en"
             ? "About Gabriele Farigu — Web and Software Developer"
             : "Chi sono — Gabriele Farigu, sviluppatore web e software",
-        url: `${currentUrl}#chi-sono`,
+        url: `${baseUrl}${locale === "en" ? "/en" : ""}/chi-sono`,
       },
       {
         "@type": "SiteNavigationElement",
@@ -165,7 +165,7 @@ export function JsonLd({ locale = "it" }: Readonly<JsonLdProps>) {
           locale === "en"
             ? "Technologies and tools I use: Next.js, React, TypeScript, Supabase"
             : "Tecnologie e strumenti che uso: Next.js, React, TypeScript, Supabase",
-        url: `${currentUrl}#competenze`,
+        url: `${baseUrl}${locale === "en" ? "/en" : ""}/competenze`,
       },
       {
         "@type": "SiteNavigationElement",
@@ -174,7 +174,7 @@ export function JsonLd({ locale = "it" }: Readonly<JsonLdProps>) {
           locale === "en"
             ? "Education and milestones: University of Bari, high school diploma"
             : "Formazione e traguardi: Università di Bari, diploma SIA",
-        url: `${currentUrl}#percorso`,
+        url: `${baseUrl}${locale === "en" ? "/en" : ""}/percorso`,
       },
       {
         "@type": "SiteNavigationElement",
@@ -183,7 +183,7 @@ export function JsonLd({ locale = "it" }: Readonly<JsonLdProps>) {
           locale === "en"
             ? "Web applications and engineering case studies I've built"
             : "Applicazioni web e casi studio ingegneristici che ho realizzato",
-        url: `${currentUrl}#progetti`,
+        url: `${baseUrl}${locale === "en" ? "/en" : ""}/progetti`,
       },
       {
         "@type": "SiteNavigationElement",
@@ -192,7 +192,7 @@ export function JsonLd({ locale = "it" }: Readonly<JsonLdProps>) {
           locale === "en"
             ? "Get in touch — send a direct message or inquiry"
             : "Scrivimi un messaggio diretto o richiedi informazioni",
-        url: `${currentUrl}#contatti`,
+        url: `${baseUrl}${locale === "en" ? "/en" : ""}/contatti`,
       },
       {
         "@type": "SiteNavigationElement",
@@ -235,31 +235,31 @@ export function JsonLd({ locale = "it" }: Readonly<JsonLdProps>) {
       {
         "@type": "WebPageElement",
         name: locale === "en" ? "About" : "Chi Sono",
-        url: `${currentUrl}#chi-sono`,
+        url: `${baseUrl}${locale === "en" ? "/en" : ""}/chi-sono`,
         description: dict.meta.description,
       },
       {
         "@type": "WebPageElement",
         name: locale === "en" ? "Skills" : "Competenze",
-        url: `${currentUrl}#competenze`,
+        url: `${baseUrl}${locale === "en" ? "/en" : ""}/competenze`,
         description: dict.skills.description,
       },
       {
         "@type": "WebPageElement",
         name: locale === "en" ? "Journey" : "Percorso",
-        url: `${currentUrl}#percorso`,
+        url: `${baseUrl}${locale === "en" ? "/en" : ""}/percorso`,
         description: dict.journey.description,
       },
       {
         "@type": "WebPageElement",
         name: locale === "en" ? "Projects" : "Progetti",
-        url: `${currentUrl}#progetti`,
+        url: `${baseUrl}${locale === "en" ? "/en" : ""}/progetti`,
         description: dict.portfolio.description,
       },
       {
         "@type": "WebPageElement",
         name: locale === "en" ? "Contact" : "Contatti",
-        url: `${currentUrl}#contatti`,
+        url: `${baseUrl}${locale === "en" ? "/en" : ""}/contatti`,
         description: dict.contact.description,
       },
       {

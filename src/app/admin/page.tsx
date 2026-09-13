@@ -10,6 +10,7 @@ import {
   Eye,
   Star,
   CheckCircle2,
+  User,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -215,16 +216,16 @@ export default async function AdminDashboardPage() {
         <div className="p-6 rounded-2xl border border-border/60 bg-card space-y-3">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-foreground flex items-center gap-2">
-              <HelpCircle className="h-4 w-4 text-primary" /> Nuova FAQ
+              <User className="h-4 w-4 text-primary" /> Biografia & Chi Sono
             </h3>
             <ArrowUpRight className="h-4 w-4 text-muted-foreground" />
           </div>
           <p className="text-xs text-muted-foreground">
-            Aggiungi o personalizza una domanda frequente per i tuoi clienti.
+            Modifica il testo biografico visibile nella pagina /chi-sono.
           </p>
-          <Button asChild size="sm" className="w-full mt-2">
-            <Link href="/admin/faq">
-              <Plus className="h-4 w-4 mr-1" /> Aggiungi
+          <Button asChild size="sm" className="w-full mt-2" variant="outline">
+            <Link href="/admin/profile">
+              Gestisci Bio →
             </Link>
           </Button>
         </div>

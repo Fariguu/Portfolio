@@ -1,14 +1,22 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Mail } from "lucide-react";
+import { ArrowRight, Mail, CornerDownRight } from "lucide-react";
 import { Github, Linkedin } from "@/components/ui/icons";
 import { SaturnOrbit } from "@/components/blocks/saturn-orbit";
+import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n/types";
+import type { Locale } from "@/lib/i18n/config";
 
 interface HeroProps {
   readonly dict: Dictionary;
+  readonly locale?: Locale;
+  readonly showExploreLink?: boolean;
 }
 
-export function Hero({ dict }: Readonly<HeroProps>) {
+export function Hero({
+  dict,
+  locale = "it",
+  showExploreLink = true,
+}: Readonly<HeroProps>) {
   return (
     <section
       id="chi-sono"
@@ -64,6 +72,23 @@ export function Hero({ dict }: Readonly<HeroProps>) {
                 <a href="#contatti">{dict.hero.ctaContact}</a>
               </Button>
             </div>
+
+            {/* Link di approfondimento per la pagina dedicata /chi-sono */}
+            {showExploreLink && (
+              <div className="pt-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="group text-xs text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full px-4 h-9 transition-colors inline-flex items-center gap-1.5"
+                  asChild
+                >
+                  <Link href={locale === "en" ? "/en/chi-sono" : "/chi-sono"}>
+                    <span>{dict.explore.about}</span>
+                    <CornerDownRight className="h-3.5 w-3.5 text-brand-accent transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </Button>
+              </div>
+            )}
           </div>
         </SaturnOrbit>
 

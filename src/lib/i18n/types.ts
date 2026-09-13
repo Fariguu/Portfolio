@@ -9,12 +9,15 @@ export interface Dictionary {
   };
   nav: {
     home: string;
+    about: string;
     skills: string;
     journey: string;
     projects: string;
     contact: string;
     contactCta: string;
     toggleMenu: string;
+    quote: string;
+    backHome: string;
   };
   hero: {
     badge: string;
@@ -277,5 +280,48 @@ export interface Dictionary {
     verifiedReview: string;
     viewProject: string;
     swipeHint: string;
+  };
+  bio: {
+    badge: string;
+    title: string;
+    fallbackHeadline: string;
+    fallbackBio: string;
+    studiesTitle: string;
+    ctaContact: string;
+    ctaProjects: string;
+    adminNotice: string;
+  };
+  pages: {
+    skills: {
+      title: string;
+      description: string;
+      keywords: string[];
+    };
+    journey: {
+      title: string;
+      description: string;
+      keywords: string[];
+    };
+    projects: {
+      title: string;
+      description: string;
+      keywords: string[];
+    };
+    contact: {
+      title: string;
+      description: string;
+      keywords: string[];
+    };
+    about: {
+      title: string;
+      description: string;
+      keywords: string[];
+    };
+  };
+  explore: {
+    about: string;
+    skills: string;
+    journey: string;
+    projects: string;
   };
 }

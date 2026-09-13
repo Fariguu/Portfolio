@@ -67,3 +67,4 @@ export function Footer({ dict, locale }: Readonly<FooterProps>) {
     </footer>
   );
 }
+
