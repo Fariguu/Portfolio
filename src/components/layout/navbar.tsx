@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { Menu, Code2 } from "lucide-react";
@@ -36,10 +35,6 @@ interface NavbarProps {
 }
 
 export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
-  const pathname = usePathname();
-  const isHomePage =
-    !pathname || pathname === "/" || pathname === "/en" || pathname === "/it";
-
   const homeHref = locale === "en" ? "/en" : "/";
   const prefix = locale === "en" ? "/en" : "";
 
@@ -113,12 +108,7 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
         >
           <Link
             href={homeHref}
-            className={cn(
-              "px-4 py-1.5 rounded-full text-center transition-all font-medium text-xs lg:text-sm",
-              isHomePage
-                ? "text-brand-accent bg-brand-accent/10 border border-brand-accent/25 shadow-2xs"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
-            )}
+            className="px-2.5 lg:px-3 text-center py-1.5 transition-colors hover:text-brand-accent text-muted-foreground whitespace-nowrap text-xs lg:text-sm"
           >
             {dict.nav.home}
           </Link>
