@@ -56,27 +56,45 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
   ];
 
   // Dynamic show/hide on scroll:
-  // When scrolling down, hide navbar; when scrolling up, reveal smoothly.
+  // When scrolling down, hide navbar; when scrolling up even slightly, reveal immediately.
   const [isVisible, setIsVisible] = React.useState(true);
-  const lastScrollY = React.useRef(0);
 
   React.useEffect(() => {
+    let lastScrollY = window.scrollY;
+    let scrollUpDistance = 0;
+    let scrollDownDistance = 0;
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      const diff = currentScrollY - lastScrollY.current;
 
+      // When near the top, always show navbar
       if (currentScrollY < 60) {
-        // Always visible near top of page
         setIsVisible(true);
-      } else if (diff > 8) {
-        // Scrolling down -> hide
-        setIsVisible(false);
-      } else if (diff < -8) {
-        // Scrolling up -> reveal dynamically
-        setIsVisible(true);
+        scrollUpDistance = 0;
+        scrollDownDistance = 0;
+        lastScrollY = currentScrollY;
+        return;
       }
 
-      lastScrollY.current = currentScrollY;
+      const delta = currentScrollY - lastScrollY;
+
+      if (delta > 0) {
+        // Scrolling down: accumulate downward delta
+        scrollDownDistance += delta;
+        scrollUpDistance = 0;
+        if (scrollDownDistance > 12) {
+          setIsVisible(false);
+        }
+      } else if (delta < 0) {
+        // Scrolling up: accumulate upward delta and reveal quickly
+        scrollUpDistance += Math.abs(delta);
+        scrollDownDistance = 0;
+        if (scrollUpDistance > 6) {
+          setIsVisible(true);
+        }
+      }
+
+      lastScrollY = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
