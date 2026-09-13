@@ -133,19 +133,19 @@ export async function Journey({
 
         {/* Mobile Horizontal Timeline View (< md) — Linea continua con punti senza card */}
         <div className="block md:hidden">
-          <div className="overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden -mx-4 px-4 sm:-mx-6 sm:px-6 pt-4 pb-6">
-            <div className="inline-flex min-w-full gap-8 relative border-t-2 border-border/80 pt-6">
+          <div className="overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden -mx-4 px-[7.5vw] pt-6 pb-6">
+            <div className="inline-flex min-w-full gap-8 relative border-t-2 border-border/80 pt-6 pr-[7.5vw]">
               {timelineData.map((item, index) => {
                 const isCurrent = item.isCurrent;
 
                 return (
                   <div
                     key={item.id || index}
-                    className="w-[82vw] max-w-[320px] shrink-0 snap-start relative group"
+                    className="w-[85vw] max-w-[340px] shrink-0 snap-center relative group pl-5 pr-1"
                   >
-                    {/* Bullet point / Dot posizionato direttamente sulla linea orizzontale */}
+                    {/* Bullet point / Dot posizionato direttamente sulla linea orizzontale e allineato con il padding */}
                     <div
-                      className={`absolute -top-[33px] left-0 h-4 w-4 rounded-full border-2 border-background transition-all duration-300 ${
+                      className={`absolute -top-[33px] left-5 h-4 w-4 rounded-full border-2 border-background transition-all duration-300 ${
                         isCurrent
                           ? "bg-primary ring-4 ring-primary/20 scale-110"
                           : "bg-foreground group-hover:scale-125 group-hover:bg-primary"
