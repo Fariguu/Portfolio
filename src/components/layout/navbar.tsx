@@ -42,7 +42,6 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
   const desktopNavigations = [
     { title: dict.nav.about, href: `${prefix}/chi-sono` },
     { title: dict.nav.skills, href: `${prefix}/competenze` },
-    { title: dict.nav.journey, href: `${prefix}/percorso` },
     { title: dict.nav.projects, href: `${prefix}/progetti` },
     { title: dict.nav.contact, href: `${prefix}/contatti` },
   ];
@@ -52,7 +51,6 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
     { title: dict.nav.home, href: homeHref },
     { title: dict.nav.about, href: `${prefix}/chi-sono` },
     { title: dict.nav.skills, href: `${prefix}/competenze` },
-    { title: dict.nav.journey, href: `${prefix}/percorso` },
     { title: dict.nav.projects, href: `${prefix}/progetti` },
     { title: dict.nav.contact, href: `${prefix}/contatti` },
   ];
