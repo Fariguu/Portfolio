@@ -20,10 +20,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { ProjectJsonLd } from "@/components/seo/project-json-ld";
 import { MarkdownContent } from "@/components/ui/markdown-content";
-import {
-  getCaseStudyBySlug,
-  getAdjacentCaseStudies,
-} from "@/lib/data/case-studies";
+import { getCaseStudyBySlug } from "@/lib/data/case-studies";
 import { createPublicClient } from "@/lib/supabase/public";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { isValidLocale, defaultLocale, locales, type Locale } from "@/lib/i18n/config";
@@ -162,41 +159,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-async function getAdjacentProjectsFromDb(currentSlug: string) {
-  try {
-    const supabase = createPublicClient();
-    const { data } = await supabase
-      .from("projects")
-      .select("slug, title, title_en, case_study_md, case_study_md_en")
-      .eq("visible", true)
-      .order("sort_order", { ascending: true });
-
-    if (!data) return { prev: null, next: null };
-    const withCaseStudy = data.filter(
-      (p) =>
-        Boolean((p.case_study_md || p.case_study_md_en)?.trim()) &&
-        Boolean(p.slug)
-    );
-
-    if (withCaseStudy.length <= 1) {
-      return { prev: null, next: null };
-    }
-
-    const index = withCaseStudy.findIndex(
-      (p) => p.slug?.toLowerCase() === currentSlug.toLowerCase()
-    );
-    const safeIndex = index === -1 ? 0 : index;
-    const prevIndex = (safeIndex - 1 + withCaseStudy.length) % withCaseStudy.length;
-    const nextIndex = (safeIndex + 1) % withCaseStudy.length;
-
-    return {
-      prev: withCaseStudy[prevIndex],
-      next: withCaseStudy[nextIndex],
-    };
-  } catch {
-    return { prev: null, next: null };
-  }
-}
 
 export default async function ProjectCaseStudyPage({ params }: PageProps) {
   const { locale: rawLocale, slug } = await params;
@@ -217,45 +179,10 @@ export default async function ProjectCaseStudyPage({ params }: PageProps) {
   } else if (!markdown && !caseStudy) {
     notFound();
   }
-
   const dict = getDictionary(locale);
-  const { prev: dbPrev, next: dbNext } = await getAdjacentProjectsFromDb(project?.slug || slug);
-  const staticAdjacent = caseStudy ? getAdjacentCaseStudies(caseStudy.slug || slug) : null;
-
   const homeHref = locale === "en" ? "/en" : "/";
   const projectsHref = locale === "en" ? "/en#progetti" : "/#progetti";
   const contactHref = locale === "en" ? "/en#contatti" : "/#contatti";
-
-  const prev = dbPrev
-    ? {
-        slug: dbPrev.slug,
-        title: isEn && dbPrev.title_en ? dbPrev.title_en : dbPrev.title,
-      }
-    : staticAdjacent
-    ? {
-        slug: staticAdjacent.prev.slug,
-        title: staticAdjacent.prev.title[locale],
-      }
-    : null;
-
-  const next = dbNext
-    ? {
-        slug: dbNext.slug,
-        title: isEn && dbNext.title_en ? dbNext.title_en : dbNext.title,
-      }
-    : staticAdjacent
-    ? {
-        slug: staticAdjacent.next.slug,
-        title: staticAdjacent.next.title[locale],
-      }
-    : null;
-
-  const prevHref = prev?.slug
-    ? `${locale === "en" ? "/en" : ""}/progetti/${prev.slug}`
-    : projectsHref;
-  const nextHref = next?.slug
-    ? `${locale === "en" ? "/en" : ""}/progetti/${next.slug}`
-    : projectsHref;
 
   const title = project
     ? (isEn && project.title_en ? project.title_en : project.title)
@@ -547,45 +474,9 @@ export default async function ProjectCaseStudyPage({ params }: PageProps) {
           </>
         ) : null}
 
-        {/* Sezione: Navigazione Progetti Sequenziale & CTA Finale */}
+        {/* Sezione: Call to Action Finale */}
         <section className="py-14 sm:py-20 border-t border-border/70 bg-background">
-          <div className="container mx-auto px-4 sm:px-6 max-w-6xl space-y-12">
-            
-            {/* Prev / Next Project Switcher */}
-            {prev && next && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Link
-                  href={prevHref}
-                  className="p-5 rounded-2xl border border-border bg-card hover:border-brand-accent/50 hover:shadow-xs transition-all group flex items-center justify-between"
-                >
-                  <div className="space-y-1 text-left">
-                    <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
-                      <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-0.5" />
-                      {dict.caseStudy.prevProject}
-                    </span>
-                    <h4 className="font-bold text-foreground text-sm sm:text-base group-hover:text-brand-accent transition-colors">
-                      {prev.title}
-                    </h4>
-                  </div>
-                </Link>
-
-                <Link
-                  href={nextHref}
-                  className="p-5 rounded-2xl border border-border bg-card hover:border-brand-accent/50 hover:shadow-xs transition-all group flex items-center justify-between text-right"
-                >
-                  <div className="space-y-1 text-right ml-auto">
-                    <span className="text-xs font-semibold text-muted-foreground flex items-center justify-end gap-1">
-                      {dict.caseStudy.nextProject}
-                      <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
-                    </span>
-                    <h4 className="font-bold text-foreground text-sm sm:text-base group-hover:text-brand-accent transition-colors">
-                      {next.title}
-                    </h4>
-                  </div>
-                </Link>
-              </div>
-            )}
-
+          <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
             {/* Banner Call to Action */}
             <div className="p-8 sm:p-12 rounded-3xl bg-linear-to-br from-secondary/60 via-card to-background border border-border text-center space-y-5 shadow-lg">
               <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-brand-accent/15 text-brand-accent border border-brand-accent/30">
