@@ -1,13 +1,13 @@
 import type { MetadataRoute } from "next";
 import { getBaseUrl } from "@/lib/url";
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = getBaseUrl();
   const slugs = new Set<string>();
 
   try {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const { data } = await supabase
       .from("projects")
       .select("slug, case_study_md, case_study_md_en")

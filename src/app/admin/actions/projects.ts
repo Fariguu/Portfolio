@@ -343,9 +343,14 @@ export async function saveProjectCaseStudy({
     const cleanMd = caseStudyMd.trim()
     let cleanMdEn = (caseStudyMdEn || '').trim()
 
-    // Se la versione inglese è vuota, traduciamo automaticamente
+    // Se la versione inglese è vuota, proviamo a tradurla automaticamente
     if (!cleanMdEn && cleanMd) {
-      cleanMdEn = await translateMarkdownCaseStudy(cleanMd)
+      try {
+        cleanMdEn = await translateMarkdownCaseStudy(cleanMd)
+      } catch (err) {
+        console.warn('[saveProjectCaseStudy] Traduzione automatica EN non riuscita o API key assente:', err)
+        cleanMdEn = ''
+      }
     }
 
     const supabase = createAdminClient()

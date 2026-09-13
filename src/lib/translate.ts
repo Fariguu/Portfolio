@@ -19,6 +19,63 @@ export interface ProjectTranslationOutput {
 }
 
 /**
+ * Modelli Gemini supportati in ordine di priorità.
+ * Se un modello viene deprecato (es. 404), viene automaticamente testato il successivo.
+ */
+const GEMINI_MODELS = [
+  'gemini-3.6-flash',
+  'gemini-flash-latest',
+  'gemini-3.5-flash',
+  'gemini-3.7-flash',
+]
+
+interface GeminiCallParams {
+  prompt: string
+  apiKey: string
+  jsonMode?: boolean
+}
+
+/**
+ * Esegue una chiamata all'API Gemini con fallback trasparente tra i modelli disponibili.
+ */
+async function callGeminiWithFallback(params: GeminiCallParams): Promise<string> {
+  let lastError: Error | null = null
+
+  for (const model of GEMINI_MODELS) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${params.apiKey}`
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: params.prompt }] }],
+          generationConfig: {
+            temperature: 0.2,
+            ...(params.jsonMode ? { responseMimeType: 'application/json' } : {}),
+          },
+        }),
+      })
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        lastError = new Error(`Modello ${model} (${response.status}): ${errorText}`)
+        continue
+      }
+
+      const data = await response.json()
+      const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text
+      if (rawText && rawText.trim().length > 0) {
+        return rawText.trim()
+      }
+    } catch (err) {
+      lastError = err instanceof Error ? err : new Error(String(err))
+    }
+  }
+
+  throw lastError || new Error('Tutti i modelli Gemini hanno fallito la chiamata.')
+}
+
+/**
  * Traduce un batch di campi di un progetto software da IT a EN tramite Google Gemini API.
  */
 async function translateWithGemini(
@@ -47,36 +104,11 @@ Respond ONLY with a valid raw JSON object with exactly these keys:
   "status_badge_en": "..."
 }`
 
-    // Endpoint standard Gemini 2.5 Flash
-    const model = 'gemini-2.5-flash'
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [{ text: prompt }],
-          },
-        ],
-        generationConfig: {
-          temperature: 0.2,
-          responseMimeType: 'application/json',
-        },
-      }),
+    const rawText = await callGeminiWithFallback({
+      prompt,
+      apiKey,
+      jsonMode: true,
     })
-
-    if (!response.ok) {
-      console.warn(`[translate] Gemini API error (${response.status}):`, await response.text())
-      return null
-    }
-
-    const data = await response.json()
-    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text
-    if (!rawText) return null
 
     // Rimuove eventuali backticks markdown se presenti
     const cleanedText = rawText
@@ -184,26 +216,11 @@ Respond ONLY with a valid raw JSON object with exactly these keys:
   "answer_en": "..."
 }`
 
-    const model = 'gemini-2.5-flash'
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: {
-          temperature: 0.2,
-          responseMimeType: 'application/json',
-        },
-      }),
+    const rawText = await callGeminiWithFallback({
+      prompt,
+      apiKey,
+      jsonMode: true,
     })
-
-    if (!response.ok) return null
-
-    const data = await response.json()
-    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text
-    if (!rawText) return null
 
     const cleanedText = rawText
       .replace(/^```json\s*/i, '')
@@ -246,19 +263,24 @@ export async function translateFAQData(
 
 /**
  * Traduce un testo completo in formato Markdown da Italiano a Inglese preservando
- * rigorosamente la sintassi Markdown (titoli, liste, blocchi di codice, grassetto, ecc.).
+ * rigorosamente la sintassi Markdown (titoli, liste, blocchi di codice, grassetto, tabelle, ecc.).
+ * Solleva un errore esplicito se la chiave GEMINI_API_KEY non è configurata o se la traduzione fallisce.
  */
 export async function translateMarkdownCaseStudy(markdown: string): Promise<string> {
   if (!markdown || !markdown.trim()) return ''
 
   const apiKey = process.env.GEMINI_API_KEY?.trim()
-  if (apiKey) {
-    try {
-      const prompt = `You are a professional software engineer and bilingual translator (Italian to English).
+  if (!apiKey) {
+    throw new Error(
+      "Chiave GEMINI_API_KEY non configurata nelle variabili d'ambiente (su Vercel o in locale). Aggiungila nelle impostazioni del progetto per abilitare la traduzione automatica con IA."
+    )
+  }
+
+  const prompt = `You are a professional software engineer and bilingual translator (Italian to English).
 Translate the following project case study written in Markdown from Italian to fluent, technical, idiomatic English suitable for a top-tier software engineer portfolio.
 
 CRITICAL INSTRUCTIONS:
-1. Preserve ALL Markdown formatting EXACTLY: headers (#, ##, ###), bold (**text**), lists (- or 1.), blockquotes (>), horizontal rules (---), and code blocks (\`\`\`lang ... \`\`\`).
+1. Preserve ALL Markdown formatting EXACTLY: headers (#, ##, ###), bold (**text**), lists (- or 1.), blockquotes (>), horizontal rules (---), tables, and code blocks (\`\`\`lang ... \`\`\`).
 2. Do not translate code, variable names, URLs, or file paths inside code blocks or inline backticks.
 3. Maintain technical accuracy (e.g. "computo metrico" -> "cost estimation / bill of quantities", "trulli e masserie" -> "trulli and masserie (historic Apulian stone estates)").
 4. Output ONLY the translated Markdown text directly without any extra wrapping, meta-commentary or JSON.
@@ -266,37 +288,22 @@ CRITICAL INSTRUCTIONS:
 Markdown input:
 ${markdown}`
 
-      const model = 'gemini-2.5-flash'
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`
+  try {
+    const rawText = await callGeminiWithFallback({
+      prompt,
+      apiKey,
+      jsonMode: false,
+    })
 
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            temperature: 0.2,
-          },
-        }),
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text
-        if (rawText && rawText.trim().length > 0) {
-          return rawText
-            .replace(/^```markdown\s*/i, '')
-            .replace(/```\s*$/i, '')
-            .trim()
-        }
-      }
-    } catch {
-      // Fallback
-    }
+    return rawText
+      .replace(/^```markdown\s*/i, '')
+      .replace(/^```\s*/i, '')
+      .replace(/```\s*$/i, '')
+      .trim()
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err)
+    throw new Error(`Errore durante la traduzione con Gemini: ${msg}`)
   }
-
-  // Fallback se Gemini non è configurato: restituisce il testo originale
-  return markdown
 }
 
 export interface TestimonialTranslationInput {
@@ -334,31 +341,22 @@ Respond ONLY with a valid raw JSON object with exactly these keys:
   "quote_en": "..."
 }`
 
-      const model = 'gemini-2.5-flash'
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`
-
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            responseMimeType: 'application/json',
-            temperature: 0.2,
-          },
-        }),
+      const rawJson = await callGeminiWithFallback({
+        prompt,
+        apiKey,
+        jsonMode: true,
       })
 
-      if (response.ok) {
-        const data = await response.json()
-        const rawJson = data?.candidates?.[0]?.content?.parts?.[0]?.text
-        if (rawJson) {
-          const parsed = JSON.parse(rawJson)
-          return {
-            role_or_project_en: parsed.role_or_project_en || '',
-            quote_en: parsed.quote_en || '',
-          }
-        }
+      const cleanedText = rawJson
+        .replace(/^```json\s*/i, '')
+        .replace(/^```\s*/i, '')
+        .replace(/```\s*$/i, '')
+        .trim()
+
+      const parsed = JSON.parse(cleanedText)
+      return {
+        role_or_project_en: parsed.role_or_project_en || '',
+        quote_en: parsed.quote_en || '',
       }
     } catch {
       // Fallback

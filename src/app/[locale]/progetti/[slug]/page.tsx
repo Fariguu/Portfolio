@@ -24,11 +24,13 @@ import {
   getCaseStudyBySlug,
   getAdjacentCaseStudies,
 } from "@/lib/data/case-studies";
-import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { isValidLocale, defaultLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getBaseUrl } from "@/lib/url";
 import { siteConfig } from "@/lib/seo.config";
+
+export const dynamic = "force-dynamic";
 
 interface PageProps {
   readonly params: Promise<{
@@ -39,7 +41,7 @@ interface PageProps {
 
 async function getProjectFromDb(slug: string) {
   try {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const { data } = await supabase
       .from("projects")
       .select("*")
@@ -56,7 +58,7 @@ export async function generateStaticParams() {
   const slugs = new Set<string>();
 
   try {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const { data } = await supabase
       .from("projects")
       .select("slug, case_study_md, case_study_md_en")
@@ -162,7 +164,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 async function getAdjacentProjectsFromDb(currentSlug: string) {
   try {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const { data } = await supabase
       .from("projects")
       .select("slug, title, title_en, case_study_md, case_study_md_en")
