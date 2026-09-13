@@ -125,10 +125,13 @@
   * {
     @apply border-border outline-ring/50;
   }
-  html,
+  html {
+    @apply bg-background text-foreground;
+    -webkit-tap-highlight-color: transparent;
+  }
   body {
     @apply bg-background text-foreground;
-    overflow-x: hidden;
+    overflow-x: clip;
     -webkit-tap-highlight-color: transparent;
   }
   button,

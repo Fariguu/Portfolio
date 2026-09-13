@@ -56,42 +56,29 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
   ];
 
   // Dynamic show/hide on scroll:
-  // When scrolling down, hide navbar; when scrolling up even slightly, reveal immediately.
+  // When scrolling down, hide navbar; when scrolling up, reveal immediately!
   const [isVisible, setIsVisible] = React.useState(true);
 
   React.useEffect(() => {
-    let lastScrollY = window.scrollY;
-    let scrollUpDistance = 0;
-    let scrollDownDistance = 0;
+    let lastScrollY = window.pageYOffset || document.documentElement.scrollTop;
 
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+      const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
 
-      // When near the top, always show navbar
-      if (currentScrollY < 60) {
+      // Always visible near top of page (first 60px)
+      if (currentScrollY <= 60) {
         setIsVisible(true);
-        scrollUpDistance = 0;
-        scrollDownDistance = 0;
         lastScrollY = currentScrollY;
         return;
       }
 
-      const delta = currentScrollY - lastScrollY;
-
-      if (delta > 0) {
-        // Scrolling down: accumulate downward delta
-        scrollDownDistance += delta;
-        scrollUpDistance = 0;
-        if (scrollDownDistance > 12) {
-          setIsVisible(false);
-        }
-      } else if (delta < 0) {
-        // Scrolling up: accumulate upward delta and reveal quickly
-        scrollUpDistance += Math.abs(delta);
-        scrollDownDistance = 0;
-        if (scrollUpDistance > 6) {
-          setIsVisible(true);
-        }
+      // If scrolling UP: reveal immediately at any scroll position on the page!
+      if (currentScrollY < lastScrollY) {
+        setIsVisible(true);
+      }
+      // If scrolling DOWN by more than 6px: hide
+      else if (currentScrollY > lastScrollY + 6) {
+        setIsVisible(false);
       }
 
       lastScrollY = currentScrollY;
@@ -102,48 +89,53 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
   }, []);
 
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-transform duration-300 ease-in-out",
-        isVisible ? "translate-y-0" : "-translate-y-full"
-      )}
-    >
-      <div className="container relative flex h-16 items-center justify-between px-4 md:px-6 mx-auto">
-        {/* Left: Brand Logo & Name */}
-        <div className="flex items-center gap-2 z-10">
-          <Link href={homeHref} className="flex items-center space-x-2">
-            <Code2 className="h-6 w-6 text-brand-accent transition-colors" />
-            <span className="font-bold inline-block">Gabriele Farigu</span>
-          </Link>
-        </div>
+    <>
+      <header
+        className={cn(
+          "fixed top-0 left-0 right-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 transition-transform duration-300 ease-in-out",
+          isVisible ? "translate-y-0" : "-translate-y-full"
+        )}
+      >
+        <div className="container relative flex h-16 items-center justify-between px-4 md:px-6 mx-auto">
+          {/* Left: Brand Logo & Name */}
+          <div className="flex items-center gap-2 z-10">
+            <Link href={homeHref} className="flex items-center space-x-2">
+              <Code2 className="h-6 w-6 text-brand-accent transition-colors" />
+              <span className="font-bold inline-block">Gabriele Farigu</span>
+            </Link>
+          </div>
 
-        {/* Center: Desktop Nav - Mantieni solo il pulsante Home al centro della barra */}
-        <nav
-          aria-label="Desktop Navigation"
-          className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center justify-center text-sm font-medium select-none pointer-events-auto"
-        >
-          <Link
-            href={homeHref}
-            className="px-2.5 lg:px-3 text-center py-1.5 transition-colors hover:text-brand-accent text-muted-foreground whitespace-nowrap text-xs lg:text-sm"
+          {/* Center: Desktop Nav - Mantieni solo il pulsante Home al centro della barra */}
+          <nav
+            aria-label="Desktop Navigation"
+            className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center justify-center text-sm font-medium select-none pointer-events-auto"
           >
-            {dict.nav.home}
-          </Link>
-        </nav>
+            <Link
+              href={homeHref}
+              className="px-2.5 lg:px-3 text-center py-1.5 transition-colors hover:text-brand-accent text-muted-foreground whitespace-nowrap text-xs lg:text-sm"
+            >
+              {dict.nav.home}
+            </Link>
+          </nav>
 
-        {/* Right: Actions & Side Menu Trigger */}
-        <div className="flex items-center justify-end space-x-2 md:space-x-3 z-10">
-          <ThemeToggle />
-          <LanguageSwitcher currentLocale={locale} />
-          <MobileMenu
-            desktopNavigations={desktopNavigations}
-            mobileNavigations={mobileNavigations}
-            contactCta={dict.nav.contactCta}
-            contactHref={`${prefix}/contatti`}
-            toggleMenuLabel={dict.nav.toggleMenu}
-            locale={locale}
-          />
+          {/* Right: Actions & Side Menu Trigger */}
+          <div className="flex items-center justify-end space-x-2 md:space-x-3 z-10">
+            <ThemeToggle />
+            <LanguageSwitcher currentLocale={locale} />
+            <MobileMenu
+              desktopNavigations={desktopNavigations}
+              mobileNavigations={mobileNavigations}
+              contactCta={dict.nav.contactCta}
+              contactHref={`${prefix}/contatti`}
+              toggleMenuLabel={dict.nav.toggleMenu}
+              locale={locale}
+            />
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {/* Spacer to prevent layout shift with fixed header */}
+      <div className="h-16 w-full shrink-0" aria-hidden="true" />
+    </>
   );
 }
