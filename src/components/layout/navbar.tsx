@@ -13,20 +13,7 @@ import type { Locale } from "@/lib/i18n/config";
 
 const MobileMenu = dynamic(
   () => import("./mobile-menu").then((mod) => mod.MobileMenu),
-  {
-    ssr: false,
-    loading: () => (
-      <Button
-        variant="ghost"
-        size="sm"
-        className="h-10 w-10 md:w-auto md:h-9 px-0 md:px-3.5 md:rounded-full md:border md:border-border/80 text-foreground"
-        aria-label="Menu"
-      >
-        <Menu className="h-5 w-5 md:h-4 md:w-4" />
-        <span className="hidden md:inline-block ml-1.5 text-xs font-medium">Menu</span>
-      </Button>
-    ),
-  }
+  { ssr: false }
 );
 
 interface NavbarProps {
@@ -54,6 +41,8 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
     { title: dict.nav.projects, href: `${prefix}/progetti` },
     { title: dict.nav.contact, href: `${prefix}/contatti` },
   ];
+
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   // Dynamic show/hide on scroll:
   // When scrolling down, hide navbar; when scrolling up, reveal immediately!
@@ -122,14 +111,36 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
           <div className="flex items-center justify-end space-x-2 md:space-x-3 z-10">
             <ThemeToggle />
             <LanguageSwitcher currentLocale={locale} />
-            <MobileMenu
-              desktopNavigations={desktopNavigations}
-              mobileNavigations={mobileNavigations}
-              contactCta={dict.nav.contactCta}
-              contactHref={`${prefix}/contatti`}
-              toggleMenuLabel={dict.nav.toggleMenu}
-              locale={locale}
-            />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsMenuOpen(true)}
+              onPointerEnter={() => {
+                import("./mobile-menu");
+              }}
+              onTouchStart={() => {
+                import("./mobile-menu");
+              }}
+              className="h-10 w-10 md:w-auto md:h-9 px-0 md:px-3.5 md:rounded-full md:border md:border-border/80 md:bg-background/80 hover:border-brand-accent/50 hover:bg-muted/60 transition-all text-foreground cursor-pointer"
+              aria-label={dict.nav.toggleMenu}
+            >
+              <Menu className="h-5 w-5 md:h-4 md:w-4 text-foreground md:text-brand-accent" />
+              <span className="hidden md:inline-block ml-1.5 text-xs font-medium">Menu</span>
+              <span className="sr-only md:hidden">{dict.nav.toggleMenu}</span>
+            </Button>
+
+            {isMenuOpen && (
+              <MobileMenu
+                open={isMenuOpen}
+                onOpenChange={setIsMenuOpen}
+                desktopNavigations={desktopNavigations}
+                mobileNavigations={mobileNavigations}
+                contactCta={dict.nav.contactCta}
+                contactHref={`${prefix}/contatti`}
+                toggleMenuLabel={dict.nav.toggleMenu}
+                locale={locale}
+              />
+            )}
           </div>
         </div>
       </header>

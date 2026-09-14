@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Mail, CornerDownRight } from "lucide-react";
 import { Github, Linkedin } from "@/components/ui/icons";
 import { SaturnOrbit } from "@/components/blocks/saturn-orbit";
+import { TechChips } from "@/components/blocks/tech-chips";
 import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
@@ -22,20 +23,19 @@ export function Hero({
       id="chi-sono"
       className="relative w-full overflow-hidden bg-background pt-8 pb-10 sm:pt-10 sm:pb-12 lg:pt-10 lg:pb-14 flex items-center min-h-[85vh] sm:min-h-[90vh]"
     >
-      {/* Background gradients */}
-      <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80 pointer-events-none">
-        <div
-          className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] dark:from-[#047857] dark:to-[#88fc9d] opacity-30 dark:opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
-          style={{
-            clipPath:
-              "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
-          }}
-        />
-      </div>
+      {/* Background ambient glow: gradiente radiale nativo a 0ms senza overhead di rasterizzazione */}
+      <div
+        className="absolute inset-0 -z-10 pointer-events-none bg-[radial-gradient(ellipse_70%_50%_at_50%_-10%,rgba(144,137,252,0.18),transparent)] dark:bg-[radial-gradient(ellipse_70%_50%_at_50%_-10%,rgba(4,120,87,0.20),transparent)]"
+        aria-hidden="true"
+      />
 
       <div className="container px-4 md:px-6 relative z-10 mx-auto flex flex-col items-center">
-        <SaturnOrbit>
-          <div className="flex flex-col items-center justify-center text-center space-y-5 sm:space-y-6 w-full">
+        <div className="relative w-full min-h-0 py-6 md:py-0 md:min-h-[550px] flex items-center justify-center select-none overflow-visible">
+          {/* Layer orbitante 3D: renderizzato esclusivamente su desktop (>= md) */}
+          <SaturnOrbit />
+
+          {/* Il Pianeta / Contenuto Centrale: Server Component puro al 100% */}
+          <div className="relative z-50 flex flex-col items-center justify-center max-w-2xl text-center pointer-events-auto w-full space-y-5 sm:space-y-6">
             {/* Badge disponibilità: compatto e protetto da overflow su schermi piccoli */}
             <div className="inline-flex items-center justify-center min-w-0 sm:min-w-[245px] max-w-full rounded-full border border-primary/20 bg-primary/10 dark:border-emerald-500/30 dark:bg-emerald-500/10 px-3.5 py-1 text-xs sm:text-sm font-medium text-primary dark:text-[#88fc9d] transition-colors hover:bg-primary/20 dark:hover:bg-emerald-500/20 backdrop-blur-sm cursor-pointer">
               <span className="flex h-2 w-2 rounded-full bg-emerald-500 dark:bg-[#88fc9d] mr-2 shrink-0 animate-pulse"></span>
@@ -89,8 +89,11 @@ export function Hero({
                 </Button>
               </div>
             )}
+
+            {/* Tech Stack Chips statici per schermi mobile (< md): Server Component puro */}
+            <TechChips />
           </div>
-        </SaturnOrbit>
+        </div>
 
         {/* Social Icons posizionati all'esterno dell'orbita per eliminare qualsiasi sovrapposizione visiva */}
         <div className="flex items-center gap-6 pt-2 sm:pt-4 text-muted-foreground relative z-30">

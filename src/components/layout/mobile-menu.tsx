@@ -27,6 +27,8 @@ interface SideMenuProps {
   readonly contactHref?: string;
   readonly toggleMenuLabel: string;
   readonly locale?: string;
+  readonly open?: boolean;
+  readonly onOpenChange?: (open: boolean) => void;
 }
 
 export function MobileMenu({
@@ -37,8 +39,12 @@ export function MobileMenu({
   contactHref = "/contatti",
   toggleMenuLabel,
   locale = "it",
+  open: controlledOpen,
+  onOpenChange: setControlledOpen,
 }: Readonly<SideMenuProps>) {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [internalOpen, setInternalOpen] = React.useState(false);
+  const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen;
+  const setIsOpen = setControlledOpen || setInternalOpen;
   const pathname = usePathname();
 
   // Desktop links: use desktopNavigations if provided, otherwise fallback
@@ -60,18 +66,20 @@ export function MobileMenu({
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <SheetTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-10 w-10 md:w-auto md:h-9 px-0 md:px-3.5 md:rounded-full md:border md:border-border/80 md:bg-background/80 hover:border-brand-accent/50 hover:bg-muted/60 transition-all text-foreground cursor-pointer"
-          aria-label={toggleMenuLabel}
-        >
-          <Menu className="h-5 w-5 md:h-4 md:w-4 text-foreground md:text-brand-accent" />
-          <span className="hidden md:inline-block ml-1.5 text-xs font-medium">Menu</span>
-          <span className="sr-only md:hidden">{toggleMenuLabel}</span>
-        </Button>
-      </SheetTrigger>
+      {controlledOpen === undefined && (
+        <SheetTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-10 w-10 md:w-auto md:h-9 px-0 md:px-3.5 md:rounded-full md:border md:border-border/80 md:bg-background/80 hover:border-brand-accent/50 hover:bg-muted/60 transition-all text-foreground cursor-pointer"
+            aria-label={toggleMenuLabel}
+          >
+            <Menu className="h-5 w-5 md:h-4 md:w-4 text-foreground md:text-brand-accent" />
+            <span className="hidden md:inline-block ml-1.5 text-xs font-medium">Menu</span>
+            <span className="sr-only md:hidden">{toggleMenuLabel}</span>
+          </Button>
+        </SheetTrigger>
+      )}
 
       <SheetContent
         side="right"

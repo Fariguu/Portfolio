@@ -12,58 +12,34 @@ interface ThemeToggleProps {
 
 export function ThemeToggle({ className, showLabel = false }: Readonly<ThemeToggleProps>) {
   const { setTheme, resolvedTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
 
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return (
-      <Button
-        variant="ghost"
-        size={showLabel ? "default" : "icon"}
-        className={`h-9 rounded-full ${showLabel ? "px-3 justify-start gap-2" : "w-9"} ${className || ""}`}
-        aria-label="Cambia tema"
-      >
-        <span className="h-4 w-4" />
-        {showLabel && <span className="text-sm">Tema</span>}
-      </Button>
-    );
-  }
-
-  const isDark = resolvedTheme === "dark";
+  const handleToggle = () => {
+    const isDark =
+      typeof document !== "undefined"
+        ? document.documentElement.classList.contains("dark")
+        : resolvedTheme === "dark";
+    setTheme(isDark ? "light" : "dark");
+  };
 
   return (
     <Button
       variant="ghost"
       size={showLabel ? "default" : "icon"}
-      onClick={() => setTheme(isDark ? "light" : "dark")}
+      onClick={handleToggle}
       className={`h-9 rounded-full relative transition-colors ${
         showLabel ? "px-3 justify-start gap-2.5 w-full" : "w-9"
       } ${className || ""}`}
-      title={isDark ? "Attiva tema chiaro" : "Attiva tema scuro"}
+      title="Alterna tema chiaro/scuro"
       aria-label="Alterna tema chiaro/scuro"
     >
       <div className="relative h-4 w-4 flex items-center justify-center">
-        <Sun
-          className={`h-4 w-4 transition-all duration-300 ${
-            isDark
-              ? "rotate-90 scale-0 opacity-0"
-              : "rotate-0 scale-100 opacity-100 text-amber-600"
-          }`}
-        />
-        <Moon
-          className={`absolute h-4 w-4 transition-all duration-300 ${
-            isDark
-              ? "rotate-0 scale-100 opacity-100 text-[#88fc9d]"
-              : "-rotate-90 scale-0 opacity-0"
-          }`}
-        />
+        <Sun className="h-4 w-4 transition-transform duration-300 dark:hidden text-amber-600" />
+        <Moon className="h-4 w-4 transition-transform duration-300 hidden dark:block text-[#88fc9d]" />
       </div>
       {showLabel && (
         <span className="text-sm font-medium">
-          {isDark ? "Tema Scuro" : "Tema Chiaro"}
+          <span className="dark:hidden">Tema Chiaro</span>
+          <span className="hidden dark:inline">Tema Scuro</span>
         </span>
       )}
       <span className="sr-only">Alterna tema chiaro e scuro</span>
