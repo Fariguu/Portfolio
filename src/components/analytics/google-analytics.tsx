@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import Script from "next/script";
@@ -43,13 +43,13 @@ export function GoogleAnalytics({ measurementId }: GoogleAnalyticsProps) {
           setShouldLoad(true);
           cleanup();
         },
-        { timeout: 3500 }
+        { timeout: 6000 }
       );
     } else {
       timeoutId = setTimeout(() => {
         setShouldLoad(true);
         cleanup();
-      }, 3500);
+      }, 6000);
     }
 
     return () => {
