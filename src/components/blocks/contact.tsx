@@ -1,16 +1,12 @@
 import * as React from "react";
-import dynamic from "next/dynamic";
 import { Mail, MapPin, Phone, Coins } from "lucide-react";
 import { Linkedin } from "@/components/ui/icons";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { LazyContactForm } from "./lazy-contact-form";
 import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
-
-const ContactForm = dynamic(
-  () => import("./contact-form").then((mod) => mod.ContactForm)
-);
 
 interface ContactProps {
   readonly dict: Dictionary;
@@ -103,8 +99,8 @@ export function Contact({ dict, locale }: Readonly<ContactProps>) {
             </div>
           </div>
 
-          {/* 2. Card del Form di Contatto (Client Component isolato caricato asincronamente) */}
-          <ContactForm dict={dict} locale={locale} />
+          {/* 2. Card del Form di Contatto (Lazy-loaded all'avvicinarsi del viewport) */}
+          <LazyContactForm dict={dict} locale={locale} />
 
           {/* 3. Card promozionale per il Preventivo (3° su mobile; Colonna 1, Riga 2 su desktop): HTML statico puro */}
           <Card className="order-3 lg:order-none border-border/50 shadow-xs bg-background p-6 space-y-4 lg:col-start-1 lg:row-start-2 lg:self-end">
