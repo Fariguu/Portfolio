@@ -17,29 +17,33 @@ const MobileMenu = dynamic(
 );
 
 interface NavbarProps {
-  readonly dict: Dictionary;
+  readonly dict?: Dictionary;
+  readonly nav?: Dictionary["nav"];
   readonly locale: Locale;
 }
 
-export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
+export function Navbar({ dict, nav: explicitNav, locale }: Readonly<NavbarProps>) {
+  const nav = explicitNav || dict?.nav;
+  if (!nav) throw new Error("Navbar requires nav or dict");
+
   const homeHref = locale === "en" ? "/en" : "/";
   const prefix = locale === "en" ? "/en" : "";
 
   // Desktop drawer: all other options (Home is kept centered in the desktop navbar)
   const desktopNavigations = [
-    { title: dict.nav.about, href: `${prefix}/chi-sono` },
-    { title: dict.nav.skills, href: `${prefix}/competenze` },
-    { title: dict.nav.projects, href: `${prefix}/progetti` },
-    { title: dict.nav.contact, href: `${prefix}/contatti` },
+    { title: nav.about, href: `${prefix}/chi-sono` },
+    { title: nav.skills, href: `${prefix}/competenze` },
+    { title: nav.projects, href: `${prefix}/progetti` },
+    { title: nav.contact, href: `${prefix}/contatti` },
   ];
 
   // Mobile drawer: all options including Home
   const mobileNavigations = [
-    { title: dict.nav.home, href: homeHref },
-    { title: dict.nav.about, href: `${prefix}/chi-sono` },
-    { title: dict.nav.skills, href: `${prefix}/competenze` },
-    { title: dict.nav.projects, href: `${prefix}/progetti` },
-    { title: dict.nav.contact, href: `${prefix}/contatti` },
+    { title: nav.home, href: homeHref },
+    { title: nav.about, href: `${prefix}/chi-sono` },
+    { title: nav.skills, href: `${prefix}/competenze` },
+    { title: nav.projects, href: `${prefix}/progetti` },
+    { title: nav.contact, href: `${prefix}/contatti` },
   ];
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -104,7 +108,7 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
               prefetch={false}
               className="px-2.5 lg:px-3 text-center py-1.5 transition-colors hover:text-brand-accent text-muted-foreground whitespace-nowrap text-xs lg:text-sm"
             >
-              {dict.nav.home}
+              {nav.home}
             </Link>
           </nav>
 
@@ -120,11 +124,11 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
                 import("./mobile-menu");
               }}
               className="h-10 w-10 md:w-auto md:h-9 px-0 md:px-3.5 md:rounded-full md:border md:border-border/80 md:bg-background/80 hover:border-brand-accent/50 hover:bg-muted/60 transition-all text-foreground cursor-pointer"
-              aria-label={dict.nav.toggleMenu}
+              aria-label={nav.toggleMenu}
             >
               <Menu className="h-5 w-5 md:h-4 md:w-4 text-foreground md:text-brand-accent" />
               <span className="hidden md:inline-block ml-1.5 text-xs font-medium">Menu</span>
-              <span className="sr-only md:hidden">{dict.nav.toggleMenu}</span>
+              <span className="sr-only md:hidden">{nav.toggleMenu}</span>
             </Button>
 
             {isMenuOpen && (
@@ -133,9 +137,9 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
                 onOpenChange={setIsMenuOpen}
                 desktopNavigations={desktopNavigations}
                 mobileNavigations={mobileNavigations}
-                contactCta={dict.nav.contactCta}
+                contactCta={nav.contactCta}
                 contactHref={`${prefix}/contatti`}
-                toggleMenuLabel={dict.nav.toggleMenu}
+                toggleMenuLabel={nav.toggleMenu}
                 locale={locale}
               />
             )}

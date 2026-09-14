@@ -17,11 +17,18 @@ import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
 
 interface ContactFormProps {
-  readonly dict: Dictionary;
+  readonly dict?: Dictionary;
+  readonly contactDict?: Dictionary["contact"];
   readonly locale: Locale;
 }
 
-export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
+export function ContactForm({
+  dict,
+  contactDict: explicitContact,
+  locale,
+}: Readonly<ContactFormProps>) {
+  const contact = explicitContact || dict?.contact;
+  if (!contact) throw new Error("ContactForm requires contactDict or dict");
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -45,7 +52,7 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
 
     if (turnstileSiteKey && !turnstileToken) {
       setHasInteracted(true);
-      setErrorMessage(dict.contact.turnstileError);
+      setErrorMessage(contact.turnstileError);
       setIsSubmitting(false);
       return;
     }
@@ -67,7 +74,7 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
       const result = await response.json();
 
       if (!result.success) {
-        setErrorMessage(result.error || dict.contact.genericError);
+        setErrorMessage(result.error || contact.genericError);
         setIsSubmitting(false);
         return;
       }
@@ -76,7 +83,7 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
       setIsSubmitted(true);
     } catch (err: unknown) {
       const errMessage =
-        err instanceof Error ? err.message : dict.contact.genericError;
+        err instanceof Error ? err.message : contact.genericError;
       setErrorMessage(errMessage);
     } finally {
       setIsSubmitting(false);
@@ -96,8 +103,8 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
   return (
     <Card className="order-2 lg:order-none border-border/50 shadow-xs bg-background h-full flex flex-col justify-between lg:col-start-2 lg:row-start-1 lg:row-span-2">
       <CardHeader>
-        <CardTitle>{dict.contact.cardTitle}</CardTitle>
-        <CardDescription>{dict.contact.cardDescription}</CardDescription>
+        <CardTitle>{contact.cardTitle}</CardTitle>
+        <CardDescription>{contact.cardDescription}</CardDescription>
       </CardHeader>
       <CardContent>
         {isSubmitted ? (
@@ -109,10 +116,10 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
             </div>
             <div className="space-y-1">
               <h4 className="font-bold text-foreground text-xl">
-                {dict.contact.successTitle}
+                {contact.successTitle}
               </h4>
               <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
-                {dict.contact.successMessage}{" "}
+                {contact.successMessage}{" "}
                 <strong>{submittedEmail}</strong>.
               </p>
             </div>
@@ -123,7 +130,7 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
                 onClick={handleReset}
                 className="rounded-full hover:text-brand-accent hover:border-brand-accent/40"
               >
-                {dict.contact.sendAnother}
+                {contact.sendAnother}
               </Button>
             </div>
           </div>
@@ -147,7 +154,7 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
                   htmlFor="first-name"
                   className="text-sm font-medium leading-none text-foreground"
                 >
-                  {dict.contact.fieldFirstName}
+                  {contact.fieldFirstName}
                 </label>
                 <input
                   id="first-name"
@@ -155,7 +162,7 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
                   onChange={(e) => setFirstName(e.target.value)}
                   disabled={isSubmitting}
                   className="flex h-11 sm:h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
-                  placeholder={dict.contact.fieldFirstNamePlaceholder}
+                  placeholder={contact.fieldFirstNamePlaceholder}
                   required
                 />
               </div>
@@ -164,7 +171,7 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
                   htmlFor="last-name"
                   className="text-sm font-medium leading-none text-foreground"
                 >
-                  {dict.contact.fieldLastName}
+                  {contact.fieldLastName}
                 </label>
                 <input
                   id="last-name"
@@ -172,7 +179,7 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
                   onChange={(e) => setLastName(e.target.value)}
                   disabled={isSubmitting}
                   className="flex h-11 sm:h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
-                  placeholder={dict.contact.fieldLastNamePlaceholder}
+                  placeholder={contact.fieldLastNamePlaceholder}
                   required
                 />
               </div>
@@ -182,7 +189,7 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
                 htmlFor="email"
                 className="text-sm font-medium leading-none text-foreground"
               >
-                {dict.contact.fieldEmail}
+                {contact.fieldEmail}
               </label>
               <input
                 id="email"
@@ -191,7 +198,7 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isSubmitting}
                 className="flex h-11 sm:h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
-                placeholder={dict.contact.fieldEmailPlaceholder}
+                placeholder={contact.fieldEmailPlaceholder}
                 required
               />
             </div>
@@ -200,7 +207,7 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
                 htmlFor="message"
                 className="text-sm font-medium leading-none text-foreground"
               >
-                {dict.contact.fieldMessage}
+                {contact.fieldMessage}
               </label>
               <textarea
                 id="message"
@@ -209,7 +216,7 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
                 disabled={isSubmitting}
                 rows={4}
                 className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-y"
-                placeholder={dict.contact.fieldMessagePlaceholder}
+                placeholder={contact.fieldMessagePlaceholder}
                 required
               />
             </div>
@@ -220,7 +227,7 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
                 siteKey={turnstileSiteKey}
                 userInteracted={hasInteracted}
                 onSuccess={(token) => setTurnstileToken(token)}
-                onError={() => setErrorMessage(dict.contact.turnstileError)}
+                onError={() => setErrorMessage(contact.turnstileError)}
                 onExpire={() => setTurnstileToken("")}
               />
             )}
@@ -233,24 +240,24 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {dict.contact.submitting}
+                  {contact.submitting}
                 </>
               ) : (
                 <>
                   <Send className="mr-2 h-4 w-4" />
-                  {dict.contact.submit}
+                  {contact.submit}
                 </>
               )}
             </Button>
 
             <p className="text-xs text-muted-foreground text-center pt-1">
-              {dict.contact.privacyConsentPrefix}{" "}
+              {contact.privacyConsentPrefix}{" "}
               <Link
                 href={privacyHref}
                 prefetch={false}
                 className="underline hover:text-brand-accent transition-colors"
               >
-                {dict.contact.privacyConsentLinkText}
+                {contact.privacyConsentLinkText}
               </Link>
               .
             </p>

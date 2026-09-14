@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist } from "next/font/google";
 import { VercelAnalytics } from "@/components/analytics/vercel-analytics";
 import { getBaseUrl } from "@/lib/url";
 import { siteConfig } from "@/lib/seo.config";
@@ -11,12 +11,14 @@ const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
   display: "optional",
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-  display: "optional",
+  fallback: [
+    "system-ui",
+    "-apple-system",
+    "BlinkMacSystemFont",
+    "Segoe UI",
+    "Roboto",
+    "sans-serif",
+  ],
 });
 
 export const viewport: Viewport = {
@@ -65,7 +67,7 @@ export default function RootLayout({
   return (
     <html lang="it" className="scroll-smooth" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} antialiased`}
       >
         {/* Google Analytics caricato su interaction o idle per non bloccare il caricamento critico (FCP/LCP/TBT) */}
         <GoogleAnalytics measurementId="G-0PDN3595Y5" />

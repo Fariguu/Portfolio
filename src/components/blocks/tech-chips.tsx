@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import { TECH_ITEMS } from "@/lib/tech-stack";
 
 /**
@@ -12,7 +12,7 @@ export function TechChips({ className = "" }: { readonly className?: string }) {
         {TECH_ITEMS.map((item) => (
           <div
             key={item.name}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border/70 bg-card/70 backdrop-blur-xs text-xs font-medium text-foreground/85 shadow-2xs transition-colors hover:border-brand-accent/40 hover:text-brand-accent"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border/70 bg-card/90 text-xs font-medium text-foreground/85 shadow-2xs transition-colors hover:border-brand-accent/40 hover:text-brand-accent"
           >
             <div className="w-3.5 h-3.5 flex items-center justify-center shrink-0">
               {item.svg(`chip-${item.name.toLowerCase().replace(/[^a-z0-9]/g, "")}`)}

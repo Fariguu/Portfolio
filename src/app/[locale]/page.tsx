@@ -69,7 +69,7 @@ export default async function HomePage({ params }: Readonly<PageProps>) {
 
   return (
     <div className="min-h-screen flex flex-col font-[family-name:var(--font-geist-sans)]">
-      <Navbar dict={dict} locale={locale} />
+      <Navbar nav={dict.nav} locale={locale} />
       <main className="flex-1">
         <Hero dict={dict} locale={locale} />
         <Features dict={dict} locale={locale} />

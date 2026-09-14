@@ -104,7 +104,7 @@ export function Contact({ dict, locale }: Readonly<ContactProps>) {
           </div>
 
           {/* 2. Card del Form di Contatto (Client Component isolato caricato asincronamente) */}
-          <ContactForm dict={dict} locale={locale} />
+          <ContactForm contactDict={dict.contact} locale={locale} />
 
           {/* 3. Card promozionale per il Preventivo (3° su mobile; Colonna 1, Riga 2 su desktop): HTML statico puro */}
           <Card className="order-3 lg:order-none border-border/50 shadow-xs bg-background p-6 space-y-4 lg:col-start-1 lg:row-start-2 lg:self-end">
