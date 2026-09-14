@@ -11,6 +11,7 @@ const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
   display: "optional",
+  preload: false,
   fallback: [
     "system-ui",
     "-apple-system",
