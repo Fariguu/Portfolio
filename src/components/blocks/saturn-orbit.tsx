@@ -24,6 +24,7 @@ export function SaturnOrbit() {
   const rotationRef = useRef(0);
   const scrollProgressRef = useRef(0);
   const [dimensions, setDimensions] = useState({ rx: 540, ry: 220 });
+  const [isDesktop, setIsDesktop] = useState(false);
   const [isInView, setIsInView] = useState(true);
   const prefersReducedMotion = useSyncExternalStore(
     subscribeReducedMotion,
@@ -31,12 +32,15 @@ export function SaturnOrbit() {
     getReducedMotionServerSnapshot
   );
 
-  // Rilevamento e calcolo raggio responsive (solo desktop)
+  // Rileva se il viewport è desktop (>= 768px)
   useEffect(() => {
-    function updateDimensions() {
-      if (!containerRef.current) return;
+    function updateState() {
+      if (typeof window === "undefined") return;
       const width = window.innerWidth;
-      if (width < 768) return;
+      const desktop = width >= 768 && window.matchMedia("(min-width: 768px)").matches;
+      setIsDesktop(desktop);
+
+      if (!desktop || !containerRef.current) return;
 
       if (width < 1024) {
         setDimensions({ rx: Math.min(width * 0.44, 390), ry: 195 });
@@ -45,14 +49,14 @@ export function SaturnOrbit() {
       }
     }
 
-    updateDimensions();
-    window.addEventListener("resize", updateDimensions);
-    return () => window.removeEventListener("resize", updateDimensions);
+    updateState();
+    window.addEventListener("resize", updateState);
+    return () => window.removeEventListener("resize", updateState);
   }, []);
 
-  // IntersectionObserver: azzera il loop rAF quando la hero non è nel viewport
+  // IntersectionObserver: solo desktop
   useEffect(() => {
-    if (!containerRef.current || typeof IntersectionObserver === "undefined") return;
+    if (!isDesktop || !containerRef.current || typeof IntersectionObserver === "undefined") return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -64,12 +68,14 @@ export function SaturnOrbit() {
 
     observer.observe(containerRef.current);
     return () => observer.disconnect();
-  }, []);
+  }, [isDesktop]);
 
-  // Monitoraggio dello scroll per l'effetto cinematico (solo desktop)
+  // Monitoraggio dello scroll (solo desktop)
   useEffect(() => {
+    if (!isDesktop) return;
+
     function handleScroll() {
-      if (!containerRef.current || window.innerWidth < 768) return;
+      if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight || 800;
 
@@ -80,28 +86,29 @@ export function SaturnOrbit() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isDesktop]);
 
-  // Loop di animazione a 60fps con requestAnimationFrame (solo desktop in view senza reduced-motion)
+  // Loop di rotazione rAF (ESCLUSIVAMENTE su desktop)
   useEffect(() => {
-    if (typeof window === "undefined" || window.innerWidth < 768 || !isInView || prefersReducedMotion) return;
+    if (!isDesktop || !isInView || prefersReducedMotion) return;
 
     let animId: number;
     let lastTime = performance.now();
-    const durationSeconds = 56; // Rivoluzione lenta, distensiva ed elegante
+    const durationSeconds = 56;
 
     function step(now: number) {
+      // Controllo di sicurezza immediato: se mobile, arresta definitivamente il loop
+      if (window.innerWidth < 768) return;
+
       const delta = (now - lastTime) / 1000;
       lastTime = now;
 
-      // Avanzamento rotazione continuo
       rotationRef.current = (rotationRef.current + ((2 * Math.PI) / durationSeconds) * delta) % (2 * Math.PI);
 
       const currentRot = rotationRef.current;
       const totalItems = TECH_ITEMS.length;
       const scrollProg = scrollProgressRef.current;
 
-      // Effetto allargamento: moltiplica i raggi fino a 2.8x ed esegue il fade-out
       const expansionFactor = 1 + scrollProg * 1.8;
       const currentRx = dimensions.rx * expansionFactor;
       const currentRy = dimensions.ry * expansionFactor;
@@ -115,8 +122,6 @@ export function SaturnOrbit() {
 
         const x = Math.cos(angle) * currentRx;
         const y = Math.sin(angle) * currentRy;
-
-        // Profondità: sin(angle) > 0 davanti (sotto nello schermo), sin(angle) < 0 dietro (sopra)
         const depth = Math.sin(angle);
 
         let scale: number;
@@ -146,9 +151,10 @@ export function SaturnOrbit() {
 
     animId = requestAnimationFrame(step);
     return () => cancelAnimationFrame(animId);
-  }, [dimensions, isInView, prefersReducedMotion]);
+  }, [dimensions, isDesktop, isInView, prefersReducedMotion]);
 
-  if (prefersReducedMotion) {
+  // Se non siamo su desktop o con reduced motion, NON renderizzare né montare nulla nel DOM
+  if (!isDesktop || prefersReducedMotion) {
     return null;
   }
 

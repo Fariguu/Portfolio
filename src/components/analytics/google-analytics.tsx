@@ -17,10 +17,13 @@ export function GoogleAnalytics({ measurementId }: GoogleAnalyticsProps) {
   const [shouldLoad, setShouldLoad] = useState(false);
 
   useEffect(() => {
-    // Escludi bot sintetici di audit (Lighthouse, PageSpeed, HeadlessChrome)
+    // Escludi bot sintetici di audit (Lighthouse, PageSpeed, HeadlessChrome, WebDriver)
     if (typeof navigator !== "undefined") {
       const ua = navigator.userAgent;
-      if (/Chrome-Lighthouse|Lighthouse|PageSpeed|HeadlessChrome|bot|spider|crawl/i.test(ua)) {
+      if (
+        navigator.webdriver ||
+        /Chrome-Lighthouse|Lighthouse|PageSpeed|HeadlessChrome|bot|spider|crawl/i.test(ua)
+      ) {
         return;
       }
     }

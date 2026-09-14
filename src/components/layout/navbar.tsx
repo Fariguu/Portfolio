@@ -118,9 +118,6 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
               onPointerEnter={() => {
                 import("./mobile-menu");
               }}
-              onTouchStart={() => {
-                import("./mobile-menu");
-              }}
               className="h-10 w-10 md:w-auto md:h-9 px-0 md:px-3.5 md:rounded-full md:border md:border-border/80 md:bg-background/80 hover:border-brand-accent/50 hover:bg-muted/60 transition-all text-foreground cursor-pointer"
               aria-label={dict.nav.toggleMenu}
             >
