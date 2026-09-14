@@ -47,8 +47,11 @@ export function LanguageSwitcher({
     // 1. Aggiornamento ottimistico dell'indicatore visivo
     setActiveLocale(nextLocale);
 
-    // 2. Persistenza preferenza cookie
+    // 2. Persistenza preferenza cookie e sincronizzazione lang HTML
     document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000; SameSite=Lax`;
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = nextLocale;
+    }
 
     // 3. Recupera l'hash solo a runtime nell'event handler
     const hash = typeof window !== "undefined" ? window.location.hash : "";

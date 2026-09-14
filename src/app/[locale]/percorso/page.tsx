@@ -8,7 +8,7 @@ import { isValidLocale, defaultLocale, locales, type Locale } from "@/lib/i18n/c
 import { getBaseUrl } from "@/lib/url";
 import { siteConfig } from "@/lib/seo.config";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Mail, GraduationCap } from "lucide-react";
+import { ArrowRight, Mail } from "lucide-react";
 import Link from "next/link";
 
 interface PercorsoPageProps {

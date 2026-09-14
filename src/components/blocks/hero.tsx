@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Mail, CornerDownRight } from "lucide-react";
 import { Github, Linkedin } from "@/components/ui/icons";
-import { SaturnOrbit } from "@/components/blocks/saturn-orbit";
+import { DesktopOrbit } from "@/components/blocks/desktop-orbit";
 import { TechChips } from "@/components/blocks/tech-chips";
 import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n/types";
@@ -31,8 +31,8 @@ export function Hero({
 
       <div className="container px-4 md:px-6 relative z-10 mx-auto flex flex-col items-center">
         <div className="relative w-full min-h-0 py-6 md:py-0 md:min-h-[550px] flex items-center justify-center select-none overflow-visible">
-          {/* Layer orbitante 3D: renderizzato esclusivamente su desktop (>= md) */}
-          <SaturnOrbit />
+          {/* Layer orbitante 3D: caricato asincronamente esclusivamente su desktop (>= md) */}
+          <DesktopOrbit />
 
           {/* Il Pianeta / Contenuto Centrale: Server Component puro al 100% */}
           <div className="relative z-50 flex flex-col items-center justify-center max-w-2xl text-center pointer-events-auto w-full space-y-5 sm:space-y-6">

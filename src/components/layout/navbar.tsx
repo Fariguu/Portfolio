@@ -49,10 +49,10 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
   const [isVisible, setIsVisible] = React.useState(true);
 
   React.useEffect(() => {
-    let lastScrollY = window.pageYOffset || document.documentElement.scrollTop;
+    let lastScrollY = 0;
 
     const handleScroll = () => {
-      const currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
+      const currentScrollY = window.scrollY;
 
       // Always visible near top of page (first 60px)
       if (currentScrollY <= 60) {
