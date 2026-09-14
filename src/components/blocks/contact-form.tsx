@@ -10,8 +10,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CheckCircle2, Loader2, AlertCircle, Send } from "lucide-react";
-import { sendContactEmail } from "@/app/actions/contact";
 import { LazyTurnstile } from "./lazy-turnstile";
+
 import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
@@ -43,14 +43,20 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
     setErrorMessage(null);
 
     try {
-      const result = await sendContactEmail({
-        firstName,
-        lastName,
-        email,
-        message,
-        turnstileToken,
-        locale,
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          message,
+          turnstileToken,
+          locale,
+        }),
       });
+
+      const result = await response.json();
 
       if (!result.success) {
         setErrorMessage(result.error || dict.contact.genericError);
