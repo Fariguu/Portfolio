@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-
+import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { Menu, Code2 } from "lucide-react";
 import { LanguageSwitcher } from "./language-switcher";
@@ -11,7 +11,10 @@ import { cn } from "@/lib/utils";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
 
-
+const MobileMenu = dynamic(
+  () => import("./mobile-menu").then((mod) => mod.MobileMenu),
+  { ssr: false }
+);
 
 interface NavbarProps {
   readonly dict: Dictionary;
@@ -40,35 +43,6 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
   ];
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [MobileMenuComp, setMobileMenuComp] = React.useState<React.ComponentType<{
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-    desktopNavigations: Array<{ title: string; href: string }>;
-    mobileNavigations: Array<{ title: string; href: string }>;
-    contactCta: string;
-    contactHref: string;
-    toggleMenuLabel: string;
-    locale: Locale;
-  }> | null>(null);
-
-  const openMenu = () => {
-    if (!MobileMenuComp) {
-      import("./mobile-menu").then((mod) => {
-        setMobileMenuComp(() => mod.MobileMenu);
-        setIsMenuOpen(true);
-      });
-    } else {
-      setIsMenuOpen(true);
-    }
-  };
-
-  const preloadMenu = () => {
-    if (!MobileMenuComp) {
-      import("./mobile-menu").then((mod) => {
-        setMobileMenuComp(() => mod.MobileMenu);
-      });
-    }
-  };
 
   // Dynamic show/hide on scroll:
   // When scrolling down, hide navbar; when scrolling up, reveal immediately!
@@ -140,9 +114,10 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
             <Button
               variant="ghost"
               size="sm"
-              onClick={openMenu}
-              onPointerEnter={preloadMenu}
-              onTouchStart={preloadMenu}
+              onClick={() => setIsMenuOpen(true)}
+              onPointerEnter={() => {
+                import("./mobile-menu");
+              }}
               className="h-10 w-10 md:w-auto md:h-9 px-0 md:px-3.5 md:rounded-full md:border md:border-border/80 md:bg-background/80 hover:border-brand-accent/50 hover:bg-muted/60 transition-all text-foreground cursor-pointer"
               aria-label={dict.nav.toggleMenu}
             >
@@ -151,8 +126,8 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
               <span className="sr-only md:hidden">{dict.nav.toggleMenu}</span>
             </Button>
 
-            {isMenuOpen && MobileMenuComp && (
-              <MobileMenuComp
+            {isMenuOpen && (
+              <MobileMenu
                 open={isMenuOpen}
                 onOpenChange={setIsMenuOpen}
                 desktopNavigations={desktopNavigations}

@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { headers } from "next/headers";
-import { VercelAnalytics } from "@/components/analytics/vercel-analytics";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { getBaseUrl } from "@/lib/url";
 import { siteConfig } from "@/lib/seo.config";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -84,7 +85,8 @@ export default async function RootLayout({
         >
           <JsonLd locale={locale} />
           {children}
-          <VercelAnalytics />
+          <Analytics />
+          <SpeedInsights />
         </ThemeProvider>
       </body>
     </html>

@@ -1,18 +1,22 @@
 "use client";
 
 import * as React from "react";
+import dynamic from "next/dynamic";
+
+const SaturnOrbit = dynamic(
+  () => import("./saturn-orbit").then((mod) => mod.SaturnOrbit),
+  { ssr: false }
+);
 
 export function DesktopOrbit() {
-  const [OrbitComponent, setOrbitComponent] = React.useState<React.ComponentType | null>(null);
+  const [isDesktop, setIsDesktop] = React.useState(false);
 
   React.useEffect(() => {
     // Carica SaturnOrbit unicamente se il viewport è desktop (>= 768px).
-    // Su mobile (< 768px), non viene scaricato né valutato alcun byte di JS.
+    // Su mobile (< 768px), il modulo saturn-orbit e le sue icone non vengono neppure scaricati.
     const checkViewport = () => {
       if (window.innerWidth >= 768) {
-        import("./saturn-orbit").then((mod) => {
-          setOrbitComponent(() => mod.SaturnOrbit);
-        });
+        setIsDesktop(true);
       }
     };
 
@@ -21,9 +25,9 @@ export function DesktopOrbit() {
     return () => window.removeEventListener("resize", checkViewport);
   }, []);
 
-  if (!OrbitComponent) {
+  if (!isDesktop) {
     return null;
   }
 
-  return <OrbitComponent />;
+  return <SaturnOrbit />;
 }

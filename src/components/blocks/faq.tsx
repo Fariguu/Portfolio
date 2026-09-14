@@ -1,4 +1,8 @@
-import { LazyFaqAccordion } from "./lazy-faq-accordion";
+import dynamic from "next/dynamic";
+
+const FaqAccordion = dynamic(
+  () => import("./faq-accordion").then((mod) => mod.FaqAccordion)
+);
 import { createClient } from "@/lib/supabase/server";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
@@ -72,7 +76,7 @@ export async function FAQ({ dict, locale = "it" }: Readonly<FAQProps>) {
 
         <div className="mx-auto mt-12 max-w-3xl">
           <div className="bg-background rounded-2xl border border-border/60 p-6 sm:p-8 shadow-xs">
-            <LazyFaqAccordion items={faqList} />
+            <FaqAccordion items={faqList} />
           </div>
         </div>
       </div>
