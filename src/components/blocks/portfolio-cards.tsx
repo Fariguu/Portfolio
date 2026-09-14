@@ -58,7 +58,6 @@ export function PortfolioCards({
                 alt={`${dict.portfolio.previewAltPrefix} ${project.title}`}
                 fill
                 sizes="(max-width: 640px) 85vw, (max-width: 1024px) 45vw, 360px"
-                priority={index === 0}
                 className="object-cover transition-transform duration-300 group-hover:scale-105"
               />
               {project.statusBadge && (
