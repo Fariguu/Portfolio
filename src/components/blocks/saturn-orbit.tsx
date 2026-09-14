@@ -242,9 +242,9 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
-  // IntersectionObserver: azzera il loop rAF quando la hero non è nel viewport
+  // IntersectionObserver: azzera il loop rAF quando la hero non è nel viewport (solo desktop)
   useEffect(() => {
-    if (!containerRef.current || typeof IntersectionObserver === "undefined") return;
+    if (!isDesktop || !containerRef.current || typeof IntersectionObserver === "undefined") return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -256,7 +256,7 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
 
     observer.observe(containerRef.current);
     return () => observer.disconnect();
-  }, []);
+  }, [isDesktop]);
 
   // Monitoraggio dello scroll per l'effetto cinematico (solo desktop)
   useEffect(() => {
@@ -370,31 +370,29 @@ export function SaturnOrbit({ children }: Readonly<SaturnOrbitProps>) {
         </div>
       </div>
 
-      {/* Layer orbitante 3D: visibile esclusivamente su desktop (>= md) e se prefers-reduced-motion è falso */}
-      <div
-        className={`hidden md:block absolute inset-0 pointer-events-none z-20 ${
-          prefersReducedMotion ? "!hidden" : ""
-        }`}
-      >
-        {TECH_ITEMS.map((item, index) => (
-          <div
-            key={item.name}
-            ref={(el) => {
-              itemsRef.current[index] = el;
-            }}
-            className="absolute top-1/2 left-1/2 pointer-events-auto will-change-transform cursor-default group"
-          >
-            <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl backdrop-blur-xs transition-all duration-200 hover:scale-115">
-              <div className="w-4 h-4 flex items-center justify-center shrink-0 drop-shadow-xs transition-transform duration-200 group-hover:scale-120">
-                {item.svg(uniqueId)}
+      {/* Layer orbitante 3D: montato ed eseguito esclusivamente su desktop (>= md) se non ridotto il movimento */}
+      {isDesktop && !prefersReducedMotion && (
+        <div className="hidden md:block absolute inset-0 pointer-events-none z-20">
+          {TECH_ITEMS.map((item, index) => (
+            <div
+              key={item.name}
+              ref={(el) => {
+                itemsRef.current[index] = el;
+              }}
+              className="absolute top-1/2 left-1/2 pointer-events-auto will-change-transform cursor-default group"
+            >
+              <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl backdrop-blur-xs transition-all duration-200 hover:scale-115">
+                <div className="w-4 h-4 flex items-center justify-center shrink-0 drop-shadow-xs transition-transform duration-200 group-hover:scale-120">
+                  {item.svg(uniqueId)}
+                </div>
+                <span className="text-xs font-semibold tracking-wide text-foreground/85 group-hover:text-brand-accent transition-colors duration-200 whitespace-nowrap">
+                  {item.name}
+                </span>
               </div>
-              <span className="text-xs font-semibold tracking-wide text-foreground/85 group-hover:text-brand-accent transition-colors duration-200 whitespace-nowrap">
-                {item.name}
-              </span>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

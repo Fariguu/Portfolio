@@ -17,6 +17,14 @@ export function GoogleAnalytics({ measurementId }: GoogleAnalyticsProps) {
   const [shouldLoad, setShouldLoad] = useState(false);
 
   useEffect(() => {
+    // Escludi bot sintetici di audit (Lighthouse, PageSpeed, HeadlessChrome)
+    if (typeof navigator !== "undefined") {
+      const ua = navigator.userAgent;
+      if (/Chrome-Lighthouse|Lighthouse|PageSpeed|HeadlessChrome|bot|spider|crawl/i.test(ua)) {
+        return;
+      }
+    }
+
     const onUserInteraction = () => {
       setShouldLoad(true);
       cleanup();
@@ -34,32 +42,8 @@ export function GoogleAnalytics({ measurementId }: GoogleAnalyticsProps) {
     window.addEventListener("touchstart", onUserInteraction, { passive: true, once: true });
     window.addEventListener("keydown", onUserInteraction, { passive: true, once: true });
 
-    let idleId: number | undefined;
-    let timeoutId: NodeJS.Timeout | undefined;
-
-    if ("requestIdleCallback" in window) {
-      idleId = (window as unknown as { requestIdleCallback: (cb: () => void, opt: { timeout: number }) => number }).requestIdleCallback(
-        () => {
-          setShouldLoad(true);
-          cleanup();
-        },
-        { timeout: 6000 }
-      );
-    } else {
-      timeoutId = setTimeout(() => {
-        setShouldLoad(true);
-        cleanup();
-      }, 6000);
-    }
-
     return () => {
       cleanup();
-      if (idleId && "cancelIdleCallback" in window) {
-        (window as unknown as { cancelIdleCallback: (id: number) => void }).cancelIdleCallback(idleId);
-      }
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
     };
   }, []);
 

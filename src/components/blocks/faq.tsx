@@ -1,9 +1,8 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import dynamic from "next/dynamic";
+
+const FaqAccordion = dynamic(
+  () => import("./faq-accordion").then((mod) => mod.FaqAccordion)
+);
 import { createClient } from "@/lib/supabase/server";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
@@ -77,18 +76,7 @@ export async function FAQ({ dict, locale = "it" }: Readonly<FAQProps>) {
 
         <div className="mx-auto mt-12 max-w-3xl">
           <div className="bg-background rounded-2xl border border-border/60 p-6 sm:p-8 shadow-xs">
-            <Accordion type="single" collapsible className="w-full space-y-2">
-              {faqList.map((item, index) => (
-                <AccordionItem key={item.question} value={`faq-${index}`}>
-                  <AccordionTrigger className="text-left font-medium text-foreground hover:no-underline">
-                    <span>{item.question}</span>
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <p className="text-muted-foreground pt-1">{item.answer}</p>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+            <FaqAccordion items={faqList} />
           </div>
         </div>
       </div>

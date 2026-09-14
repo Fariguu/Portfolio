@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
       "lucide-react",
       "@radix-ui/react-dialog",
       "@radix-ui/react-slot",
+      "@radix-ui/react-accordion",
       "radix-ui",
     ],
     serverActions: {
