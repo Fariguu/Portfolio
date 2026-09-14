@@ -34,13 +34,11 @@ export function GoogleAnalytics({ measurementId }: GoogleAnalyticsProps) {
     };
 
     const cleanup = () => {
-      window.removeEventListener("scroll", onUserInteraction);
       window.removeEventListener("pointerdown", onUserInteraction);
       window.removeEventListener("touchstart", onUserInteraction);
       window.removeEventListener("keydown", onUserInteraction);
     };
 
-    window.addEventListener("scroll", onUserInteraction, { passive: true, once: true });
     window.addEventListener("pointerdown", onUserInteraction, { passive: true, once: true });
     window.addEventListener("touchstart", onUserInteraction, { passive: true, once: true });
     window.addEventListener("keydown", onUserInteraction, { passive: true, once: true });

@@ -31,6 +31,7 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
   const [isSubmitted, setIsSubmitted] = React.useState(false);
   const [submittedEmail, setSubmittedEmail] = React.useState("");
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
+  const [hasInteracted, setHasInteracted] = React.useState(false);
 
   const turnstileSiteKey =
     process.env.NEXT_PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY;
@@ -41,6 +42,13 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
     e.preventDefault();
     setIsSubmitting(true);
     setErrorMessage(null);
+
+    if (turnstileSiteKey && !turnstileToken) {
+      setHasInteracted(true);
+      setErrorMessage(dict.contact.turnstileError);
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       const response = await fetch("/api/contact", {
@@ -120,7 +128,12 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
             </div>
           </div>
         ) : (
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form
+            className="space-y-4"
+            onSubmit={handleSubmit}
+            onFocus={() => setHasInteracted(true)}
+            onPointerEnter={() => setHasInteracted(true)}
+          >
             {errorMessage && (
               <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm flex items-start gap-2 animate-fade-in">
                 <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
@@ -201,10 +214,11 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
               />
             </div>
 
-            {/* Cloudflare Turnstile anti-bot widget */}
+            {/* Cloudflare Turnstile anti-bot widget (caricato solo su interazione reale con il form) */}
             {turnstileSiteKey && (
               <LazyTurnstile
                 siteKey={turnstileSiteKey}
+                userInteracted={hasInteracted}
                 onSuccess={(token) => setTurnstileToken(token)}
                 onError={() => setErrorMessage(dict.contact.turnstileError)}
                 onExpire={() => setTurnstileToken("")}
@@ -233,6 +247,7 @@ export function ContactForm({ dict, locale }: Readonly<ContactFormProps>) {
               {dict.contact.privacyConsentPrefix}{" "}
               <Link
                 href={privacyHref}
+                prefetch={false}
                 className="underline hover:text-brand-accent transition-colors"
               >
                 {dict.contact.privacyConsentLinkText}

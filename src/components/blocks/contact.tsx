@@ -125,7 +125,7 @@ export function Contact({ dict, locale }: Readonly<ContactProps>) {
               variant="outline"
               className="w-full sm:w-auto rounded-full font-medium h-10 px-5 border-border/80 hover:border-foreground/40 transition-colors"
             >
-              <Link href={locale === "en" ? "/en/preventivo" : "/preventivo"}>
+              <Link href={locale === "en" ? "/en/preventivo" : "/preventivo"} prefetch={false}>
                 <Coins className="mr-2 h-4 w-4" />
                 <span>{dict.quote.ctaBanner.button}</span>
               </Link>
