@@ -5,13 +5,14 @@ import { getBaseUrl } from "@/lib/url";
 import { siteConfig } from "@/lib/seo.config";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
+import { PwaManifest } from "@/components/pwa/pwa-manifest";
 import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
   display: "optional",
-  preload: false,
+  preload: true,
   fallback: [
     "system-ui",
     "-apple-system",
@@ -80,6 +81,7 @@ export default function RootLayout({
         >
           {children}
           <VercelAnalytics />
+          <PwaManifest />
         </ThemeProvider>
       </body>
     </html>
