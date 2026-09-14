@@ -8,7 +8,7 @@ import { siteConfig } from "@/lib/seo.config";
 import { JsonLd } from "@/components/seo/json-ld";
 import { defaultLocale, isValidLocale, type Locale } from "@/lib/i18n/config";
 import { ThemeProvider } from "@/components/theme/theme-provider";
-import Script from "next/script";
+import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -79,19 +79,8 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* Google tag (gtag.js) caricato in idle/lazyOnload per non bloccare il thread principale (TBT) */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-0PDN3595Y5"
-          strategy="lazyOnload"
-        />
-        <Script id="google-analytics" strategy="lazyOnload">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-0PDN3595Y5', { page_path: window.location.pathname });
-          `}
-        </Script>
+        {/* Google Analytics caricato su interaction o idle per non bloccare il caricamento critico (FCP/LCP/TBT) */}
+        <GoogleAnalytics measurementId="G-0PDN3595Y5" />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
