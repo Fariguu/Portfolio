@@ -43,54 +43,9 @@ export function PortfolioCards({
   dict,
   locale,
 }: Readonly<PortfolioCardsProps>) {
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  const [maxTextHeight, setMaxTextHeight] = React.useState<number | null>(null);
-
-  const measureHeights = React.useCallback(() => {
-    if (!containerRef.current) return;
-    const textEls =
-      containerRef.current.querySelectorAll<HTMLElement>("[data-project-desc]");
-    let max = 0;
-    textEls.forEach((el) => {
-      const h = el.offsetHeight;
-      if (h > max) max = h;
-    });
-    if (max > 0) {
-      setMaxTextHeight(max);
-    }
-  }, []);
-
-  React.useEffect(() => {
-    measureHeights();
-
-    if (typeof window === "undefined") return;
-
-    const resizeObserver = new ResizeObserver(() => {
-      measureHeights();
-    });
-
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
-    }
-
-    if (document.fonts?.ready) {
-      document.fonts.ready.then(measureHeights);
-    }
-
-    window.addEventListener("resize", measureHeights);
-
-    return () => {
-      resizeObserver.disconnect();
-      window.removeEventListener("resize", measureHeights);
-    };
-  }, [measureHeights, projects]);
-
   return (
     <>
-      <div
-        ref={containerRef}
-        className="flex items-stretch overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden gap-6 pb-6 pt-2 -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 md:overflow-visible"
-      >
+      <div className="flex items-stretch overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden gap-6 pb-6 pt-2 -mx-4 px-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 md:overflow-visible">
         {projects.map((project, index) => (
           <Card
             key={project.id || index}
@@ -102,8 +57,7 @@ export function PortfolioCards({
                 src={project.image}
                 alt={`${dict.portfolio.previewAltPrefix} ${project.title}`}
                 fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                priority={index === 0}
+                sizes="(max-width: 640px) 85vw, (max-width: 1024px) 45vw, 360px"
                 className="object-cover transition-transform duration-300 group-hover:scale-105"
               />
               {project.statusBadge && (
@@ -144,24 +98,16 @@ export function PortfolioCards({
             </CardHeader>
 
             {/* Contenuto: Blocchi 4 e 5 */}
-            <CardContent className="flex-none flex flex-col p-6 pt-4">
-              {/* Blocco 4: Testo descrittivo (altezza equalizzata sulla card con più testo; le altre lasciano lo spazio bianco fino al blocco 5) */}
-              <div
-                className="flex flex-col justify-start min-h-[19.5rem] sm:min-h-[16rem] md:min-h-[13rem]"
-                style={
-                  maxTextHeight ? { height: `${maxTextHeight}px` } : undefined
-                }
-              >
-                <div
-                  data-project-desc
-                  className="text-sm leading-relaxed text-muted-foreground"
-                >
+            <CardContent className="flex-1 flex flex-col justify-between p-6 pt-4 gap-4">
+              {/* Blocco 4: Testo descrittivo */}
+              <div className="flex-1">
+                <p className="text-sm leading-relaxed text-muted-foreground">
                   {project.description}
-                </div>
+                </p>
               </div>
 
               {/* Blocco 5: Collegamento al caso di studio (perfettamente allineato sulla stessa riga orizzontale) */}
-              <div className="pt-4 shrink-0">
+              <div className="pt-2 shrink-0">
                 {project.hasCaseStudy && project.slug ? (
                   <Button
                     variant="outline"
