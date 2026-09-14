@@ -27,7 +27,7 @@ import { isValidLocale, defaultLocale, locales, type Locale } from "@/lib/i18n/c
 import { getBaseUrl } from "@/lib/url";
 import { siteConfig } from "@/lib/seo.config";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 interface PageProps {
   readonly params: Promise<{

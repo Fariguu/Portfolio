@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Github } from "@/components/ui/icons";
 import { CornerDownRight } from "lucide-react";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { getCachedProjects } from "@/lib/data/public-queries";
 import type { Project } from "@/lib/database.types";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
@@ -48,64 +48,54 @@ export async function Portfolio({
     };
   });
 
-  try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("projects")
-      .select("*")
-      .eq("visible", true)
-      .order("sort_order", { ascending: true });
+  const data = await getCachedProjects();
+  if (data && data.length > 0) {
+    projects = (data as Project[]).map((p) => {
+      // Find matching fallback item by exact title match or slug
+      const dictFallback = dict.portfolio.fallbackList.find(
+        (f) => f.title.toLowerCase() === p.title.toLowerCase() ||
+               (f.slug && p.title.toLowerCase().includes(f.slug.replace(/-/g, " ")))
+      );
+      const slug = p.slug || resolveProjectSlug(p.title, dictFallback?.slug);
+      const hasDbCaseStudy = Boolean(
+        (locale === "en" ? (p.case_study_md_en || p.case_study_md) : (p.case_study_md || p.case_study_md_en))?.trim()
+      );
+      const hasCaseStudy = Boolean(slug && hasDbCaseStudy);
 
-    if (!error && data && data.length > 0) {
-      projects = (data as Project[]).map((p) => {
-        // Find matching fallback item by exact title match or slug
-        const dictFallback = dict.portfolio.fallbackList.find(
-          (f) => f.title.toLowerCase() === p.title.toLowerCase() ||
-                 (f.slug && p.title.toLowerCase().includes(f.slug.replace(/-/g, " ")))
-        );
-        const slug = p.slug || resolveProjectSlug(p.title, dictFallback?.slug);
-        const hasDbCaseStudy = Boolean(
-          (locale === "en" ? (p.case_study_md_en || p.case_study_md) : (p.case_study_md || p.case_study_md_en))?.trim()
-        );
-        const hasCaseStudy = Boolean(slug && hasDbCaseStudy);
-
-        if (locale === "en") {
-          return {
-            id: p.id,
-            slug,
-            hasCaseStudy,
-            title: p.title_en || dictFallback?.title || p.title,
-            description: p.description_en || dictFallback?.description || p.description,
-            image: p.image_url,
-            tags: p.tags || [],
-            statusBadge: p.status_badge_en || dictFallback?.statusBadge || undefined,
-            demo: p.demo_url || undefined,
-            github: p.github_url || undefined,
-            githubLabel: p.github_label_en || dictFallback?.githubLabel || dict.portfolio.codeLabel,
-            isPrivate: p.is_private,
-            featured: p.featured,
-          };
-        }
-
+      if (locale === "en") {
         return {
           id: p.id,
           slug,
           hasCaseStudy,
-          title: p.title,
-          description: p.description,
+          title: p.title_en || dictFallback?.title || p.title,
+          description: p.description_en || dictFallback?.description || p.description,
           image: p.image_url,
           tags: p.tags || [],
-          statusBadge: p.status_badge || undefined,
+          statusBadge: p.status_badge_en || dictFallback?.statusBadge || undefined,
           demo: p.demo_url || undefined,
           github: p.github_url || undefined,
-          githubLabel: p.github_label || dict.portfolio.codeLabel,
+          githubLabel: p.github_label_en || dictFallback?.githubLabel || dict.portfolio.codeLabel,
           isPrivate: p.is_private,
           featured: p.featured,
         };
-      });
-    }
-  } catch {
-    // Fallback sul dizionario
+      }
+
+      return {
+        id: p.id,
+        slug,
+        hasCaseStudy,
+        title: p.title,
+        description: p.description,
+        image: p.image_url,
+        tags: p.tags || [],
+        statusBadge: p.status_badge || undefined,
+        demo: p.demo_url || undefined,
+        github: p.github_url || undefined,
+        githubLabel: p.github_label || dict.portfolio.codeLabel,
+        isPrivate: p.is_private,
+        featured: p.featured,
+      };
+    });
   }
 
   return (

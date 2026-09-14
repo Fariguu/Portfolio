@@ -4,7 +4,7 @@ import { Footer } from "@/components/layout/footer";
 import { Hero } from "@/components/blocks/hero";
 import { Journey } from "@/components/blocks/journey";
 import { BackToHomeButton } from "@/components/ui/back-to-home-button";
-import { createClient } from "@/lib/supabase/server";
+import { getCachedProfile } from "@/lib/data/public-queries";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { isValidLocale, defaultLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getBaseUrl } from "@/lib/url";
@@ -79,25 +79,15 @@ export default async function ChiSonoPage({
       ? dict.bio.fallbackBio
       : dict.bio.fallbackBio;
 
-  try {
-    const supabase = await createClient();
-    const { data } = await supabase
-      .from("profile")
-      .select("*")
-      .eq("id", "main")
-      .single();
-
-    if (data) {
-      if (locale === "en") {
-        headline = data.headline_en || data.headline_it || headline;
-        bio = data.bio_en || data.bio_it || bio;
-      } else {
-        headline = data.headline_it || headline;
-        bio = data.bio_it || bio;
-      }
+  const data = await getCachedProfile();
+  if (data) {
+    if (locale === "en") {
+      headline = data.headline_en || data.headline_it || headline;
+      bio = data.bio_en || data.bio_it || bio;
+    } else {
+      headline = data.headline_it || headline;
+      bio = data.bio_it || bio;
     }
-  } catch {
-    // Fallback sul dizionario
   }
 
   const bioParagraphs = bio

@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 const FaqAccordion = dynamic(
   () => import("./faq-accordion").then((mod) => mod.FaqAccordion)
 );
-import { createClient } from "@/lib/supabase/server";
+import { getCachedFaqs } from "@/lib/data/public-queries";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
 
@@ -15,29 +15,19 @@ interface FAQProps {
 export async function FAQ({ dict, locale = "it" }: Readonly<FAQProps>) {
   let faqList = dict.faq.items;
 
-  // Recupero dinamico da Supabase con fallback automatico sul dizionario statico
-  try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("faqs")
-      .select("*")
-      .eq("visible", true)
-      .order("sort_order", { ascending: true });
-
-    if (!error && data && data.length > 0) {
-      faqList = data.map((item) => ({
-        question:
-          locale === "en" && item.question_en
-            ? item.question_en
-            : item.question_it,
-        answer:
-          locale === "en" && item.answer_en
-            ? item.answer_en
-            : item.answer_it,
-      }));
-    }
-  } catch {
-    // In caso di errore o assenza di connessione DB, mantiene dict.faq.items
+  // Recupero da Supabase (cached) con fallback automatico sul dizionario statico
+  const data = await getCachedFaqs();
+  if (data && data.length > 0) {
+    faqList = data.map((item) => ({
+      question:
+        locale === "en" && item.question_en
+          ? item.question_en
+          : item.question_it,
+      answer:
+        locale === "en" && item.answer_en
+          ? item.answer_en
+          : item.answer_it,
+    }));
   }
 
   const faqSchema = {

@@ -1,5 +1,5 @@
 import { GraduationCap, Award, BookOpen, ExternalLink, Calendar } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
+import { getCachedJourney } from "@/lib/data/public-queries";
 import { SectionExploreButton } from "@/components/ui/section-explore-button";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
@@ -79,39 +79,28 @@ export async function Journey({
   );
 
   if (locale === "it") {
-    try {
-      const supabase = await createClient();
-      const { data, error } = await supabase
-        .from("journey_items")
-        .select("*")
-        .eq("visible", true)
-        .order("start_date", { ascending: true })
-        .order("sort_order", { ascending: true });
-
-      if (!error && data && data.length > 0) {
-        timelineData = data.map((item) => ({
-          id: item.id,
-          period: formatPeriod(
-            item.start_date,
-            item.end_date,
-            dict.journey.presentLabel
-          ),
-          title: item.title,
-          institution: item.institution,
-          description: item.description,
-          type: item.type as TimelineItemDisplay["type"],
-          isCurrent: !item.end_date,
-          tags: item.tags || [],
-          link: item.link_url
-            ? {
-                label: item.link_label || dict.journey.detailsLabel,
-                url: item.link_url,
-              }
-            : undefined,
-        }));
-      }
-    } catch {
-      // Fallback sul dizionario
+    const data = await getCachedJourney();
+    if (data && data.length > 0) {
+      timelineData = data.map((item) => ({
+        id: item.id,
+        period: formatPeriod(
+          item.start_date,
+          item.end_date,
+          dict.journey.presentLabel
+        ),
+        title: item.title,
+        institution: item.institution,
+        description: item.description,
+        type: item.type as TimelineItemDisplay["type"],
+        isCurrent: !item.end_date,
+        tags: item.tags || [],
+        link: item.link_url
+          ? {
+              label: item.link_label || dict.journey.detailsLabel,
+              url: item.link_url,
+            }
+          : undefined,
+      }));
     }
   }
 

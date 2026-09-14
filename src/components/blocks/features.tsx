@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { getCachedSkills } from "@/lib/data/public-queries";
 import { getIconComponent } from "@/lib/icons";
 import { SectionExploreButton } from "@/components/ui/section-explore-button";
 import type { Dictionary } from "@/lib/i18n/types";
@@ -17,21 +17,11 @@ export async function Features({
 }: Readonly<FeaturesProps>) {
   let features = dict.skills.fallbackList;
 
-  // Se siamo in lingua italiana proviamo a recuperare eventuali aggiornamenti dal DB Supabase
+  // Se siamo in lingua italiana proviamo a recuperare eventuali aggiornamenti dal DB Supabase (cached)
   if (locale === "it") {
-    try {
-      const supabase = await createClient();
-      const { data, error } = await supabase
-        .from("skills")
-        .select("*")
-        .eq("visible", true)
-        .order("sort_order", { ascending: true });
-
-      if (!error && data && data.length > 0) {
-        features = data;
-      }
-    } catch {
-      // Fallback sul dizionario se il DB non è raggiungibile
+    const data = await getCachedSkills();
+    if (data && data.length > 0) {
+      features = data;
     }
   }
 

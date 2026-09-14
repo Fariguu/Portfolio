@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { getCachedTestimonials } from "@/lib/data/public-queries";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
 import type { Testimonial } from "@/lib/database.types";
@@ -13,43 +13,8 @@ interface TestimonialsProps {
 }
 
 export async function Testimonials({ dict, locale = "it" }: Readonly<TestimonialsProps>) {
-  let testimonials: Testimonial[] = [];
-  let validCaseStudySlugs = new Set<string>();
-
-  try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-      .from("testimonials")
-      .select("*")
-      .eq("visible", true)
-      .order("sort_order", { ascending: true });
-
-    if (!error && data) {
-      testimonials = data;
-    }
-
-    if (testimonials.length > 0) {
-      const { data: projectsData } = await supabase
-        .from("projects")
-        .select("slug, case_study_md, case_study_md_en")
-        .eq("visible", true);
-
-      if (projectsData) {
-        validCaseStudySlugs = new Set(
-          projectsData
-            .filter((p) =>
-              Boolean(
-                (p.case_study_md && p.case_study_md.trim().length > 0) ||
-                (p.case_study_md_en && p.case_study_md_en.trim().length > 0)
-              ) && Boolean(p.slug)
-            )
-            .map((p) => p.slug as string)
-        );
-      }
-    }
-  } catch {
-    // In caso di errore di connessione DB o assenza tabella, testimonials resta vuoto
-  }
+  const { testimonials, validCaseStudySlugs: rawSlugs } = await getCachedTestimonials();
+  const validCaseStudySlugs = new Set<string>(rawSlugs);
 
   // Se l'array è vuoto o non ci sono testimonianze visibili, il componente non renderizza NULLA (zero ingombro)
   if (!testimonials || testimonials.length === 0) {
