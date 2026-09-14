@@ -21,7 +21,7 @@ export function SectionExploreButton({
         size="lg"
         className="group rounded-full h-11 sm:h-12 px-6 sm:px-8 border-border/80 bg-background/90 hover:bg-muted/80 hover:border-brand-accent/50 hover:text-foreground shadow-xs transition-all duration-200 font-medium text-xs sm:text-sm"
       >
-        <Link href={href}>
+        <Link href={href} prefetch={false}>
           <span>{label}</span>
           <CornerDownRight className="ml-2.5 h-4 w-4 text-brand-accent transition-transform duration-200 group-hover:translate-x-1 group-hover:scale-110" />
         </Link>

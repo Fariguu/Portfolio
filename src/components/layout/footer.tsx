@@ -57,6 +57,7 @@ export function Footer({ dict, locale }: Readonly<FooterProps>) {
             </p>
             <Link
               href={privacyHref}
+              prefetch={false}
               className="text-xs text-muted-foreground hover:text-brand-accent transition-colors underline-offset-4 hover:underline"
             >
               {dict.footer.privacyPolicy}

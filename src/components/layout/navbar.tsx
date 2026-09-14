@@ -88,7 +88,7 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
         <div className="container relative flex h-16 items-center justify-between px-4 md:px-6 mx-auto">
           {/* Left: Brand Logo & Name */}
           <div className="flex items-center gap-2 z-10">
-            <Link href={homeHref} className="flex items-center space-x-2">
+            <Link href={homeHref} prefetch={false} className="flex items-center space-x-2">
               <Code2 className="h-6 w-6 text-brand-accent transition-colors" />
               <span className="font-bold inline-block">Gabriele Farigu</span>
             </Link>
@@ -101,6 +101,7 @@ export function Navbar({ dict, locale }: Readonly<NavbarProps>) {
           >
             <Link
               href={homeHref}
+              prefetch={false}
               className="px-2.5 lg:px-3 text-center py-1.5 transition-colors hover:text-brand-accent text-muted-foreground whitespace-nowrap text-xs lg:text-sm"
             >
               {dict.nav.home}

@@ -46,7 +46,7 @@ export function Hero({
               <h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl/none bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-500 dark:from-gray-100 dark:to-gray-500 pb-2">
                 {dict.hero.name}
               </h1>
-              <p className="mx-auto max-w-[700px] min-h-0 sm:min-h-[56px] text-sm sm:text-base md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-muted-foreground transition-opacity duration-150">
+              <p className="mx-auto max-w-[700px] min-h-0 sm:min-h-[56px] text-sm sm:text-base md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-muted-foreground">
                 {dict.hero.tagline}
               </p>
             </div>
@@ -82,7 +82,7 @@ export function Hero({
                   className="group text-xs text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full px-4 h-9 transition-colors inline-flex items-center gap-1.5"
                   asChild
                 >
-                  <Link href={locale === "en" ? "/en/chi-sono" : "/chi-sono"}>
+                  <Link href={locale === "en" ? "/en/chi-sono" : "/chi-sono"} prefetch={false}>
                     <span>{dict.explore.about}</span>
                     <CornerDownRight className="h-3.5 w-3.5 text-brand-accent transition-transform group-hover:translate-x-1" />
                   </Link>
