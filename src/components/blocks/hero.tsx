@@ -21,7 +21,7 @@ export function Hero({
   return (
     <section
       id="chi-sono"
-      className="relative w-full overflow-hidden bg-background pt-8 pb-10 sm:pt-10 sm:pb-12 lg:pt-10 lg:pb-14 flex items-center min-h-[85vh] sm:min-h-[90vh]"
+      className="relative w-full overflow-hidden bg-background pt-4 pb-5 md:pt-10 md:pb-14 flex items-center md:min-h-[85vh] lg:min-h-[90vh]"
     >
       {/* Background ambient glow: gradiente radiale nativo a 0ms senza overhead di rasterizzazione */}
       <div
@@ -30,23 +30,23 @@ export function Hero({
       />
 
       <div className="container px-4 md:px-6 relative z-10 mx-auto flex flex-col items-center">
-        <div className="relative w-full min-h-0 py-6 md:py-0 md:min-h-[550px] flex items-center justify-center select-none overflow-visible">
+        <div className="relative w-full min-h-0 py-2 md:py-0 md:min-h-[550px] flex items-center justify-center select-none overflow-visible">
           {/* Layer orbitante 3D: caricato asincronamente esclusivamente su desktop (>= md) */}
           <DesktopOrbit />
 
           {/* Il Pianeta / Contenuto Centrale: Server Component puro al 100% */}
-          <div className="relative z-50 flex flex-col items-center justify-center max-w-2xl text-center pointer-events-auto w-full space-y-5 sm:space-y-6">
+          <div className="relative z-50 flex flex-col items-center justify-center max-w-2xl text-center pointer-events-auto w-full space-y-3 md:space-y-6">
             {/* Badge disponibilità: compatto e protetto da overflow su schermi piccoli */}
-            <div className="inline-flex items-center justify-center min-w-0 sm:min-w-[245px] max-w-full rounded-full border border-primary/20 bg-primary/10 dark:border-emerald-500/30 dark:bg-emerald-500/10 px-3.5 py-1 text-xs sm:text-sm font-medium text-primary dark:text-[#88fc9d] transition-colors hover:bg-primary/20 dark:hover:bg-emerald-500/20 backdrop-blur-sm cursor-pointer">
+            <div className="inline-flex items-center justify-center min-w-0 sm:min-w-[245px] max-w-full rounded-full border border-primary/20 bg-primary/10 dark:border-emerald-500/30 dark:bg-emerald-500/10 px-3 py-0.5 sm:px-3.5 sm:py-1 text-xs sm:text-sm font-medium text-primary dark:text-[#88fc9d] transition-colors hover:bg-primary/20 dark:hover:bg-emerald-500/20 backdrop-blur-sm cursor-pointer">
               <span className="flex h-2 w-2 rounded-full bg-emerald-500 dark:bg-[#88fc9d] mr-2 shrink-0 animate-pulse"></span>
               <span className="truncate">{dict.hero.badge}</span>
             </div>
 
-            <div className="space-y-3 sm:space-y-4 max-w-4xl px-2">
-              <h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl/none bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-500 dark:from-gray-100 dark:to-gray-500 pb-2">
+            <div className="space-y-1.5 sm:space-y-4 max-w-4xl px-2">
+              <h1 className="text-2xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl/none bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-500 dark:from-gray-100 dark:to-gray-500 pb-1 sm:pb-2">
                 {dict.hero.name}
               </h1>
-              <p className="mx-auto max-w-[700px] min-h-0 sm:min-h-[56px] text-sm sm:text-base md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-muted-foreground">
+              <p className="mx-auto max-w-[700px] min-h-0 sm:min-h-[56px] text-xs sm:text-base md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed text-muted-foreground line-clamp-2 sm:line-clamp-none">
                 {dict.hero.tagline}
               </p>
             </div>
@@ -73,9 +73,9 @@ export function Hero({
               </Button>
             </div>
 
-            {/* Link di approfondimento per la pagina dedicata /chi-sono */}
+            {/* Link di approfondimento per la pagina dedicata /chi-sono (visibile solo su desktop per preservare il viewport mobile) */}
             {showExploreLink && (
-              <div className="pt-2">
+              <div className="hidden md:block pt-2">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -90,13 +90,13 @@ export function Hero({
               </div>
             )}
 
-            {/* Tech Stack Chips statici per schermi mobile (< md): Server Component puro */}
+            {/* Tech Stack Chips statici per schermi mobile (< md): Server Component orizzontale a riga singola */}
             <TechChips />
           </div>
         </div>
 
-        {/* Social Icons posizionati all'esterno dell'orbita per eliminare qualsiasi sovrapposizione visiva */}
-        <div className="flex items-center gap-6 pt-2 sm:pt-4 text-muted-foreground relative z-30">
+        {/* Social Icons posizionati all'esterno dell'orbita su desktop; su mobile rimangono accessibili nel footer o contatti */}
+        <div className="hidden md:flex items-center gap-6 pt-2 sm:pt-4 text-muted-foreground relative z-30">
           <a
             href="https://github.com/Fariguu"
             target="_blank"
