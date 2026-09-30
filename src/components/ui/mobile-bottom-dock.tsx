@@ -46,16 +46,15 @@ export function MobileBottomDock({ dict }: Readonly<MobileBottomDockProps>) {
     };
   }, []);
 
-  // Gestione click: apre il toggle e scrolla fluidamente alla sezione
+  // Gestione click: scroll fluido verso la sezione corrispondente
   const handleClick = (id: string) => {
     setActiveSection(id);
-
-    // Se la sezione è un toggle collassabile chiuso, lo apriamo via hash
-    window.location.hash = `#${id}`;
-
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (typeof window !== "undefined" && window.history?.pushState) {
+        window.history.pushState(null, "", `#${id}`);
+      }
     }
   };
 

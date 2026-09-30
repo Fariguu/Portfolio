@@ -101,7 +101,7 @@ export async function Portfolio({
   }
 
   return (
-    <section id={sectionId || undefined} className="w-full py-12 md:py-24 bg-background">
+    <section id={sectionId || undefined} className="w-full py-12 md:py-24 bg-background scroll-mt-16">
       <div className="container px-4 md:px-6 mx-auto">
         <div className="mx-auto max-w-2xl text-center space-y-4 mb-16">
           <p className="text-base font-semibold leading-7 text-primary">

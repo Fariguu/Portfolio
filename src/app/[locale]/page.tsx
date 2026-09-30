@@ -9,9 +9,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 
 import { Contact } from "@/components/blocks/contact";
-import { MobileCollapsibleSection } from "@/components/ui/mobile-collapsible-section";
 import { MobileBottomDock } from "@/components/ui/mobile-bottom-dock";
-import { Sparkles, GraduationCap, Briefcase } from "lucide-react";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { isValidLocale, defaultLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getBaseUrl } from "@/lib/url";
@@ -74,35 +72,17 @@ export default async function HomePage({ params }: Readonly<PageProps>) {
     <div className="min-h-screen flex flex-col font-[family-name:var(--font-geist-sans)]">
       <Navbar nav={dict.nav} locale={locale} />
       <main className="flex-1">
-        {/* HERO: Rimane sempre visibile (con Tech Stack incluso su mobile) */}
+        {/* HERO: Visibile con Tech Stack su mobile e orbita 3D su desktop */}
         <Hero dict={dict} locale={locale} />
 
-        {/* COMPETENZE: Collassabile su mobile (< md), sempre visibile su desktop */}
-        <MobileCollapsibleSection
-          id="competenze"
-          title={dict.nav.skills}
-          icon={<Sparkles className="h-4 w-4" />}
-        >
-          <Features dict={dict} locale={locale} sectionId="" />
-        </MobileCollapsibleSection>
+        {/* COMPETENZE */}
+        <Features dict={dict} locale={locale} sectionId="competenze" />
 
-        {/* PERCORSO: Collassabile su mobile (< md), sempre visibile su desktop */}
-        <MobileCollapsibleSection
-          id="percorso"
-          title={dict.nav.journey}
-          icon={<GraduationCap className="h-4 w-4" />}
-        >
-          <Journey dict={dict} locale={locale} sectionId="" />
-        </MobileCollapsibleSection>
+        {/* PERCORSO */}
+        <Journey dict={dict} locale={locale} sectionId="percorso" />
 
-        {/* PROGETTI: Collassabile su mobile (< md), sempre visibile su desktop */}
-        <MobileCollapsibleSection
-          id="progetti"
-          title={dict.nav.projects}
-          icon={<Briefcase className="h-4 w-4" />}
-        >
-          <Portfolio dict={dict} locale={locale} sectionId="" />
-        </MobileCollapsibleSection>
+        {/* PROGETTI */}
+        <Portfolio dict={dict} locale={locale} sectionId="progetti" />
 
         <Testimonials dict={dict} locale={locale} />
         <Contact dict={dict} locale={locale} />

@@ -38,7 +38,7 @@ export async function Features({
   }
 
   return (
-    <section id={sectionId || undefined} className="w-full py-12 md:py-24 bg-muted/40 relative">
+    <section id={sectionId || undefined} className="w-full py-12 md:py-24 bg-muted/40 relative scroll-mt-16">
       <div className="container px-4 md:px-6 mx-auto">
         <div className="mx-auto max-w-2xl text-center space-y-4 min-h-[135px] flex flex-col justify-center">
           <p className="text-base font-semibold leading-7 text-primary">
