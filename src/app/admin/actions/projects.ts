@@ -2,8 +2,33 @@
 
 import { createAdminClient } from '@/lib/supabase/admin'
 import { verifyAdminSession } from '@/lib/auth-guard'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag, updateTag } from 'next/cache'
 import { translateProjectData, translateMarkdownCaseStudy } from '@/lib/translate'
+
+function revalidateProjectCaches(slug?: string) {
+  try {
+    updateTag('projects')
+  } catch {
+    // Ignore in non-action context
+  }
+  try {
+    revalidateTag('projects', 'default')
+  } catch (err) {
+    console.warn('[revalidateProjectCaches] revalidateTag failed:', err)
+  }
+  revalidatePath('/', 'layout')
+  revalidatePath('/en', 'layout')
+  revalidatePath('/[locale]', 'layout')
+  revalidatePath('/progetti')
+  revalidatePath('/en/progetti')
+  revalidatePath('/admin/projects')
+  revalidatePath('/admin')
+  revalidatePath('/sitemap.xml')
+  if (slug) {
+    revalidatePath(`/progetti/${slug}`)
+    revalidatePath(`/en/progetti/${slug}`)
+  }
+}
 
 async function uploadImageIfPresent(file: File | null, existingUrl?: string): Promise<string> {
   if (!file || file.size === 0) {
@@ -146,11 +171,7 @@ export async function createProject(formData: FormData) {
       return { error: error.message }
     }
 
-    revalidatePath('/')
-    revalidatePath('/[locale]', 'layout')
-    revalidatePath('/admin/projects')
-    revalidatePath('/admin')
-    revalidatePath('/sitemap.xml')
+    revalidateProjectCaches()
     return { success: true }
   } catch (err: unknown) {
     return { error: err instanceof Error ? err.message : 'Errore durante il salvataggio del progetto' }
@@ -195,6 +216,7 @@ export async function updateProject(id: string, formData: FormData) {
     const featured = formData.get('featured') === 'true' || formData.get('featured') === 'on'
     const visible = formData.get('visible') === 'true' || formData.get('visible') === 'on'
     const sort_order = Number.parseInt((formData.get('sort_order') as string) || '0', 10)
+    const autoTranslate = formData.get('auto_translate') === 'true'
 
     let title_en = (formData.get('title_en') as string) || ''
     let description_en = (formData.get('description_en') as string) || ''
@@ -205,8 +227,8 @@ export async function updateProject(id: string, formData: FormData) {
       return { error: 'Titolo e descrizione sono obbligatori' }
     }
 
-    // Se i campi in lingua inglese non sono stati inseriti a mano, traduciamo automaticamente
-    if (!title_en.trim() || !description_en.trim() || !github_label_en.trim() || (status_badge && !status_badge_en.trim())) {
+    // Se richiesta traduzione forzata o se mancano le traduzioni in inglese
+    if (autoTranslate || !title_en.trim() || !description_en.trim() || !github_label_en.trim() || (status_badge && !status_badge_en.trim())) {
       const autoTranslated = await translateProjectData({
         title,
         description,
@@ -214,14 +236,14 @@ export async function updateProject(id: string, formData: FormData) {
         status_badge: status_badge || undefined,
       })
 
-      if (!title_en.trim()) title_en = autoTranslated.title_en
-      if (!description_en.trim()) description_en = autoTranslated.description_en
-      if (!github_label_en.trim()) github_label_en = autoTranslated.github_label_en || 'GitHub Code'
-      if (status_badge && !status_badge_en.trim()) status_badge_en = autoTranslated.status_badge_en
+      if (autoTranslate || !title_en.trim()) title_en = autoTranslated.title_en
+      if (autoTranslate || !description_en.trim()) description_en = autoTranslated.description_en
+      if (autoTranslate || !github_label_en.trim()) github_label_en = autoTranslated.github_label_en || 'GitHub Code'
+      if (status_badge && (autoTranslate || !status_badge_en.trim())) status_badge_en = autoTranslated.status_badge_en
     }
 
     const supabase = createAdminClient()
-    const { error } = await supabase
+    const { data: updatedProject, error } = await supabase
       .from('projects')
       .update({
         title,
@@ -243,19 +265,64 @@ export async function updateProject(id: string, formData: FormData) {
         updated_at: new Date().toISOString(),
       })
       .eq('id', id)
+      .select('slug')
+      .single()
 
     if (error) {
       return { error: error.message }
     }
 
-    revalidatePath('/')
-    revalidatePath('/[locale]', 'layout')
-    revalidatePath('/admin/projects')
-    revalidatePath('/admin')
-    revalidatePath('/sitemap.xml')
+    revalidateProjectCaches(updatedProject?.slug || undefined)
     return { success: true }
   } catch (err: unknown) {
     return { error: err instanceof Error ? err.message : 'Errore durante l\'aggiornamento del progetto' }
+  }
+}
+
+export async function retranslateProject(id: string) {
+  try {
+    const authCheck = await verifyAdminSession()
+    if (!authCheck.authorized) {
+      return { error: authCheck.error || 'Non autorizzato' }
+    }
+
+    const supabase = createAdminClient()
+    const { data: project, error: fetchErr } = await supabase
+      .from('projects')
+      .select('*')
+      .eq('id', id)
+      .single()
+
+    if (fetchErr || !project) {
+      return { error: fetchErr?.message || 'Progetto non trovato' }
+    }
+
+    const autoTranslated = await translateProjectData({
+      title: project.title,
+      description: project.description,
+      github_label: project.github_label || 'Codice GitHub',
+      status_badge: project.status_badge || undefined,
+    })
+
+    const { error: updateErr } = await supabase
+      .from('projects')
+      .update({
+        title_en: autoTranslated.title_en || null,
+        description_en: autoTranslated.description_en || null,
+        github_label_en: autoTranslated.github_label_en || null,
+        status_badge_en: autoTranslated.status_badge_en || null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', id)
+
+    if (updateErr) {
+      return { error: updateErr.message }
+    }
+
+    revalidateProjectCaches(project.slug || undefined)
+    return { success: true, translation: autoTranslated }
+  } catch (err: unknown) {
+    return { error: err instanceof Error ? err.message : 'Errore durante la ri-traduzione' }
   }
 }
 
@@ -272,10 +339,7 @@ export async function deleteProject(id: string) {
     return { error: error.message }
   }
 
-  revalidatePath('/')
-  revalidatePath('/admin/projects')
-  revalidatePath('/admin')
-  revalidatePath('/sitemap.xml')
+  revalidateProjectCaches()
   return { success: true }
 }
 
@@ -295,9 +359,7 @@ export async function toggleProjectVisibility(id: string, currentVisible: boolea
     return { error: error.message }
   }
 
-  revalidatePath('/')
-  revalidatePath('/admin/projects')
-  revalidatePath('/sitemap.xml')
+  revalidateProjectCaches()
   return { success: true }
 }
 
@@ -317,8 +379,7 @@ export async function toggleProjectFeatured(id: string, currentFeatured: boolean
     return { error: error.message }
   }
 
-  revalidatePath('/')
-  revalidatePath('/admin/projects')
+  revalidateProjectCaches()
   return { success: true }
 }
 
@@ -372,13 +433,7 @@ export async function saveProjectCaseStudy({
       return { error: error.message }
     }
 
-    revalidatePath('/')
-    revalidatePath('/[locale]', 'layout')
-    revalidatePath('/progetti/[slug]', 'page')
-    revalidatePath(`/progetti/${cleanSlug}`)
-    revalidatePath(`/en/progetti/${cleanSlug}`)
-    revalidatePath('/admin/projects')
-    revalidatePath('/sitemap.xml')
+    revalidateProjectCaches(cleanSlug)
     return { success: true, slug: cleanSlug, caseStudyMdEn: cleanMdEn }
   } catch (err: unknown) {
     return { error: err instanceof Error ? err.message : 'Errore durante il salvataggio del caso di studio' }
@@ -393,6 +448,12 @@ export async function deleteProjectCaseStudy(projectId: string) {
     }
 
     const supabase = createAdminClient()
+    const { data: project } = await supabase
+      .from('projects')
+      .select('slug')
+      .eq('id', projectId)
+      .single()
+
     const { error } = await supabase
       .from('projects')
       .update({
@@ -406,10 +467,7 @@ export async function deleteProjectCaseStudy(projectId: string) {
       return { error: error.message }
     }
 
-    revalidatePath('/')
-    revalidatePath('/[locale]', 'layout')
-    revalidatePath('/admin/projects')
-    revalidatePath('/sitemap.xml')
+    revalidateProjectCaches(project?.slug || undefined)
     return { success: true }
   } catch (err: unknown) {
     return { error: err instanceof Error ? err.message : 'Errore durante l\'eliminazione del caso di studio' }

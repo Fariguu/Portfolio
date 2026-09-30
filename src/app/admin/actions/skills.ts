@@ -2,7 +2,28 @@
 
 import { createAdminClient } from '@/lib/supabase/admin'
 import { verifyAdminSession } from '@/lib/auth-guard'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag, updateTag } from 'next/cache'
+import { translateSkillData } from '@/lib/translate'
+
+function revalidateSkillCaches() {
+  try {
+    updateTag('skills')
+  } catch {
+    // Ignore in non-action context
+  }
+  try {
+    revalidateTag('skills', 'default')
+  } catch (err) {
+    console.warn('[revalidateSkillCaches] revalidateTag failed:', err)
+  }
+  revalidatePath('/', 'layout')
+  revalidatePath('/en', 'layout')
+  revalidatePath('/[locale]', 'layout')
+  revalidatePath('/competenze')
+  revalidatePath('/en/competenze')
+  revalidatePath('/admin/skills')
+  revalidatePath('/admin')
+}
 
 export async function createSkill(formData: FormData) {
   const authCheck = await verifyAdminSession()
@@ -20,10 +41,25 @@ export async function createSkill(formData: FormData) {
     return { error: 'Nome e descrizione sono obbligatori' }
   }
 
+  let name_en = (formData.get('name_en') as string) || ''
+  let description_en = (formData.get('description_en') as string) || ''
+
+  if (!name_en.trim() || !description_en.trim()) {
+    try {
+      const auto = await translateSkillData({ name, description })
+      if (!name_en.trim()) name_en = auto.name_en
+      if (!description_en.trim()) description_en = auto.description_en
+    } catch {
+      // Fallback
+    }
+  }
+
   const supabase = createAdminClient()
   const { error } = await supabase.from('skills').insert({
     name,
     description,
+    name_en: name_en.trim() || null,
+    description_en: description_en.trim() || null,
     icon_name,
     sort_order,
     visible,
@@ -33,9 +69,7 @@ export async function createSkill(formData: FormData) {
     return { error: error.message }
   }
 
-  revalidatePath('/')
-  revalidatePath('/admin/skills')
-  revalidatePath('/admin')
+  revalidateSkillCaches()
   return { success: true }
 }
 
@@ -50,9 +84,23 @@ export async function updateSkill(id: string, formData: FormData) {
   const icon_name = (formData.get('icon_name') as string) || 'MonitorSmartphone'
   const sort_order = Number.parseInt((formData.get('sort_order') as string) || '0', 10)
   const visible = formData.get('visible') === 'true' || formData.get('visible') === 'on'
+  const autoTranslate = formData.get('auto_translate') === 'true'
 
   if (!name || !description) {
     return { error: 'Nome e descrizione sono obbligatori' }
+  }
+
+  let name_en = (formData.get('name_en') as string) || ''
+  let description_en = (formData.get('description_en') as string) || ''
+
+  if (autoTranslate || !name_en.trim() || !description_en.trim()) {
+    try {
+      const auto = await translateSkillData({ name, description })
+      if (autoTranslate || !name_en.trim()) name_en = auto.name_en
+      if (autoTranslate || !description_en.trim()) description_en = auto.description_en
+    } catch {
+      // Fallback
+    }
   }
 
   const supabase = createAdminClient()
@@ -61,6 +109,8 @@ export async function updateSkill(id: string, formData: FormData) {
     .update({
       name,
       description,
+      name_en: name_en.trim() || null,
+      description_en: description_en.trim() || null,
       icon_name,
       sort_order,
       visible,
@@ -72,9 +122,7 @@ export async function updateSkill(id: string, formData: FormData) {
     return { error: error.message }
   }
 
-  revalidatePath('/')
-  revalidatePath('/admin/skills')
-  revalidatePath('/admin')
+  revalidateSkillCaches()
   return { success: true }
 }
 
@@ -91,9 +139,7 @@ export async function deleteSkill(id: string) {
     return { error: error.message }
   }
 
-  revalidatePath('/')
-  revalidatePath('/admin/skills')
-  revalidatePath('/admin')
+  revalidateSkillCaches()
   return { success: true }
 }
 
@@ -113,7 +159,6 @@ export async function toggleSkillVisibility(id: string, currentVisible: boolean)
     return { error: error.message }
   }
 
-  revalidatePath('/')
-  revalidatePath('/admin/skills')
+  revalidateSkillCaches()
   return { success: true }
 }

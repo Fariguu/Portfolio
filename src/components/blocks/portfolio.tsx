@@ -12,6 +12,7 @@ interface PortfolioProps {
   readonly dict: Dictionary;
   readonly locale: Locale;
   readonly showExploreLink?: boolean;
+  readonly sectionId?: string;
 }
 
 function resolveProjectSlug(title: string, candidateSlug?: string): string | undefined {
@@ -27,6 +28,7 @@ export async function Portfolio({
   dict,
   locale,
   showExploreLink = true,
+  sectionId = "progetti",
 }: Readonly<PortfolioProps>) {
   let projects: ProjectDisplay[] = dict.portfolio.fallbackList.map((p, idx) => {
     const slug = resolveProjectSlug(p.title, p.slug);
@@ -71,10 +73,10 @@ export async function Portfolio({
           description: p.description_en || dictFallback?.description || p.description,
           image: p.image_url,
           tags: p.tags || [],
-          statusBadge: p.status_badge_en || dictFallback?.statusBadge || undefined,
-          demo: p.demo_url || undefined,
-          github: p.github_url || undefined,
-          githubLabel: p.github_label_en || dictFallback?.githubLabel || dict.portfolio.codeLabel,
+          statusBadge: p.status_badge_en || p.status_badge || dictFallback?.statusBadge || undefined,
+          demo: p.demo_url || dictFallback?.demo || undefined,
+          github: p.github_url || dictFallback?.github || undefined,
+          githubLabel: p.github_label_en || p.github_label || dictFallback?.githubLabel || dict.portfolio.codeLabel,
           isPrivate: p.is_private,
           featured: p.featured,
         };
@@ -99,7 +101,7 @@ export async function Portfolio({
   }
 
   return (
-    <section id="progetti" className="w-full py-24 bg-background">
+    <section id={sectionId || undefined} className="w-full py-12 md:py-24 bg-background">
       <div className="container px-4 md:px-6 mx-auto">
         <div className="mx-auto max-w-2xl text-center space-y-4 mb-16">
           <p className="text-base font-semibold leading-7 text-primary">

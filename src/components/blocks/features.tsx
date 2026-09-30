@@ -8,25 +8,37 @@ interface FeaturesProps {
   readonly dict: Dictionary;
   readonly locale: Locale;
   readonly showExploreLink?: boolean;
+  readonly sectionId?: string;
 }
 
 export async function Features({
   dict,
   locale,
   showExploreLink = true,
+  sectionId = "competenze",
 }: Readonly<FeaturesProps>) {
   let features = dict.skills.fallbackList;
 
-  // Se siamo in lingua italiana proviamo a recuperare eventuali aggiornamenti dal DB Supabase (cached)
-  if (locale === "it") {
-    const data = await getCachedSkills();
-    if (data && data.length > 0) {
-      features = data;
+  // Recupera le competenze aggiornate dal database Supabase per qualsiasi locale
+  const data = await getCachedSkills();
+  if (data && data.length > 0) {
+    if (locale === "en") {
+      features = data.map((item) => ({
+        name: item.name_en || item.name,
+        description: item.description_en || item.description,
+        icon_name: item.icon_name,
+      }));
+    } else {
+      features = data.map((item) => ({
+        name: item.name,
+        description: item.description,
+        icon_name: item.icon_name,
+      }));
     }
   }
 
   return (
-    <section id="competenze" className="w-full py-24 bg-muted/40 relative">
+    <section id={sectionId || undefined} className="w-full py-12 md:py-24 bg-muted/40 relative">
       <div className="container px-4 md:px-6 mx-auto">
         <div className="mx-auto max-w-2xl text-center space-y-4 min-h-[135px] flex flex-col justify-center">
           <p className="text-base font-semibold leading-7 text-primary">

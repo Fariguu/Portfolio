@@ -14,6 +14,8 @@ export type Database = {
           id: string
           name: string
           description: string
+          name_en: string | null
+          description_en: string | null
           icon_name: string
           sort_order: number
           visible: boolean
@@ -24,6 +26,8 @@ export type Database = {
           id?: string
           name: string
           description: string
+          name_en?: string | null
+          description_en?: string | null
           icon_name?: string
           sort_order?: number
           visible?: boolean
@@ -34,6 +38,8 @@ export type Database = {
           id?: string
           name?: string
           description?: string
+          name_en?: string | null
+          description_en?: string | null
           icon_name?: string
           sort_order?: number
           visible?: boolean
@@ -50,9 +56,14 @@ export type Database = {
           title: string
           institution: string
           description: string
+          title_en: string | null
+          institution_en: string | null
+          description_en: string | null
           type: 'education' | 'certification' | 'milestone'
           tags: string[]
+          tags_en: string[] | null
           link_label: string | null
+          link_label_en: string | null
           link_url: string | null
           sort_order: number
           visible: boolean
@@ -66,9 +77,14 @@ export type Database = {
           title: string
           institution: string
           description: string
+          title_en?: string | null
+          institution_en?: string | null
+          description_en?: string | null
           type?: 'education' | 'certification' | 'milestone'
           tags?: string[]
+          tags_en?: string[] | null
           link_label?: string | null
+          link_label_en?: string | null
           link_url?: string | null
           sort_order?: number
           visible?: boolean
@@ -82,9 +98,14 @@ export type Database = {
           title?: string
           institution?: string
           description?: string
+          title_en?: string | null
+          institution_en?: string | null
+          description_en?: string | null
           type?: 'education' | 'certification' | 'milestone'
           tags?: string[]
+          tags_en?: string[] | null
           link_label?: string | null
+          link_label_en?: string | null
           link_url?: string | null
           sort_order?: number
           visible?: boolean

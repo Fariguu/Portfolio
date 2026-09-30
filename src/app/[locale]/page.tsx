@@ -9,6 +9,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 
 import { Contact } from "@/components/blocks/contact";
+import { MobileCollapsibleSection } from "@/components/ui/mobile-collapsible-section";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { isValidLocale, defaultLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getBaseUrl } from "@/lib/url";
@@ -71,10 +72,36 @@ export default async function HomePage({ params }: Readonly<PageProps>) {
     <div className="min-h-screen flex flex-col font-[family-name:var(--font-geist-sans)]">
       <Navbar nav={dict.nav} locale={locale} />
       <main className="flex-1">
+        {/* HERO: Rimane sempre visibile (con Tech Stack incluso su mobile) */}
         <Hero dict={dict} locale={locale} />
-        <Features dict={dict} locale={locale} />
-        <Journey dict={dict} locale={locale} />
-        <Portfolio dict={dict} locale={locale} />
+
+        {/* COMPETENZE: Collassabile su mobile (< md), sempre visibile su desktop */}
+        <MobileCollapsibleSection
+          id="competenze"
+          title={dict.nav.skills}
+          badge={dict.skills.badge}
+        >
+          <Features dict={dict} locale={locale} sectionId="" />
+        </MobileCollapsibleSection>
+
+        {/* PERCORSO: Collassabile su mobile (< md), sempre visibile su desktop */}
+        <MobileCollapsibleSection
+          id="percorso"
+          title={dict.nav.journey}
+          badge={dict.journey.badge}
+        >
+          <Journey dict={dict} locale={locale} sectionId="" />
+        </MobileCollapsibleSection>
+
+        {/* PROGETTI: Collassabile su mobile (< md), sempre visibile su desktop */}
+        <MobileCollapsibleSection
+          id="progetti"
+          title={dict.nav.projects}
+          badge={dict.portfolio.badge}
+        >
+          <Portfolio dict={dict} locale={locale} sectionId="" />
+        </MobileCollapsibleSection>
+
         <Testimonials dict={dict} locale={locale} />
         <Contact dict={dict} locale={locale} />
         <FAQ dict={dict} locale={locale} />

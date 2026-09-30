@@ -98,17 +98,45 @@ export function Navbar({ dict, nav: explicitNav, locale }: Readonly<NavbarProps>
             </Link>
           </div>
 
-          {/* Center: Desktop Nav - Mantieni solo il pulsante Home al centro della barra */}
+          {/* Center: Desktop Nav - Quick Links */}
           <nav
             aria-label="Desktop Navigation"
-            className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center justify-center text-sm font-medium select-none pointer-events-auto"
+            className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center justify-center gap-0.5 lg:gap-1 text-sm font-medium select-none pointer-events-auto"
           >
             <Link
               href={homeHref}
               prefetch={false}
-              className="px-2.5 lg:px-3 text-center py-1.5 transition-colors hover:text-brand-accent text-muted-foreground whitespace-nowrap text-xs lg:text-sm"
+              className="px-2.5 lg:px-3 py-1.5 rounded-full transition-colors hover:text-brand-accent text-muted-foreground hover:bg-muted/50 whitespace-nowrap text-xs lg:text-sm"
             >
               {nav.home}
+            </Link>
+            <Link
+              href={`${homeHref === "/" ? "" : homeHref}#competenze`}
+              prefetch={false}
+              className="px-2.5 lg:px-3 py-1.5 rounded-full transition-colors hover:text-brand-accent text-muted-foreground hover:bg-muted/50 whitespace-nowrap text-xs lg:text-sm"
+            >
+              {nav.skills}
+            </Link>
+            <Link
+              href={`${homeHref === "/" ? "" : homeHref}#percorso`}
+              prefetch={false}
+              className="px-2.5 lg:px-3 py-1.5 rounded-full transition-colors hover:text-brand-accent text-muted-foreground hover:bg-muted/50 whitespace-nowrap text-xs lg:text-sm"
+            >
+              {nav.journey}
+            </Link>
+            <Link
+              href={`${homeHref === "/" ? "" : homeHref}#progetti`}
+              prefetch={false}
+              className="px-2.5 lg:px-3 py-1.5 rounded-full transition-colors hover:text-brand-accent text-muted-foreground hover:bg-muted/50 whitespace-nowrap text-xs lg:text-sm"
+            >
+              {nav.projects}
+            </Link>
+            <Link
+              href={`${homeHref === "/" ? "" : homeHref}#contatti`}
+              prefetch={false}
+              className="px-2.5 lg:px-3 py-1.5 rounded-full transition-colors hover:text-brand-accent text-muted-foreground hover:bg-muted/50 whitespace-nowrap text-xs lg:text-sm"
+            >
+              {nav.contact}
             </Link>
           </nav>
 
