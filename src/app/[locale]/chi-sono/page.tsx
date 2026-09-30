@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
-import { Hero } from "@/components/blocks/hero";
 import { Journey } from "@/components/blocks/journey";
 import { BackToHomeButton } from "@/components/ui/back-to-home-button";
 import { getCachedProfile } from "@/lib/data/public-queries";
@@ -140,11 +139,14 @@ export default async function ChiSonoPage({
       <Navbar dict={dict} locale={locale} />
 
       <main className="flex-1">
-        {/* 1. Hero principale */}
-        <Hero dict={dict} locale={locale} showExploreLink={false} />
+        {/* Sezione Biografia Narrativa Approfondita */}
+        <section className="relative w-full pt-12 sm:pt-16 pb-20 bg-muted/20 border-b border-border/40 overflow-hidden">
+          {/* Ambient background glow */}
+          <div
+            className="absolute inset-0 -z-10 pointer-events-none bg-[radial-gradient(ellipse_70%_50%_at_50%_-10%,rgba(144,137,252,0.15),transparent)] dark:bg-[radial-gradient(ellipse_70%_50%_at_50%_-10%,rgba(4,120,87,0.15),transparent)]"
+            aria-hidden="true"
+          />
 
-        {/* 2. Sezione Biografia Narrativa Approfondita */}
-        <section className="w-full py-20 bg-muted/30 border-y border-border/40">
           <div className="container px-4 md:px-6 mx-auto max-w-4xl space-y-10">
             {/* Header Bio */}
             <div className="text-center space-y-3">
@@ -152,11 +154,11 @@ export default async function ChiSonoPage({
                 <Sparkles className="h-3.5 w-3.5" />
                 <span>{dict.bio.badge}</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+              <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-foreground bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-500 dark:from-gray-100 dark:to-gray-400 pb-1">
                 {dict.bio.title}
-              </h2>
+              </h1>
               {headline && (
-                <p className="text-lg font-medium text-primary dark:text-[#88fc9d]">
+                <p className="text-lg sm:text-xl font-medium text-primary dark:text-[#88fc9d] max-w-2xl mx-auto">
                   {headline}
                 </p>
               )}
