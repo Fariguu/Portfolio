@@ -17,10 +17,16 @@ export function MobileBottomDock({ dict }: Readonly<MobileBottomDockProps>) {
   const [isVisible, setIsVisible] = React.useState(true);
   const lastScrollY = React.useRef(0);
 
-  // Monitora la sezione attiva via IntersectionObserver
+  // Monitora la sezione attiva via IntersectionObserver e resetta quando si è nella Hero
   React.useEffect(() => {
-    const sectionIds = ["competenze", "percorso", "progetti"];
+    const sectionIds = ["chi-sono", "competenze", "percorso", "progetti"];
     const observers: IntersectionObserver[] = [];
+
+    const checkHeroScroll = () => {
+      if (typeof window !== "undefined" && window.scrollY < 180) {
+        setActiveSection("");
+      }
+    };
 
     sectionIds.forEach((id) => {
       const el = document.getElementById(id);
@@ -30,19 +36,27 @@ export function MobileBottomDock({ dict }: Readonly<MobileBottomDockProps>) {
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              setActiveSection(id);
+              if (id === "chi-sono" || window.scrollY < 180) {
+                setActiveSection("");
+              } else {
+                setActiveSection(id);
+              }
             }
           });
         },
-        { threshold: 0.2, rootMargin: "-20% 0px -40% 0px" }
+        { threshold: 0.25, rootMargin: "-15% 0px -35% 0px" }
       );
 
       observer.observe(el);
       observers.push(observer);
     });
 
+    window.addEventListener("scroll", checkHeroScroll, { passive: true });
+    checkHeroScroll();
+
     return () => {
       observers.forEach((obs) => obs.disconnect());
+      window.removeEventListener("scroll", checkHeroScroll);
     };
   }, []);
 
