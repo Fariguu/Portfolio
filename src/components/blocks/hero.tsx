@@ -21,7 +21,7 @@ export function Hero({
   return (
     <section
       id="chi-sono"
-      className="relative w-full overflow-hidden bg-background pt-4 pb-28 sm:pt-10 sm:pb-14 flex items-center justify-center min-h-[calc(100dvh-4rem)] md:min-h-[85vh] lg:min-h-[90vh]"
+      className="relative w-full overflow-hidden bg-background pt-4 pb-36 sm:pt-10 sm:pb-14 flex items-center justify-center min-h-[calc(100dvh-4rem)] md:min-h-[85vh] lg:min-h-[90vh]"
     >
       {/* Background ambient glow: gradiente radiale nativo a 0ms senza overhead di rasterizzazione */}
       <div

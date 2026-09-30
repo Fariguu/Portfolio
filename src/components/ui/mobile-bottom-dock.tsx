@@ -68,7 +68,7 @@ export function MobileBottomDock({ dict }: Readonly<MobileBottomDockProps>) {
     <nav
       aria-label="Navigazione rapida mobile"
       className={cn(
-        "fixed bottom-5 left-1/2 -translate-x-1/2 z-50 md:hidden",
+        "fixed bottom-3.5 left-1/2 -translate-x-1/2 z-50 md:hidden",
         "transition-all duration-300 ease-in-out",
         isVisible ? "translate-y-0 opacity-100" : "translate-y-16 opacity-0 pointer-events-none"
       )}
