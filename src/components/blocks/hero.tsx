@@ -21,7 +21,7 @@ export function Hero({
   return (
     <section
       id="chi-sono"
-      className="relative w-full overflow-hidden bg-background pt-8 pb-10 sm:pt-10 sm:pb-12 lg:pt-10 lg:pb-14 flex items-center min-h-[75vh] md:min-h-[85vh] lg:min-h-[90vh]"
+      className="relative w-full overflow-hidden bg-background pt-6 pb-10 sm:pt-10 sm:pb-14 flex items-center justify-center min-h-[calc(100dvh-4rem)] md:min-h-[85vh] lg:min-h-[90vh]"
     >
       {/* Background ambient glow: gradiente radiale nativo a 0ms senza overhead di rasterizzazione */}
       <div
@@ -51,11 +51,11 @@ export function Hero({
               </p>
             </div>
 
-            {/* CTA Buttons: nascosti su mobile (< md) per eliminare ingombro superfluo, visibili su desktop (>= md) */}
-            <div className="hidden md:flex items-center justify-center gap-4 w-auto">
+            {/* CTA Buttons: visibili e ottimizzati sia per mobile che per desktop */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full max-w-xs sm:max-w-none mx-auto">
               <Button
                 size="lg"
-                className="rounded-full shadow-lg h-12 w-[220px] justify-center group font-medium transition-all duration-200"
+                className="rounded-full shadow-lg h-11 sm:h-12 w-full sm:w-[220px] justify-center group font-medium transition-all duration-200"
                 asChild
               >
                 <a href="#progetti">
@@ -66,7 +66,7 @@ export function Hero({
               <Button
                 size="lg"
                 variant="outline"
-                className="rounded-full h-12 w-[150px] justify-center font-medium bg-background/50 backdrop-blur-sm hover:text-brand-accent hover:border-brand-accent/40 transition-all duration-200"
+                className="rounded-full h-11 sm:h-12 w-full sm:w-[150px] justify-center font-medium bg-background/50 backdrop-blur-sm hover:text-brand-accent hover:border-brand-accent/40 transition-all duration-200"
                 asChild
               >
                 <a href="#contatti">{dict.hero.ctaContact}</a>
