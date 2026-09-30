@@ -46,9 +46,12 @@ export function MobileCollapsibleSection({
           aria-expanded={isOpen}
           aria-controls={`collapsible-content-${id}`}
         >
-          <span className="font-bold text-base tracking-wide uppercase text-foreground transition-colors group-hover:text-primary">
-            {title}
-          </span>
+          <div className="flex items-center gap-2.5">
+            {icon && <span className="text-brand-accent shrink-0">{icon}</span>}
+            <span className="font-bold text-base tracking-wide uppercase text-foreground transition-colors group-hover:text-primary">
+              {title}
+            </span>
+          </div>
 
           <div
             className={cn(
