@@ -10,6 +10,7 @@ import { Footer } from "@/components/layout/footer";
 
 import { Contact } from "@/components/blocks/contact";
 import { MobileCollapsibleSection } from "@/components/ui/mobile-collapsible-section";
+import { MobileBottomDock } from "@/components/ui/mobile-bottom-dock";
 import { Sparkles, GraduationCap, Briefcase } from "lucide-react";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { isValidLocale, defaultLocale, locales, type Locale } from "@/lib/i18n/config";
@@ -108,6 +109,8 @@ export default async function HomePage({ params }: Readonly<PageProps>) {
         <FAQ dict={dict} locale={locale} />
       </main>
       <Footer dict={dict} locale={locale} />
+      {/* Floating Bottom Navigation Bar (Opzione 3) per dispositivi mobile */}
+      <MobileBottomDock dict={dict.nav} />
     </div>
   );
 }
