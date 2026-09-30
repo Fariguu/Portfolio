@@ -52,12 +52,14 @@ interface JourneyProps {
   readonly dict: Dictionary;
   readonly locale: Locale;
   readonly showExploreLink?: boolean;
+  readonly sectionId?: string;
 }
 
 export async function Journey({
   dict,
   locale,
   showExploreLink = true,
+  sectionId = "percorso",
 }: Readonly<JourneyProps>) {
   let timelineData: TimelineItemDisplay[] = dict.journey.fallbackList.map(
     (item, index) => ({
@@ -78,16 +80,36 @@ export async function Journey({
     })
   );
 
-  if (locale === "it") {
-    const data = await getCachedJourney();
-    if (data && data.length > 0) {
-      timelineData = data.map((item) => ({
+  const data = await getCachedJourney();
+  if (data && data.length > 0) {
+    timelineData = data.map((item) => {
+      const period = formatPeriod(
+        item.start_date,
+        item.end_date,
+        dict.journey.presentLabel
+      );
+      if (locale === "en") {
+        return {
+          id: item.id,
+          period,
+          title: item.title_en || item.title,
+          institution: item.institution_en || item.institution,
+          description: item.description_en || item.description,
+          type: item.type as TimelineItemDisplay["type"],
+          isCurrent: !item.end_date,
+          tags: (item.tags_en && item.tags_en.length > 0 ? item.tags_en : item.tags) || [],
+          link: item.link_url
+            ? {
+                label: item.link_label_en || item.link_label || dict.journey.detailsLabel,
+                url: item.link_url,
+              }
+            : undefined,
+        };
+      }
+
+      return {
         id: item.id,
-        period: formatPeriod(
-          item.start_date,
-          item.end_date,
-          dict.journey.presentLabel
-        ),
+        period,
         title: item.title,
         institution: item.institution,
         description: item.description,
@@ -100,12 +122,12 @@ export async function Journey({
               url: item.link_url,
             }
           : undefined,
-      }));
-    }
+      };
+    });
   }
 
   return (
-    <section id="percorso" className="w-full py-24 bg-background relative overflow-hidden">
+    <section id={sectionId || undefined} className="w-full py-12 md:py-24 bg-background relative overflow-hidden scroll-mt-16">
       <div className="container px-4 md:px-6 mx-auto">
         {/* Header */}
         <div className="mx-auto max-w-2xl text-center space-y-4 mb-16">
@@ -288,10 +310,10 @@ export async function Journey({
           </div>
         </div>
 
-        {/* Pulsante di approfondimento per la pagina /chi-sono */}
+        {/* Pulsante di approfondimento per la pagina /percorso */}
         {showExploreLink && (
           <SectionExploreButton
-            href={locale === "en" ? "/en/chi-sono" : "/chi-sono"}
+            href={locale === "en" ? "/en/percorso" : "/percorso"}
             label={dict.explore.journey}
           />
         )}

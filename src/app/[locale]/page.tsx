@@ -9,6 +9,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 
 import { Contact } from "@/components/blocks/contact";
+import { MobileBottomDock } from "@/components/ui/mobile-bottom-dock";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { isValidLocale, defaultLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getBaseUrl } from "@/lib/url";
@@ -71,15 +72,25 @@ export default async function HomePage({ params }: Readonly<PageProps>) {
     <div className="min-h-screen flex flex-col font-[family-name:var(--font-geist-sans)]">
       <Navbar nav={dict.nav} locale={locale} />
       <main className="flex-1">
+        {/* HERO: Visibile con Tech Stack su mobile e orbita 3D su desktop */}
         <Hero dict={dict} locale={locale} />
-        <Features dict={dict} locale={locale} />
-        <Journey dict={dict} locale={locale} />
-        <Portfolio dict={dict} locale={locale} />
+
+        {/* COMPETENZE */}
+        <Features dict={dict} locale={locale} sectionId="competenze" />
+
+        {/* PERCORSO */}
+        <Journey dict={dict} locale={locale} sectionId="percorso" />
+
+        {/* PROGETTI */}
+        <Portfolio dict={dict} locale={locale} sectionId="progetti" />
+
         <Testimonials dict={dict} locale={locale} />
         <Contact dict={dict} locale={locale} />
         <FAQ dict={dict} locale={locale} />
       </main>
       <Footer dict={dict} locale={locale} />
+      {/* Floating Bottom Navigation Bar (Opzione 3) per dispositivi mobile */}
+      <MobileBottomDock dict={dict.nav} />
     </div>
   );
 }

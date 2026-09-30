@@ -13,7 +13,7 @@ export function Footer({ dict, locale }: Readonly<FooterProps>) {
   const privacyHref = locale === "en" ? "/en/privacy" : "/privacy";
 
   return (
-    <footer className="w-full border-t border-border/40 bg-background py-12">
+    <footer className="w-full border-t border-border/40 bg-background pt-12 pb-24 md:pb-12">
       <div className="container px-4 md:px-6 mx-auto">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center space-x-2">

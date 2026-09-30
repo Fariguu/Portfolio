@@ -28,14 +28,11 @@ export function LanguageSwitcher({
   // Calcolo deterministico del percorso senza accedere a window durante il rendering
   const getTargetUrl = React.useCallback(
     (targetLocale: Locale) => {
+      const cleanPath = pathname.replace(/^\/(it|en)(\/|$)/, "/") || "/";
       if (targetLocale === "en") {
-        if (pathname === "/") return "/en";
-        if (!pathname.startsWith("/en")) return `/en${pathname}`;
-      } else {
-        if (pathname === "/en") return "/";
-        if (pathname.startsWith("/en/")) return pathname.replace(/^\/en/, "") || "/";
+        return cleanPath === "/" ? "/en" : `/en${cleanPath}`;
       }
-      return pathname;
+      return cleanPath;
     },
     [pathname]
   );

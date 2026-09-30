@@ -379,3 +379,148 @@ Respond ONLY with a valid raw JSON object with exactly these keys:
   }
 }
 
+export interface SkillTranslationInput {
+  name?: string
+  description?: string
+}
+
+export interface SkillTranslationOutput {
+  name_en: string
+  description_en: string
+}
+
+export async function translateSkillData(
+  input: SkillTranslationInput
+): Promise<SkillTranslationOutput> {
+  const apiKey = process.env.GEMINI_API_KEY?.trim()
+  if (apiKey) {
+    try {
+      const prompt = `You are a professional software engineer and bilingual translator (Italian to English).
+Translate the following technical skill name and description from Italian to fluent, idiomatic English suitable for a top-tier developer portfolio.
+
+Input JSON:
+${JSON.stringify({
+  name: input.name || '',
+  description: input.description || '',
+})}
+
+Respond ONLY with a valid raw JSON object with exactly these keys:
+{
+  "name_en": "...",
+  "description_en": "..."
+}`
+
+      const rawJson = await callGeminiWithFallback({
+        prompt,
+        apiKey,
+        jsonMode: true,
+      })
+
+      const cleanedText = rawJson
+        .replace(/^```json\s*/i, '')
+        .replace(/^```\s*/i, '')
+        .replace(/```\s*$/i, '')
+        .trim()
+
+      const parsed = JSON.parse(cleanedText)
+      return {
+        name_en: parsed.name_en?.trim() || '',
+        description_en: parsed.description_en?.trim() || '',
+      }
+    } catch {
+      // Fallback below
+    }
+  }
+
+  const [name_en, description_en] = await Promise.all([
+    input.name ? translateTextWithMyMemory(input.name) : Promise.resolve(''),
+    input.description ? translateTextWithMyMemory(input.description) : Promise.resolve(''),
+  ])
+
+  return { name_en, description_en }
+}
+
+export interface JourneyTranslationInput {
+  title?: string
+  institution?: string
+  description?: string
+  tags?: string[]
+  link_label?: string
+}
+
+export interface JourneyTranslationOutput {
+  title_en: string
+  institution_en: string
+  description_en: string
+  tags_en: string[]
+  link_label_en: string
+}
+
+export async function translateJourneyData(
+  input: JourneyTranslationInput
+): Promise<JourneyTranslationOutput> {
+  const apiKey = process.env.GEMINI_API_KEY?.trim()
+  if (apiKey) {
+    try {
+      const prompt = `You are a professional software engineer and bilingual translator (Italian to English).
+Translate the following educational/career journey milestone fields from Italian to fluent, technical, idiomatic English suitable for a software developer portfolio.
+
+Input JSON:
+${JSON.stringify({
+  title: input.title || '',
+  institution: input.institution || '',
+  description: input.description || '',
+  tags: input.tags || [],
+  link_label: input.link_label || '',
+})}
+
+Respond ONLY with a valid raw JSON object with exactly these keys:
+{
+  "title_en": "...",
+  "institution_en": "...",
+  "description_en": "...",
+  "tags_en": ["..."],
+  "link_label_en": "..."
+}`
+
+      const rawJson = await callGeminiWithFallback({
+        prompt,
+        apiKey,
+        jsonMode: true,
+      })
+
+      const cleanedText = rawJson
+        .replace(/^```json\s*/i, '')
+        .replace(/^```\s*/i, '')
+        .replace(/```\s*$/i, '')
+        .trim()
+
+      const parsed = JSON.parse(cleanedText)
+      return {
+        title_en: parsed.title_en?.trim() || '',
+        institution_en: parsed.institution_en?.trim() || '',
+        description_en: parsed.description_en?.trim() || '',
+        tags_en: Array.isArray(parsed.tags_en) ? parsed.tags_en : (input.tags || []),
+        link_label_en: parsed.link_label_en?.trim() || '',
+      }
+    } catch {
+      // Fallback below
+    }
+  }
+
+  const [title_en, institution_en, description_en, link_label_en] = await Promise.all([
+    input.title ? translateTextWithMyMemory(input.title) : Promise.resolve(''),
+    input.institution ? translateTextWithMyMemory(input.institution) : Promise.resolve(''),
+    input.description ? translateTextWithMyMemory(input.description) : Promise.resolve(''),
+    input.link_label ? translateTextWithMyMemory(input.link_label) : Promise.resolve(''),
+  ])
+
+  return {
+    title_en,
+    institution_en,
+    description_en,
+    tags_en: input.tags || [],
+    link_label_en,
+  }
+}
+

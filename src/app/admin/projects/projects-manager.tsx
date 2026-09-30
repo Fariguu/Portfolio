@@ -9,6 +9,7 @@ import {
   toggleProjectVisibility,
   toggleProjectFeatured,
   translateProjectFields,
+  retranslateProject,
 } from '@/app/admin/actions/projects'
 import { Button } from '@/components/ui/button'
 import {
@@ -53,6 +54,8 @@ export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerPro
   const [isCreating, setIsCreating] = useState(false)
   const [loading, setLoading] = useState(false)
   const [translating, setTranslating] = useState(false)
+  const [retranslatingId, setRetranslatingId] = useState<string | null>(null)
+  const [autoTranslateOnSave, setAutoTranslateOnSave] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [toast, setToast] = useState<ToastState | null>(null)
 
@@ -124,6 +127,34 @@ export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerPro
 
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  const handleRetranslateProject = async (id: string) => {
+    setRetranslatingId(id)
+    try {
+      const res = await retranslateProject(id)
+      if (res.error) throw new Error(res.error)
+      if (res.translation) {
+        setProjects((prev) =>
+          prev.map((p) =>
+            p.id === id
+              ? {
+                  ...p,
+                  title_en: res.translation.title_en,
+                  description_en: res.translation.description_en,
+                  github_label_en: res.translation.github_label_en,
+                  status_badge_en: res.translation.status_badge_en,
+                }
+              : p
+          )
+        )
+      }
+      showToast('Traduzione in inglese aggiornata con successo!')
+    } catch (err: unknown) {
+      showToast(err instanceof Error ? err.message : 'Errore durante la traduzione', 'error')
+    } finally {
+      setRetranslatingId(null)
+    }
+  }
+
   const openCreateModal = () => {
     setEditingProject(null)
     setTitle('')
@@ -144,6 +175,7 @@ export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerPro
     setFeatured(false)
     setVisible(true)
     setSortOrder((projects.length + 1).toString())
+    setAutoTranslateOnSave(true)
     setIsCreating(true)
     setErrorMsg(null)
   }
@@ -168,6 +200,7 @@ export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerPro
     setFeatured(project.featured)
     setVisible(project.visible)
     setSortOrder(project.sort_order.toString())
+    setAutoTranslateOnSave(false)
     setIsCreating(true)
     setErrorMsg(null)
   }
@@ -260,6 +293,7 @@ export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerPro
     formData.append('featured', featured.toString())
     formData.append('visible', visible.toString())
     formData.append('sort_order', sortOrder)
+    formData.append('auto_translate', autoTranslateOnSave ? 'true' : 'false')
 
     try {
       if (editingProject) {
@@ -632,6 +666,21 @@ export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerPro
                   className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                 />
               </div>
+
+              <div className="pt-2 border-t border-border/50">
+                <label className="flex items-center gap-2 text-xs text-foreground cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={autoTranslateOnSave}
+                    onChange={(e) => setAutoTranslateOnSave(e.target.checked)}
+                    className="h-3.5 w-3.5 rounded border-border text-primary focus:ring-primary"
+                  />
+                  <span className="flex items-center gap-1 text-muted-foreground">
+                    <Sparkles className="h-3 w-3 text-amber-500 shrink-0" />
+                    Rigenera automaticamente le traduzioni in inglese al salvataggio
+                  </span>
+                </label>
+              </div>
             </div>
 
             {/* Checkboxes / Options */}
@@ -813,8 +862,25 @@ export function ProjectsManager({ initialProjects }: Readonly<ProjectsManagerPro
                   <Button
                     variant="ghost"
                     size="sm"
+                    onClick={() => handleRetranslateProject(project.id)}
+                    disabled={retranslatingId === project.id}
+                    title="Ri-traduci automaticamente in inglese con AI"
+                    className="h-8 px-2 text-xs text-primary hover:bg-primary/10 gap-1"
+                  >
+                    {retranslatingId === project.id ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin text-primary" />
+                    ) : (
+                      <Sparkles className="h-3.5 w-3.5 text-amber-500" />
+                    )}
+                    <span className="hidden sm:inline text-[11px] font-medium">Aggiorna EN</span>
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={() => openEditModal(project)}
                     className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
+                    title="Modifica progetto"
                   >
                     <Edit2 className="h-4 w-4" />
                   </Button>
