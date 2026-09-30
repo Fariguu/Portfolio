@@ -37,8 +37,8 @@ export function MobileCollapsibleSection({
 
   return (
     <div id={id} className="w-full scroll-mt-20">
-      {/* Mobile Toggle Bar (< md) - Basata sullo sketch */}
-      <div className="md:hidden border-y border-border/80 bg-muted/20 backdrop-blur-xs">
+      {/* Mobile Toggle Bar (< md) - Pulita, senza doppie scritte né icone ridondanti */}
+      <div className="md:hidden border-y border-border/80 bg-card/60 backdrop-blur-xs">
         <button
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}
@@ -46,30 +46,14 @@ export function MobileCollapsibleSection({
           aria-expanded={isOpen}
           aria-controls={`collapsible-content-${id}`}
         >
-          <div className="flex items-center gap-3">
-            {icon && (
-              <span className="text-brand-accent transition-transform group-hover:scale-110">
-                {icon}
-              </span>
-            )}
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-base tracking-wide uppercase text-foreground group-hover:text-brand-accent transition-colors">
-                {title}
-              </span>
-              {badge && (
-                <span className="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-brand-accent/15 text-brand-accent">
-                  {badge}
-                </span>
-              )}
-            </div>
-          </div>
+          <span className="font-bold text-base tracking-wide uppercase text-foreground transition-colors group-hover:text-primary">
+            {title}
+          </span>
 
           <div
             className={cn(
-              "h-8 w-8 rounded-full flex items-center justify-center transition-all duration-300",
-              isOpen
-                ? "bg-brand-accent/15 text-brand-accent rotate-180"
-                : "bg-muted text-muted-foreground group-hover:text-foreground"
+              "h-8 w-8 rounded-full flex items-center justify-center transition-all duration-300 bg-muted/60 text-muted-foreground group-hover:text-foreground",
+              isOpen && "rotate-180 text-foreground bg-muted"
             )}
           >
             <ChevronDown className="h-4 w-4 transition-transform" />

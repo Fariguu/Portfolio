@@ -79,7 +79,6 @@ export default async function HomePage({ params }: Readonly<PageProps>) {
         <MobileCollapsibleSection
           id="competenze"
           title={dict.nav.skills}
-          badge={dict.skills.badge}
         >
           <Features dict={dict} locale={locale} sectionId="" />
         </MobileCollapsibleSection>
@@ -88,7 +87,6 @@ export default async function HomePage({ params }: Readonly<PageProps>) {
         <MobileCollapsibleSection
           id="percorso"
           title={dict.nav.journey}
-          badge={dict.journey.badge}
         >
           <Journey dict={dict} locale={locale} sectionId="" />
         </MobileCollapsibleSection>
@@ -97,7 +95,6 @@ export default async function HomePage({ params }: Readonly<PageProps>) {
         <MobileCollapsibleSection
           id="progetti"
           title={dict.nav.projects}
-          badge={dict.portfolio.badge}
         >
           <Portfolio dict={dict} locale={locale} sectionId="" />
         </MobileCollapsibleSection>
