@@ -14,9 +14,7 @@ import { redirect } from "next/navigation";
 import {
   FileText,
   Download,
-  ExternalLink,
   Mail,
-  AlertCircle,
   CheckCircle2,
   Calendar,
   HardDrive,
@@ -28,9 +26,7 @@ interface CurriculumPageProps {
   readonly params: Promise<{ locale: string }>;
 }
 
-export function generateStaticParams() {
-  return locales.map((locale) => ({ locale }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,

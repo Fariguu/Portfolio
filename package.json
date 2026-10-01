@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:buttons": "node scripts/test-buttons.mjs"
+    "test:buttons": "node scripts/test-buttons.mjs",
+    "test:regression": "node scripts/regression-test.mjs"
   },
   "dependencies": {
     "@marsidev/react-turnstile": "^1.6.1",

@@ -115,6 +115,11 @@ function handleI18nRouting(request: NextRequest, pathname: string) {
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
+  // 0. Le route API non devono subire routing multilingua
+  if (pathname.startsWith("/api")) {
+    return NextResponse.next();
+  }
+
   // 1. Gestione Route Admin (Supabase Authentication)
   if (pathname.startsWith("/admin")) {
     return handleAdminAuth(request, pathname);
