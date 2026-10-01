@@ -2,7 +2,7 @@
 
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyAdminSession } from "@/lib/auth-guard";
-import { revalidatePath, revalidateTag, updateTag } from "next/cache";
+import { unstable_cache, revalidatePath, revalidateTag, updateTag } from "next/cache";
 
 const CV_FILE_PATH = "cv/curriculum.pdf";
 const BUCKET_NAME = "portfolio-media";
@@ -15,41 +15,45 @@ export interface CvInfo {
   readonly size: number | null;
 }
 
-export async function getCvInfo(): Promise<CvInfo> {
-  try {
-    const supabase = createAdminClient();
-    const { data: files, error } = await supabase.storage
-      .from(BUCKET_NAME)
-      .list("cv", {
-        limit: 10,
-        search: "curriculum.pdf",
-      });
+export const getCvInfo = unstable_cache(
+  async (): Promise<CvInfo> => {
+    try {
+      const supabase = createAdminClient();
+      const { data: files, error } = await supabase.storage
+        .from(BUCKET_NAME)
+        .list("cv", {
+          limit: 10,
+          search: "curriculum.pdf",
+        });
 
-    if (error || !files) {
-      console.warn("[getCvInfo] storage list warning:", error?.message);
+      if (error || !files) {
+        console.warn("[getCvInfo] storage list warning:", error?.message);
+        return { exists: false, url: null, updatedAt: null, size: null };
+      }
+
+      const cvFile = files.find((f) => f.name === "curriculum.pdf");
+      if (!cvFile) {
+        return { exists: false, url: null, updatedAt: null, size: null };
+      }
+
+      const { data: publicUrlData } = supabase.storage
+        .from(BUCKET_NAME)
+        .getPublicUrl(CV_FILE_PATH);
+
+      return {
+        exists: true,
+        url: publicUrlData.publicUrl,
+        updatedAt: cvFile.updated_at || cvFile.created_at || null,
+        size: cvFile.metadata?.size || null,
+      };
+    } catch (err) {
+      console.error("[getCvInfo] exception:", err);
       return { exists: false, url: null, updatedAt: null, size: null };
     }
-
-    const cvFile = files.find((f) => f.name === "curriculum.pdf");
-    if (!cvFile) {
-      return { exists: false, url: null, updatedAt: null, size: null };
-    }
-
-    const { data: publicUrlData } = supabase.storage
-      .from(BUCKET_NAME)
-      .getPublicUrl(CV_FILE_PATH);
-
-    return {
-      exists: true,
-      url: publicUrlData.publicUrl,
-      updatedAt: cvFile.updated_at || cvFile.created_at || null,
-      size: cvFile.metadata?.size || null,
-    };
-  } catch (err) {
-    console.error("[getCvInfo] exception:", err);
-    return { exists: false, url: null, updatedAt: null, size: null };
-  }
-}
+  },
+  ["cv-info"],
+  { revalidate: 3600, tags: ["cv"] }
+);
 
 export async function uploadCvAction(formData: FormData) {
   try {

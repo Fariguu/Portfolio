@@ -29,6 +29,12 @@ export function CvPdfViewer({ pdfUrl }: Readonly<CvPdfViewerProps>) {
     const renderTasks: Array<{ cancel: () => void }> = [];
 
     async function loadPdf() {
+      // Su mobile (< 768px) evitiamo il download e il parsing di pdfjs-dist per massimizzare le performance
+      if (typeof window !== "undefined" && window.innerWidth < 768) {
+        setIsLoading(false);
+        return;
+      }
+
       try {
         setIsLoading(true);
         setError(null);
@@ -156,7 +162,6 @@ export function CvPdfViewer({ pdfUrl }: Readonly<CvPdfViewerProps>) {
               target="_blank"
               rel="noopener noreferrer"
               className="absolute inset-0 bg-slate-900/5 active:bg-slate-900/15 transition-colors flex items-center justify-center cursor-pointer p-2"
-              aria-label="Tocca per visualizzare il curriculum nel lettore nativo"
             >
               <span className="px-3 py-1.5 rounded-full bg-white/95 text-slate-800 text-[11px] font-semibold border border-slate-200/90 shadow-sm backdrop-blur-xs flex items-center gap-1.5 transition-transform group-hover:scale-105 group-active:scale-95 whitespace-nowrap">
                 <ExternalLink className="w-3 h-3 text-primary shrink-0" />
@@ -242,47 +247,49 @@ export function CvPdfViewer({ pdfUrl }: Readonly<CvPdfViewerProps>) {
           </div>
         </div>
 
-        {/* Loading State */}
-        {isLoading && (
-          <div className="w-full h-[550px] flex flex-col items-center justify-center rounded-2xl border border-border/60 bg-muted/10 space-y-3">
-            <Loader2 className="h-8 w-8 text-primary animate-spin" />
-            <p className="text-sm text-muted-foreground">Generazione visualizzazione del curriculum in corso...</p>
-          </div>
-        )}
-
-        {/* Error Fallback */}
-        {error && (
-          <div className="w-full p-8 rounded-2xl border border-destructive/20 bg-destructive/5 text-center space-y-3">
-            <AlertCircle className="h-8 w-8 text-destructive mx-auto" />
-            <p className="text-sm text-destructive">{error}</p>
-            <Button asChild size="sm" variant="outline">
-              <a href="/api/cv/download" download="CV_Gabriele_Farigu.pdf">
-                <Download className="h-4 w-4 mr-1.5" />
-                Scarica il PDF direttamente
-              </a>
-            </Button>
-          </div>
-        )}
-
-        {/* Pagine del PDF come veri fogli bianchi puliti */}
-        <div className={`w-full flex flex-col items-center space-y-6 ${isLoading ? "hidden" : "flex"}`}>
-          {Array.from({ length: numPages }, (_, i) => i + 1).map((pageNum) => (
-            <div
-              key={pageNum}
-              className="relative flex flex-col items-center bg-white dark:bg-white rounded-xl shadow-xl border border-black/10 overflow-hidden transition-shadow hover:shadow-2xl"
-            >
-              <canvas
-                ref={(el) => {
-                  if (el) {
-                    canvasRefs.current.set(pageNum, el);
-                  } else {
-                    canvasRefs.current.delete(pageNum);
-                  }
-                }}
-                className="block max-w-full"
-              />
+        {/* Container con min-height stabile per eliminare Cumulative Layout Shift (CLS = 0) */}
+        <div className="relative w-full flex flex-col items-center min-h-[850px]">
+          {isLoading && (
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center rounded-2xl border border-border/60 bg-card/60 backdrop-blur-xs space-y-3">
+              <Loader2 className="h-8 w-8 text-primary animate-spin" />
+              <p className="text-sm text-muted-foreground">Generazione visualizzazione del curriculum in corso...</p>
             </div>
-          ))}
+          )}
+
+          {/* Error Fallback */}
+          {error && (
+            <div className="w-full p-8 rounded-2xl border border-destructive/20 bg-destructive/5 text-center space-y-3">
+              <AlertCircle className="h-8 w-8 text-destructive mx-auto" />
+              <p className="text-sm text-destructive">{error}</p>
+              <Button asChild size="sm" variant="outline">
+                <a href="/api/cv/download" download="CV_Gabriele_Farigu.pdf">
+                  <Download className="h-4 w-4 mr-1.5" />
+                  Scarica il PDF direttamente
+                </a>
+              </Button>
+            </div>
+          )}
+
+          {/* Pagine del PDF come veri fogli bianchi puliti con aspect-ratio stabile */}
+          <div className="w-full flex flex-col items-center space-y-6">
+            {Array.from({ length: numPages || 1 }, (_, i) => i + 1).map((pageNum) => (
+              <div
+                key={pageNum}
+                className="relative flex flex-col items-center bg-white dark:bg-white rounded-xl shadow-xl border border-black/10 overflow-hidden transition-shadow hover:shadow-2xl w-full max-w-[850px] min-h-[800px] aspect-[1/1.414]"
+              >
+                <canvas
+                  ref={(el) => {
+                    if (el) {
+                      canvasRefs.current.set(pageNum, el);
+                    } else {
+                      canvasRefs.current.delete(pageNum);
+                    }
+                  }}
+                  className="block max-w-full"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

@@ -184,9 +184,9 @@ export default async function CurriculumPage({ params }: CurriculumPageProps) {
           {/* Bottom Actions Banner */}
           <div className="p-6 md:p-8 rounded-2xl border border-border/80 bg-gradient-to-r from-card via-card to-primary/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-8">
             <div className="space-y-1">
-              <h3 className="text-base sm:text-lg font-bold text-foreground">
+              <h2 className="text-base sm:text-lg font-bold text-foreground">
                 Sei interessato al mio profilo?
-              </h3>
+              </h2>
               <p className="text-xs sm:text-sm text-muted-foreground">
                 Sono aperto a posizioni junior, opportunità lavorative, tirocini e collaborazioni tecniche.
               </p>
