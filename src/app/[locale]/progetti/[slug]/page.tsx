@@ -237,7 +237,7 @@ export default async function ProjectCaseStudyPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <Navbar dict={dict} locale={locale} />
+      <Navbar nav={dict.nav} locale={locale} />
 
       <main className="flex-1">
         {/* Breadcrumb & Top Bar */}

@@ -137,7 +137,7 @@ export default async function ChiSonoPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Navbar dict={dict} locale={locale} />
+      <Navbar nav={dict.nav} locale={locale} />
 
       <main className="flex-1">
         {/* Sezione Biografia Narrativa Approfondita */}

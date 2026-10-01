@@ -26,7 +26,11 @@ interface CurriculumPageProps {
   readonly params: Promise<{ locale: string }>;
 }
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
+
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
 
 export async function generateMetadata({
   params,
@@ -102,7 +106,7 @@ export default async function CurriculumPage({ params }: CurriculumPageProps) {
   return (
     <>
       <CvJsonLd />
-      <Navbar dict={dict} locale={locale} />
+      <Navbar nav={dict.nav} locale={locale} />
 
       <main className="min-h-screen bg-background pt-24 pb-16">
         <div className="container mx-auto px-4 md:px-6 max-w-5xl space-y-8">
