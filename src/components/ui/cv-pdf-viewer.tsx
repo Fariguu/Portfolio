@@ -45,7 +45,7 @@ export function CvPdfViewer({ pdfUrl }: Readonly<CvPdfViewerProps>) {
 
         const loadingTask = pdfjsLib.getDocument({
           url: pdfUrl,
-          cMapUrl: "https://unpkg.com/pdfjs-dist@4.10.38/cmaps/",
+          cMapUrl: "/cmaps/",
           cMapPacked: true,
         });
 
@@ -55,9 +55,22 @@ export function CvPdfViewer({ pdfUrl }: Readonly<CvPdfViewerProps>) {
         setNumPages(pdf.numPages);
         setIsLoading(false);
 
-        // Renderizza ogni pagina per la vista desktop
+        // Renderizza ogni pagina: prima pagina immediata, pagine successive con yielding del main thread
         for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
           if (isCancelled) break;
+
+          // Se ci sono pagine successive alla prima, cedi il thread per eliminare i Long Tasks
+          if (pageNum > 1) {
+            await new Promise<void>((resolve) => {
+              if (typeof requestIdleCallback !== "undefined") {
+                requestIdleCallback(() => resolve(), { timeout: 100 });
+              } else {
+                setTimeout(resolve, 16);
+              }
+            });
+            if (isCancelled) break;
+          }
+
           const page = await pdf.getPage(pageNum);
           const canvas = canvasRefs.current.get(pageNum);
           if (!canvas) continue;
@@ -73,8 +86,8 @@ export function CvPdfViewer({ pdfUrl }: Readonly<CvPdfViewerProps>) {
 
           const viewport = page.getViewport({ scale: effectiveScale });
 
-          // Supporto Retina Display / pixel ratio alto
-          const pixelRatio = Math.min(window.devicePixelRatio || 1, 2.5);
+          // Supporto display nitido con pixelRatio ottimizzato a max 1.5x (risparmia oltre 60% di memoria e compute CPU/GPU)
+          const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
           canvas.width = Math.floor(viewport.width * pixelRatio);
           canvas.height = Math.floor(viewport.height * pixelRatio);
           canvas.style.width = `${Math.floor(viewport.width)}px`;

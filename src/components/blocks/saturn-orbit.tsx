@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useEffect, useRef, useState, useId, useSyncExternalStore } from "react";
 import { TECH_ITEMS, getInitialOrbitStyle } from "@/lib/tech-stack";
@@ -70,22 +70,40 @@ export function SaturnOrbit() {
     return () => observer.disconnect();
   }, [isDesktop]);
 
-  // Monitoraggio dello scroll (solo desktop)
+  // Monitoraggio dello scroll (solo desktop) senza forced reflow
   useEffect(() => {
     if (!isDesktop) return;
 
-    function handleScroll() {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight || 800;
+    let containerTop = 0;
+    const updateContainerTop = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        containerTop = rect.top + window.scrollY;
+      }
+    };
 
-      const scrollDistance = Math.max(0, -rect.top);
-      const progress = Math.min(1, scrollDistance / (windowHeight * 0.7));
-      scrollProgressRef.current = progress;
+    updateContainerTop();
+
+    let ticking = false;
+    function handleScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const scrollY = window.scrollY;
+        const windowHeight = window.innerHeight || 800;
+        const scrollDistance = Math.max(0, scrollY - containerTop);
+        const progress = Math.min(1, scrollDistance / (windowHeight * 0.7));
+        scrollProgressRef.current = progress;
+        ticking = false;
+      });
     }
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("resize", updateContainerTop, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", updateContainerTop);
+    };
   }, [isDesktop]);
 
   // Loop di rotazione rAF (ESCLUSIVAMENTE su desktop)
