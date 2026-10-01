@@ -14,48 +14,52 @@ interface MobileBottomDockProps {
 
 export function MobileBottomDock({ dict }: Readonly<MobileBottomDockProps>) {
   const [activeSection, setActiveSection] = React.useState<string>("");
-  const [isVisible, setIsVisible] = React.useState(true);
-  const lastScrollY = React.useRef(0);
 
-  // Monitora la sezione attiva via IntersectionObserver e resetta quando si è nella Hero
+  // Monitora la sezione attiva via IntersectionObserver e resetta quando si è nella Hero (solo viewport mobile)
   React.useEffect(() => {
-    const sectionIds = ["chi-sono", "competenze", "percorso", "progetti"];
-    const observers: IntersectionObserver[] = [];
+    if (typeof window === "undefined" || window.innerWidth >= 768) return;
 
-    const checkHeroScroll = () => {
-      if (typeof window !== "undefined" && window.scrollY < 180) {
-        setActiveSection("");
-      }
-    };
+    const sectionIds = ["chi-sono", "competenze", "percorso", "progetti"];
+
+    // Singola istanza IntersectionObserver per tutte le sezioni
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            if (id === "chi-sono" || window.scrollY < 180) {
+              setActiveSection((prev) => (prev ? "" : prev));
+            } else {
+              setActiveSection(id);
+            }
+          }
+        });
+      },
+      { threshold: 0.25, rootMargin: "-15% 0px -35% 0px" }
+    );
 
     sectionIds.forEach((id) => {
       const el = document.getElementById(id);
-      if (!el) return;
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              if (id === "chi-sono" || window.scrollY < 180) {
-                setActiveSection("");
-              } else {
-                setActiveSection(id);
-              }
-            }
-          });
-        },
-        { threshold: 0.25, rootMargin: "-15% 0px -35% 0px" }
-      );
-
-      observer.observe(el);
-      observers.push(observer);
+      if (el) observer.observe(el);
     });
+
+    let ticking = false;
+    const checkHeroScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        if (window.scrollY < 180) {
+          setActiveSection((prev) => (prev ? "" : prev));
+        }
+        ticking = false;
+      });
+    };
 
     window.addEventListener("scroll", checkHeroScroll, { passive: true });
     checkHeroScroll();
 
     return () => {
-      observers.forEach((obs) => obs.disconnect());
+      observer.disconnect();
       window.removeEventListener("scroll", checkHeroScroll);
     };
   }, []);
@@ -81,11 +85,7 @@ export function MobileBottomDock({ dict }: Readonly<MobileBottomDockProps>) {
   return (
     <nav
       aria-label="Navigazione rapida mobile"
-      className={cn(
-        "fixed bottom-3.5 left-1/2 -translate-x-1/2 z-50 md:hidden",
-        "transition-all duration-300 ease-in-out",
-        isVisible ? "translate-y-0 opacity-100" : "translate-y-16 opacity-0 pointer-events-none"
-      )}
+      className="fixed bottom-3.5 left-1/2 -translate-x-1/2 z-50 md:hidden transition-all duration-300 ease-in-out"
     >
       <div className="flex items-center gap-1 p-1.5 rounded-full border border-border/80 bg-card/85 backdrop-blur-xl shadow-xl shadow-black/10 dark:shadow-black/40 ring-1 ring-white/10">
         {navItems.map((item) => {

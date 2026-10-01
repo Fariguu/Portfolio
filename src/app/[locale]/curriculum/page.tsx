@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { getCvInfo } from "@/app/admin/actions/cv";
 import { CvJsonLd } from "@/components/seo/cv-json-ld";
 import { CvPdfViewer } from "@/components/ui/cv-pdf-viewer";
-import { redirect } from "next/navigation";
 import {
   FileText,
   Download,
@@ -26,7 +25,11 @@ interface CurriculumPageProps {
   readonly params: Promise<{ locale: string }>;
 }
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
+
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
 
 export async function generateMetadata({
   params,
@@ -35,7 +38,7 @@ export async function generateMetadata({
   const locale: Locale = isValidLocale(rawLocale) ? rawLocale : defaultLocale;
   const dict = getDictionary(locale);
   const baseUrl = getBaseUrl();
-  const canonicalUrl = `${baseUrl}/curriculum`;
+  const canonicalUrl = locale === "it" ? `${baseUrl}/curriculum` : `${baseUrl}/en/curriculum`;
 
   return {
     title: dict.curriculum.meta.title,
@@ -44,8 +47,9 @@ export async function generateMetadata({
     alternates: {
       canonical: canonicalUrl,
       languages: {
-        it: canonicalUrl,
-        "x-default": canonicalUrl,
+        it: `${baseUrl}/curriculum`,
+        en: `${baseUrl}/en/curriculum`,
+        "x-default": `${baseUrl}/curriculum`,
       },
     },
     openGraph: {
@@ -53,7 +57,7 @@ export async function generateMetadata({
       description: dict.curriculum.meta.description,
       url: canonicalUrl,
       siteName: siteConfig.name,
-      locale: "it_IT",
+      locale: locale === "it" ? "it_IT" : "en_US",
       type: "profile",
     },
     twitter: {
@@ -69,12 +73,9 @@ export default async function CurriculumPage({ params }: CurriculumPageProps) {
   const { locale: rawLocale } = await params;
   const locale: Locale = isValidLocale(rawLocale) ? rawLocale : defaultLocale;
 
-  // Se l'utente visita /en/curriculum, reindirizza alla versione canonica /curriculum
-  if (locale === "en") {
-    redirect("/curriculum");
-  }
-
   const dict = getDictionary(locale);
+  const homeHref = locale === "en" ? "/en" : "/";
+  const contactHref = locale === "en" ? "/en/contatti" : "/contatti";
   const cvInfo = await getCvInfo();
 
   const formatFileSize = (bytes: number | null) => {
@@ -88,7 +89,7 @@ export default async function CurriculumPage({ params }: CurriculumPageProps) {
   const formatDate = (isoString: string | null) => {
     if (!isoString) return null;
     try {
-      return new Date(isoString).toLocaleDateString("it-IT", {
+      return new Date(isoString).toLocaleDateString(locale === "en" ? "en-US" : "it-IT", {
         day: "2-digit",
         month: "long",
         year: "numeric",
@@ -104,14 +105,14 @@ export default async function CurriculumPage({ params }: CurriculumPageProps) {
   return (
     <>
       <CvJsonLd />
-      <Navbar dict={dict} locale={locale} />
+      <Navbar nav={dict.nav} locale={locale} />
 
       <main className="min-h-screen bg-background pt-24 pb-16">
         <div className="container mx-auto px-4 md:px-6 max-w-5xl space-y-8">
           {/* Top Bar: Torna alla home */}
           <div className="flex items-center justify-between gap-4">
             <Button asChild variant="ghost" size="sm" className="rounded-full text-xs sm:text-sm text-muted-foreground hover:text-foreground">
-              <Link href="/">
+              <Link href={homeHref}>
                 <ArrowLeft className="h-4 w-4 mr-1.5 text-brand-accent" />
                 <span>{dict.curriculum.backHome}</span>
               </Link>
@@ -138,11 +139,11 @@ export default async function CurriculumPage({ params }: CurriculumPageProps) {
               <div className="flex flex-wrap items-center gap-3 pt-1 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1.5 text-brand-accent font-medium">
                   <CheckCircle2 className="h-3.5 w-3.5" />
-                  Disponibile per il download
+                  {locale === "en" ? "Available for download" : "Disponibile per il download"}
                 </span>
                 {formattedDate && (
                   <span className="flex items-center gap-1">
-                    • <Calendar className="h-3.5 w-3.5 ml-1" /> Aggiornato a {formattedDate}
+                    • <Calendar className="h-3.5 w-3.5 ml-1" /> {locale === "en" ? `Updated on ${formattedDate}` : `Aggiornato a ${formattedDate}`}
                   </span>
                 )}
                 {formattedSize && (
@@ -172,7 +173,7 @@ export default async function CurriculumPage({ params }: CurriculumPageProps) {
               </div>
               <div className="pt-2">
                 <Button asChild className="rounded-full">
-                  <Link href="/contatti">
+                  <Link href={contactHref}>
                     <Mail className="h-4 w-4 mr-1.5" />
                     <span>{dict.curriculum.contactCta}</span>
                   </Link>
@@ -185,10 +186,12 @@ export default async function CurriculumPage({ params }: CurriculumPageProps) {
           <div className="p-6 md:p-8 rounded-2xl border border-border/80 bg-gradient-to-r from-card via-card to-primary/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-8">
             <div className="space-y-1">
               <h2 className="text-base sm:text-lg font-bold text-foreground">
-                Sei interessato al mio profilo?
+                {locale === "en" ? "Interested in my profile?" : "Sei interessato al mio profilo?"}
               </h2>
               <p className="text-xs sm:text-sm text-muted-foreground">
-                Sono aperto a posizioni junior, opportunità lavorative, tirocini e collaborazioni tecniche.
+                {locale === "en"
+                  ? "I am open to junior engineering roles, job opportunities, internships, and technical collaborations."
+                  : "Sono aperto a posizioni junior, opportunità lavorative, tirocini e collaborazioni tecniche."}
               </p>
             </div>
 
@@ -200,12 +203,12 @@ export default async function CurriculumPage({ params }: CurriculumPageProps) {
                     download="CV_Gabriele_Farigu.pdf"
                   >
                     <Download className="h-4 w-4" />
-                    <span>Scarica PDF</span>
+                    <span>{locale === "en" ? "Download PDF" : "Scarica PDF"}</span>
                   </a>
                 </Button>
               )}
               <Button asChild className="rounded-full gap-1.5 text-xs sm:text-sm">
-                <Link href="/contatti">
+                <Link href={contactHref}>
                   <Mail className="h-4 w-4" />
                   <span>{dict.curriculum.contactCta}</span>
                 </Link>
@@ -214,7 +217,7 @@ export default async function CurriculumPage({ params }: CurriculumPageProps) {
           </div>
         </div>
 
-        <BackToHomeButton href="/" label={dict.curriculum.backHome} />
+        <BackToHomeButton href={homeHref} label={dict.curriculum.backHome} />
       </main>
 
       <Footer dict={dict} locale={locale} />

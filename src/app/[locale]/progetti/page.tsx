@@ -102,7 +102,7 @@ export default async function ProgettiPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Navbar dict={dict} locale={locale} />
+      <Navbar nav={dict.nav} locale={locale} />
 
       <main className="flex-1">
         {/* Componente Portfolio con griglia progetti, filtri e case study (senza pulsante circolare esplora progetti) */}

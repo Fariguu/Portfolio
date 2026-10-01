@@ -174,7 +174,7 @@ export default async function PreventivoPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Navbar dict={dict} locale={locale} />
+      <Navbar nav={dict.nav} locale={locale} />
 
       <main className="flex-1 py-10 sm:py-16 px-4 md:px-6">
         <div className="container max-w-4xl mx-auto space-y-8 sm:space-y-12">

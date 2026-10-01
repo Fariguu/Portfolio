@@ -91,6 +91,7 @@ export default async function PercorsoPage({
 
   const contactHref = locale === "en" ? "/en/contatti" : "/contatti";
   const projectsHref = locale === "en" ? "/en/progetti" : "/progetti";
+  const curriculumHref = locale === "en" ? "/en/curriculum" : "/curriculum";
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground font-[family-name:var(--font-geist-sans)]">
@@ -98,7 +99,7 @@ export default async function PercorsoPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Navbar dict={dict} locale={locale} />
+      <Navbar nav={dict.nav} locale={locale} />
 
       <main className="flex-1">
         {/* Componente Journey principale */}
@@ -130,7 +131,7 @@ export default async function PercorsoPage({
                 variant="outline"
                 className="rounded-full border-border/80 bg-background/50 hover:border-brand-accent/50 hover:text-brand-accent transition-colors shadow-xs"
               >
-                <Link href="/curriculum">
+                <Link href={curriculumHref}>
                   <FileText className="mr-2 h-4 w-4 text-brand-accent" />
                   <span>{locale === "en" ? "Curriculum Vitae" : "Consulta il Curriculum"}</span>
                 </Link>

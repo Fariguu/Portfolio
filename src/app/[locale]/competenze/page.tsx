@@ -95,7 +95,7 @@ export default async function CompetenzePage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <Navbar dict={dict} locale={locale} />
+      <Navbar nav={dict.nav} locale={locale} />
 
       <main className="flex-1">
         {/* Componente Features principale con griglia competenze (senza link di approfondimento circolare) */}
