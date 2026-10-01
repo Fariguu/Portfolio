@@ -17,6 +17,7 @@ import {
   HardDrive,
 } from "lucide-react";
 import Link from "next/link";
+import { CvPdfViewer } from "@/components/ui/cv-pdf-viewer";
 
 interface CvManagerProps {
   readonly initialCvInfo: CvInfo;
@@ -361,33 +362,16 @@ export function CvManager({ initialCvInfo }: Readonly<CvManagerProps>) {
       {cvInfo.exists && cvInfo.url && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg flex items-center justify-between">
-              <span className="flex items-center gap-2">
-                <FileText className="h-5 w-5 text-primary" />
-                Anteprima del Curriculum
-              </span>
-              <Button asChild size="sm" variant="ghost" className="text-xs">
-                <a href={cvInfo.url} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="h-3.5 w-3.5 mr-1" />
-                  Apri a schermo intero
-                </a>
-              </Button>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <FileText className="h-5 w-5 text-primary" />
+              Anteprima del Curriculum
             </CardTitle>
+            <CardDescription>
+              Visualizzazione ad alta definizione identica a quella pubblica
+            </CardDescription>
           </CardHeader>
-          <CardContent className="p-2 sm:p-6">
-            <div className="w-full h-[600px] rounded-xl overflow-hidden border border-border/80 bg-muted/20">
-              <object
-                data={cvInfo.url}
-                type="application/pdf"
-                className="w-full h-full"
-              >
-                <iframe
-                  src={cvInfo.url}
-                  className="w-full h-full"
-                  title="Anteprima Curriculum PDF"
-                />
-              </object>
-            </div>
+          <CardContent className="p-2 sm:p-6 bg-muted/10 rounded-b-xl">
+            <CvPdfViewer pdfUrl={cvInfo.url} />
           </CardContent>
         </Card>
       )}

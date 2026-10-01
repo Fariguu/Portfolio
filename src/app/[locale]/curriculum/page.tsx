@@ -9,6 +9,7 @@ import { siteConfig } from "@/lib/seo.config";
 import { Button } from "@/components/ui/button";
 import { getCvInfo } from "@/app/admin/actions/cv";
 import { CvJsonLd } from "@/components/seo/cv-json-ld";
+import { CvPdfViewer } from "@/components/ui/cv-pdf-viewer";
 import { redirect } from "next/navigation";
 import {
   FileText,
@@ -111,7 +112,7 @@ export default async function CurriculumPage({ params }: CurriculumPageProps) {
 
       <main className="min-h-screen bg-background pt-24 pb-16">
         <div className="container mx-auto px-4 md:px-6 max-w-5xl space-y-8">
-          {/* Top Bar: Torna alla home + Azione Download Primaria */}
+          {/* Top Bar: Torna alla home */}
           <div className="flex items-center justify-between gap-4">
             <Button asChild variant="ghost" size="sm" className="rounded-full text-xs sm:text-sm text-muted-foreground hover:text-foreground">
               <Link href="/">
@@ -119,20 +120,6 @@ export default async function CurriculumPage({ params }: CurriculumPageProps) {
                 <span>{dict.curriculum.backHome}</span>
               </Link>
             </Button>
-
-            {cvInfo.exists && cvInfo.url && (
-              <Button asChild size="sm" className="rounded-full shadow-xs gap-1.5 text-xs sm:text-sm">
-                <a
-                  href={cvInfo.url}
-                  download="Curriculum_Vitae_Gabriele_Farigu.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Download className="h-4 w-4" />
-                  <span>{dict.curriculum.downloadButton}</span>
-                </a>
-              </Button>
-            )}
           </div>
 
           {/* Header Titolo */}
@@ -171,67 +158,9 @@ export default async function CurriculumPage({ params }: CurriculumPageProps) {
             )}
           </div>
 
-          {/* PDF Viewer Container */}
+          {/* PDF Viewer Container: Fogli bianchi puliti senza barre nere o tema scuro del browser */}
           {cvInfo.exists && cvInfo.url ? (
-            <div className="space-y-4">
-              <div className="w-full h-[72vh] md:h-[82vh] rounded-2xl overflow-hidden border border-border/80 bg-muted/20 shadow-md relative">
-                <object
-                  data={cvInfo.url}
-                  type="application/pdf"
-                  className="w-full h-full"
-                >
-                  {/* Fallback iframe per browser desktop/mobile alternativi */}
-                  <iframe
-                    src={cvInfo.url}
-                    className="w-full h-full"
-                    title="Curriculum Vitae di Gabriele Farigu"
-                  >
-                    <div className="flex flex-col items-center justify-center h-full p-6 text-center space-y-4">
-                      <AlertCircle className="h-10 w-10 text-muted-foreground" />
-                      <p className="text-sm text-muted-foreground max-w-md">
-                        {dict.curriculum.fallbackNotice}
-                      </p>
-                      <Button asChild>
-                        <a
-                          href={cvInfo.url}
-                          download="Curriculum_Vitae_Gabriele_Farigu.pdf"
-                        >
-                          <Download className="h-4 w-4 mr-1.5" />
-                          <span>{dict.curriculum.fallbackDownload}</span>
-                        </a>
-                      </Button>
-                    </div>
-                  </iframe>
-                </object>
-              </div>
-
-              {/* Informazione Fallback Mobile */}
-              <div className="p-4 rounded-xl bg-muted/40 border border-border/60 text-xs sm:text-sm text-muted-foreground flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <AlertCircle className="h-4 w-4 shrink-0 text-muted-foreground" />
-                  <span>
-                    Visualizzazione ottimizzata per desktop. Su dispositivi mobili puoi scaricare il file o aprirlo a schermo intero.
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
-                  <Button asChild size="sm" variant="ghost" className="h-8 text-xs gap-1">
-                    <a href={cvInfo.url} target="_blank" rel="noopener noreferrer">
-                      <ExternalLink className="h-3.5 w-3.5" />
-                      <span>{dict.curriculum.openNewTab}</span>
-                    </a>
-                  </Button>
-                  <Button asChild size="sm" variant="outline" className="h-8 text-xs gap-1">
-                    <a
-                      href={cvInfo.url}
-                      download="Curriculum_Vitae_Gabriele_Farigu.pdf"
-                    >
-                      <Download className="h-3.5 w-3.5" />
-                      <span>Scarica</span>
-                    </a>
-                  </Button>
-                </div>
-              </div>
-            </div>
+            <CvPdfViewer pdfUrl={cvInfo.url} />
           ) : (
             <div className="p-8 md:p-12 rounded-2xl border border-dashed border-border bg-card text-center space-y-4">
               <div className="h-14 w-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto">
@@ -268,11 +197,11 @@ export default async function CurriculumPage({ params }: CurriculumPageProps) {
             </div>
 
             <div className="flex flex-wrap items-center gap-3 shrink-0">
-              {cvInfo.exists && cvInfo.url && (
-                <Button asChild variant="outline" className="rounded-full gap-1.5 text-xs sm:text-sm">
+              {cvInfo.exists && (
+                <Button asChild variant="outline" className="rounded-full gap-1.5 text-xs sm:text-sm cursor-pointer">
                   <a
-                    href={cvInfo.url}
-                    download="Curriculum_Vitae_Gabriele_Farigu.pdf"
+                    href="/api/cv/download"
+                    download="CV_Gabriele_Farigu.pdf"
                   >
                     <Download className="h-4 w-4" />
                     <span>Scarica PDF</span>
