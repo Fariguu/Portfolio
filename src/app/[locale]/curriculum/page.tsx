@@ -156,8 +156,8 @@ export default async function CurriculumPage({ params }: CurriculumPageProps) {
           </div>
 
           {/* PDF Viewer Container: Fogli bianchi puliti senza barre nere o tema scuro del browser */}
-          {cvInfo.exists && cvInfo.url ? (
-            <CvPdfViewer pdfUrl={cvInfo.url} />
+          {cvInfo.exists ? (
+            <CvPdfViewer />
           ) : (
             <div className="p-8 md:p-12 rounded-2xl border border-dashed border-border bg-card text-center space-y-4">
               <div className="h-14 w-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto">

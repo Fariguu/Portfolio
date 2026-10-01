@@ -248,9 +248,9 @@ export function CvManager({ initialCvInfo }: Readonly<CvManagerProps>) {
                     <span>Visualizza Pagina Pubblica</span>
                   </Link>
                 </Button>
-                {cvInfo.url && (
+                {cvInfo.exists && (
                   <Button asChild size="sm" variant="secondary">
-                    <a href={cvInfo.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5">
+                    <a href="/api/cv/view" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5">
                       <FileText className="h-4 w-4" />
                       <span>Apri PDF Diretto</span>
                     </a>
@@ -359,7 +359,7 @@ export function CvManager({ initialCvInfo }: Readonly<CvManagerProps>) {
       </Card>
 
       {/* PDF Preview Card */}
-      {cvInfo.exists && cvInfo.url && (
+      {cvInfo.exists && (
         <Card>
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
@@ -371,7 +371,7 @@ export function CvManager({ initialCvInfo }: Readonly<CvManagerProps>) {
             </CardDescription>
           </CardHeader>
           <CardContent className="p-2 sm:p-6 bg-muted/10 rounded-b-xl">
-            <CvPdfViewer pdfUrl={cvInfo.url} />
+            <CvPdfViewer />
           </CardContent>
         </Card>
       )}

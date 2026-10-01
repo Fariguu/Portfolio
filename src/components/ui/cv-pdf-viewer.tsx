@@ -13,10 +13,10 @@ import {
 import { Button } from "@/components/ui/button";
 
 interface CvPdfViewerProps {
-  readonly pdfUrl: string;
+  readonly pdfUrl?: string;
 }
 
-export function CvPdfViewer({ pdfUrl }: Readonly<CvPdfViewerProps>) {
+export function CvPdfViewer({ pdfUrl = "/api/cv/view" }: Readonly<CvPdfViewerProps>) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [numPages, setNumPages] = React.useState<number>(0);
   const [scale, setScale] = React.useState<number>(1.1);
@@ -171,7 +171,7 @@ export function CvPdfViewer({ pdfUrl }: Readonly<CvPdfViewerProps>) {
 
             {/* Overlay interattivo cliccabile con pillola morbida ben distanziata dai bordi */}
             <a
-              href={pdfUrl}
+              href="/api/cv/view"
               target="_blank"
               rel="noopener noreferrer"
               className="absolute inset-0 bg-slate-900/5 active:bg-slate-900/15 transition-colors flex items-center justify-center cursor-pointer p-2"
@@ -245,7 +245,7 @@ export function CvPdfViewer({ pdfUrl }: Readonly<CvPdfViewerProps>) {
             <div className="h-4 w-[1px] bg-border mx-1" aria-hidden="true" />
 
             <Button asChild variant="ghost" size="sm" className="h-8 px-2 text-xs text-muted-foreground hover:text-foreground gap-1">
-              <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
+              <a href="/api/cv/view" target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">Schermo Intero</span>
               </a>
