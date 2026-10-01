@@ -203,6 +203,15 @@ export function JsonLd({ locale = "it" }: Readonly<JsonLdProps>) {
             : "Configuratore preventivo online — descrivi il tuo progetto in 4 passaggi",
         url: `${baseUrl}${locale === "en" ? "/en" : ""}/preventivo`,
       },
+      {
+        "@type": "SiteNavigationElement",
+        name: "Curriculum Vitae",
+        description:
+          locale === "en"
+            ? "Curriculum Vitae of Gabriele Farigu — Web & Software Developer"
+            : "Curriculum Vitae di Gabriele Farigu — visualizza e scarica il CV in PDF",
+        url: `${baseUrl}/curriculum`,
+      },
     ],
   };
 

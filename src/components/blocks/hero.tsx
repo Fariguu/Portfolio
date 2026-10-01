@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Mail, CornerDownRight } from "lucide-react";
+import { ArrowRight, Mail, CornerDownRight, FileText } from "lucide-react";
 import { Github, Linkedin } from "@/components/ui/icons";
 import { DesktopOrbit } from "@/components/blocks/desktop-orbit";
 import { TechChips } from "@/components/blocks/tech-chips";
@@ -73,13 +73,25 @@ export function Hero({
               </Button>
             </div>
 
-            {/* Link di approfondimento per la pagina dedicata /chi-sono */}
-            {showExploreLink && (
-              <div className="pt-1">
+            {/* Link al Curriculum Vitae (Variante A) & Approfondimento Chi Sono */}
+            <div className="pt-1 flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="group text-xs text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full px-3.5 h-8 transition-colors inline-flex items-center gap-1.5"
+                asChild
+              >
+                <Link href="/curriculum" prefetch={false}>
+                  <FileText className="h-3.5 w-3.5 text-brand-accent transition-transform group-hover:scale-110" />
+                  <span>{locale === "en" ? "Curriculum Vitae" : "Vedi il mio Curriculum"}</span>
+                </Link>
+              </Button>
+
+              {showExploreLink && (
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="group text-xs text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full px-4 h-9 transition-colors inline-flex items-center gap-1.5"
+                  className="group text-xs text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full px-3.5 h-8 transition-colors inline-flex items-center gap-1.5"
                   asChild
                 >
                   <Link href={locale === "en" ? "/en/chi-sono" : "/chi-sono"} prefetch={false}>
@@ -87,8 +99,8 @@ export function Hero({
                     <CornerDownRight className="h-3.5 w-3.5 text-brand-accent transition-transform group-hover:translate-x-1" />
                   </Link>
                 </Button>
-              </div>
-            )}
+              )}
+            </div>
 
             {/* Tech Stack Chips statici per schermi mobile (< md): Server Component puro */}
             <TechChips />

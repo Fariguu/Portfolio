@@ -8,7 +8,7 @@ import { isValidLocale, defaultLocale, locales, type Locale } from "@/lib/i18n/c
 import { getBaseUrl } from "@/lib/url";
 import { siteConfig } from "@/lib/seo.config";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Mail } from "lucide-react";
+import { ArrowRight, Mail, FileText } from "lucide-react";
 import Link from "next/link";
 
 interface PercorsoPageProps {
@@ -117,11 +117,17 @@ export default async function PercorsoPage({
                 ? "I am available for junior engineering roles, freelance contracts, and software development projects."
                 : "Sono disponibile per opportunità lavorative, progetti freelance e collaborazioni tecniche su misura."}
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+            <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-4 pt-2">
               <Button asChild size="lg" className="rounded-full shadow-md">
                 <Link href={contactHref}>
                   <Mail className="mr-2 h-4 w-4" />
                   <span>{dict.bio.ctaContact}</span>
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="secondary" className="rounded-full shadow-sm hover:border-brand-accent/40">
+                <Link href="/curriculum">
+                  <FileText className="mr-2 h-4 w-4 text-brand-accent" />
+                  <span>{locale === "en" ? "Curriculum Vitae" : "Consulta il Curriculum"}</span>
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="rounded-full">
