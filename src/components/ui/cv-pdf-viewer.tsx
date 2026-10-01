@@ -171,7 +171,7 @@ export function CvPdfViewer({ pdfUrl }: Readonly<CvPdfViewerProps>) {
 
             {/* Overlay interattivo cliccabile con pillola morbida ben distanziata dai bordi */}
             <a
-              href={pdfUrl}
+              href="/api/cv/view"
               target="_blank"
               rel="noopener noreferrer"
               className="absolute inset-0 bg-slate-900/5 active:bg-slate-900/15 transition-colors flex items-center justify-center cursor-pointer p-2"
