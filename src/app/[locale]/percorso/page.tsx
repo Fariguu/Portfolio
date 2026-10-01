@@ -124,13 +124,23 @@ export default async function PercorsoPage({
                   <span>{dict.bio.ctaContact}</span>
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="secondary" className="rounded-full shadow-sm hover:border-brand-accent/40">
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="rounded-full border-border/80 bg-background/50 hover:border-brand-accent/50 hover:text-brand-accent transition-colors shadow-xs"
+              >
                 <Link href="/curriculum">
                   <FileText className="mr-2 h-4 w-4 text-brand-accent" />
                   <span>{locale === "en" ? "Curriculum Vitae" : "Consulta il Curriculum"}</span>
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="rounded-full">
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="rounded-full border-border/80 bg-background/50 hover:border-brand-accent/50 hover:text-brand-accent transition-colors shadow-xs"
+              >
                 <Link href={projectsHref}>
                   <span>{dict.bio.ctaProjects}</span>
                   <ArrowRight className="ml-2 h-4 w-4" />

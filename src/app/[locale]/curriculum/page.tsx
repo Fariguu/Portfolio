@@ -115,7 +115,7 @@ export default async function CurriculumPage({ params }: CurriculumPageProps) {
           <div className="flex items-center justify-between gap-4">
             <Button asChild variant="ghost" size="sm" className="rounded-full text-xs sm:text-sm text-muted-foreground hover:text-foreground">
               <Link href="/">
-                <ArrowLeft className="h-4 w-4 mr-1.5 text-primary" />
+                <ArrowLeft className="h-4 w-4 mr-1.5 text-brand-accent" />
                 <span>{dict.curriculum.backHome}</span>
               </Link>
             </Button>
@@ -137,7 +137,7 @@ export default async function CurriculumPage({ params }: CurriculumPageProps) {
 
           {/* Header Titolo */}
           <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs sm:text-sm font-medium border border-primary/20 bg-primary/10 dark:border-emerald-500/30 dark:bg-emerald-500/10 text-primary dark:text-[#88fc9d]">
               <FileText className="h-3.5 w-3.5" />
               <span>{dict.curriculum.badge}</span>
             </div>
@@ -153,7 +153,7 @@ export default async function CurriculumPage({ params }: CurriculumPageProps) {
             {/* Metadati file */}
             {cvInfo.exists && (
               <div className="flex flex-wrap items-center gap-3 pt-1 text-xs text-muted-foreground">
-                <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-medium">
+                <span className="flex items-center gap-1.5 text-brand-accent font-medium">
                   <CheckCircle2 className="h-3.5 w-3.5" />
                   Disponibile per il download
                 </span>
