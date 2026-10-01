@@ -18,6 +18,7 @@ export interface Dictionary {
     toggleMenu: string;
     quote: string;
     backHome: string;
+    curriculum: string;
   };
   hero: {
     badge: string;
@@ -323,5 +324,22 @@ export interface Dictionary {
     skills: string;
     journey: string;
     projects: string;
+  };
+  curriculum: {
+    badge: string;
+    title: string;
+    description: string;
+    downloadButton: string;
+    openNewTab: string;
+    fallbackNotice: string;
+    fallbackDownload: string;
+    noCvNotice: string;
+    contactCta: string;
+    backHome: string;
+    meta: {
+      title: string;
+      description: string;
+      keywords: string[];
+    };
   };
 }
