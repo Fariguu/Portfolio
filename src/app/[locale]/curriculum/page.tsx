@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { getCvInfo } from "@/app/admin/actions/cv";
 import { CvJsonLd } from "@/components/seo/cv-json-ld";
 import { CvPdfViewer } from "@/components/ui/cv-pdf-viewer";
-import { redirect } from "next/navigation";
 import {
   FileText,
   Download,
