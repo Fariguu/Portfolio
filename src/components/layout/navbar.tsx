@@ -34,7 +34,7 @@ export function Navbar({ dict, nav: explicitNav, locale }: Readonly<NavbarProps>
     { title: nav.about, href: `${prefix}/chi-sono` },
     { title: nav.skills, href: `${prefix}/competenze` },
     { title: nav.projects, href: `${prefix}/progetti` },
-    { title: nav.curriculum, href: "/curriculum" },
+    { title: nav.curriculum, href: `${prefix}/curriculum` },
     { title: nav.contact, href: `${prefix}/contatti` },
   ];
 
@@ -44,7 +44,7 @@ export function Navbar({ dict, nav: explicitNav, locale }: Readonly<NavbarProps>
     { title: nav.about, href: `${prefix}/chi-sono` },
     { title: nav.skills, href: `${prefix}/competenze` },
     { title: nav.projects, href: `${prefix}/progetti` },
-    { title: nav.curriculum, href: "/curriculum" },
+    { title: nav.curriculum, href: `${prefix}/curriculum` },
     { title: nav.contact, href: `${prefix}/contatti` },
   ];
 
@@ -113,28 +113,28 @@ export function Navbar({ dict, nav: explicitNav, locale }: Readonly<NavbarProps>
               {nav.home}
             </Link>
             <Link
-              href={`${homeHref === "/" ? "" : homeHref}#competenze`}
+              href={`${homeHref}#competenze`}
               prefetch={false}
               className="px-2.5 lg:px-3 py-1.5 rounded-full transition-colors hover:text-brand-accent text-muted-foreground hover:bg-muted/50 whitespace-nowrap text-xs lg:text-sm"
             >
               {nav.skills}
             </Link>
             <Link
-              href={`${homeHref === "/" ? "" : homeHref}#percorso`}
+              href={`${homeHref}#percorso`}
               prefetch={false}
               className="px-2.5 lg:px-3 py-1.5 rounded-full transition-colors hover:text-brand-accent text-muted-foreground hover:bg-muted/50 whitespace-nowrap text-xs lg:text-sm"
             >
               {nav.journey}
             </Link>
             <Link
-              href={`${homeHref === "/" ? "" : homeHref}#progetti`}
+              href={`${homeHref}#progetti`}
               prefetch={false}
               className="px-2.5 lg:px-3 py-1.5 rounded-full transition-colors hover:text-brand-accent text-muted-foreground hover:bg-muted/50 whitespace-nowrap text-xs lg:text-sm"
             >
               {nav.projects}
             </Link>
             <Link
-              href={`${homeHref === "/" ? "" : homeHref}#contatti`}
+              href={`${homeHref}#contatti`}
               prefetch={false}
               className="px-2.5 lg:px-3 py-1.5 rounded-full transition-colors hover:text-brand-accent text-muted-foreground hover:bg-muted/50 whitespace-nowrap text-xs lg:text-sm"
             >

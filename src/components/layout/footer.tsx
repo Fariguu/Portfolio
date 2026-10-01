@@ -11,6 +11,7 @@ interface FooterProps {
 
 export function Footer({ dict, locale }: Readonly<FooterProps>) {
   const privacyHref = locale === "en" ? "/en/privacy" : "/privacy";
+  const curriculumHref = locale === "en" ? "/en/curriculum" : "/curriculum";
 
   return (
     <footer className="w-full border-t border-border/40 bg-background pt-12 pb-24 md:pb-12">
@@ -57,7 +58,7 @@ export function Footer({ dict, locale }: Readonly<FooterProps>) {
             </p>
             <div className="flex items-center gap-3">
               <Link
-                href="/curriculum"
+                href={curriculumHref}
                 prefetch={false}
                 className="text-xs text-muted-foreground hover:text-brand-accent transition-colors underline-offset-4 hover:underline"
               >

@@ -19,7 +19,7 @@ interface ContactProps {
 
 export function Contact({ dict, locale }: Readonly<ContactProps>) {
   return (
-    <section id="contatti" className="w-full py-24 bg-muted/30">
+    <section id="contatti" className="w-full py-24 bg-muted/30 scroll-mt-16">
       <div className="container px-4 md:px-6 mx-auto">
         {/* Intestazione Sezione Contatti centrata: Server Component puro */}
         <div className="mx-auto max-w-2xl text-center space-y-4 mb-14">

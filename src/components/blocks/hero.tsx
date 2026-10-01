@@ -81,7 +81,7 @@ export function Hero({
                 className="group text-xs text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full px-3.5 h-8 transition-colors inline-flex items-center gap-1.5"
                 asChild
               >
-                <Link href="/curriculum" prefetch={false}>
+                <Link href={locale === "en" ? "/en/curriculum" : "/curriculum"} prefetch={false}>
                   <FileText className="h-3.5 w-3.5 text-brand-accent transition-transform group-hover:scale-110" />
                   <span>{locale === "en" ? "Curriculum Vitae" : "Vedi il mio Curriculum"}</span>
                 </Link>

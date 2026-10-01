@@ -62,7 +62,7 @@ async function runTests() {
     // Test 1: Desktop Quick Link: Competenze
     try {
       await resetDesktopToTop();
-      const link = desktopPage.locator('header nav a[href="#competenze"]').first();
+      const link = desktopPage.locator('header nav a[href$="#competenze"]').first();
       await link.click();
       await desktopPage.waitForTimeout(600);
       const inView = await desktopPage.evaluate(() => {
@@ -78,7 +78,7 @@ async function runTests() {
     // Test 2: Desktop Quick Link: Percorso
     try {
       await resetDesktopToTop();
-      const link = desktopPage.locator('header nav a[href="#percorso"]').first();
+      const link = desktopPage.locator('header nav a[href$="#percorso"]').first();
       await link.click();
       await desktopPage.waitForTimeout(600);
       const inView = await desktopPage.evaluate(() => {
@@ -94,7 +94,7 @@ async function runTests() {
     // Test 3: Desktop Quick Link: Progetti
     try {
       await resetDesktopToTop();
-      const link = desktopPage.locator('header nav a[href="#progetti"]').first();
+      const link = desktopPage.locator('header nav a[href$="#progetti"]').first();
       await link.click();
       await desktopPage.waitForTimeout(600);
       const inView = await desktopPage.evaluate(() => {
@@ -110,7 +110,7 @@ async function runTests() {
     // Test 4: Desktop Quick Link: Contatti
     try {
       await resetDesktopToTop();
-      const link = desktopPage.locator('header nav a[href="#contatti"]').first();
+      const link = desktopPage.locator('header nav a[href$="#contatti"]').first();
       await link.click();
       await desktopPage.waitForTimeout(600);
       const inView = await desktopPage.evaluate(() => {
@@ -121,6 +121,25 @@ async function runTests() {
       recordResult("Desktop Quick Link: Contatti", inView, "Navigates to #contatti");
     } catch (e) {
       recordResult("Desktop Quick Link: Contatti", false, e.message);
+    }
+
+    // Test 4b: Cross-page navigation from /curriculum to #competenze
+    try {
+      await desktopPage.goto(`${BASE_URL}/curriculum`, { waitUntil: "networkidle" });
+      const link = desktopPage.locator('header nav a[href$="#competenze"]').first();
+      await link.click();
+      await desktopPage.waitForTimeout(1000);
+      const url = desktopPage.url();
+      const inView = await desktopPage.evaluate(() => {
+        const el = document.getElementById("competenze");
+        if (!el) return false;
+        const rect = el.getBoundingClientRect();
+        return rect.top < window.innerHeight && rect.bottom > 0;
+      });
+      recordResult("Navbar Navigation from /curriculum: Competenze", inView && !url.includes("/curriculum"), `URL: ${url}, inView: ${inView}`);
+      await desktopPage.goto(BASE_URL, { waitUntil: "networkidle" });
+    } catch (e) {
+      recordResult("Navbar Navigation from /curriculum: Competenze", false, e.message);
     }
 
     // Test 5: Hero CTA: Guarda i miei progetti
