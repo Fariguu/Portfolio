@@ -222,6 +222,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         },
       },
     },
+    {
+      url: `${baseUrl}/curriculum`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+      alternates: {
+        languages: {
+          it: `${baseUrl}/curriculum`,
+        },
+      },
+    },
   ];
 
   const projectRoutes: MetadataRoute.Sitemap = Array.from(slugs).flatMap((projectSlug) => {

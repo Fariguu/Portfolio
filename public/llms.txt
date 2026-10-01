@@ -10,6 +10,7 @@ Questo file segue lo standard [llms.txt](https://llmstxt.org/) e fornisce contes
 - [Home (English)](https://gabrielefarigu.com/en): English version of the portfolio homepage with full stack project showcase.
 - [Informativa sulla Privacy (IT)](https://gabrielefarigu.com/privacy): Informativa sul trattamento dei dati personali conforme al GDPR (UE 2016/679).
 - [Privacy Policy (EN)](https://gabrielefarigu.com/en/privacy): Privacy policy and personal data processing disclosure conforming to GDPR.
+- [Curriculum Vitae (IT)](https://gabrielefarigu.com/curriculum): Curriculum Vitae online con visualizzatore PDF e download per recruiter e collaborazioni.
 
 ## Sezioni del Portfolio
 

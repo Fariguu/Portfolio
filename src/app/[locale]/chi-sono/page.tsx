@@ -9,7 +9,7 @@ import { isValidLocale, defaultLocale, locales, type Locale } from "@/lib/i18n/c
 import { getBaseUrl } from "@/lib/url";
 import { siteConfig } from "@/lib/seo.config";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Mail, Sparkles, GraduationCap, Code2, MapPin } from "lucide-react";
+import { ArrowRight, Mail, Sparkles, GraduationCap, Code2, MapPin, FileText } from "lucide-react";
 import Link from "next/link";
 
 interface ChiSonoPageProps {
@@ -187,15 +187,31 @@ export default async function ChiSonoPage({
               </div>
             </div>
 
-            {/* CTA interattive */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-              <Button asChild size="lg" className="rounded-full shadow-lg">
+            {/* CTA interattive: stile armonico con 1 primario + outline eleganti coordinati */}
+            <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-4 pt-2">
+              <Button asChild size="lg" className="rounded-full shadow-md">
                 <Link href={projectsHref}>
                   <span>{dict.bio.ctaProjects}</span>
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="rounded-full">
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="rounded-full border-border/80 bg-background/50 hover:border-brand-accent/50 hover:text-brand-accent transition-colors shadow-xs"
+              >
+                <Link href="/curriculum">
+                  <FileText className="mr-2 h-4 w-4 text-brand-accent" />
+                  <span>{locale === "en" ? "Curriculum Vitae" : "Vedi Curriculum Vitae"}</span>
+                </Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="rounded-full border-border/80 bg-background/50 hover:border-brand-accent/50 hover:text-brand-accent transition-colors shadow-xs"
+              >
                 <Link href={contactHref}>
                   <Mail className="mr-2 h-4 w-4" />
                   <span>{dict.bio.ctaContact}</span>

@@ -1,4 +1,5 @@
 import { createAdminClient } from '@/lib/supabase/admin'
+import { getCvInfo } from '@/app/admin/actions/cv'
 import Link from 'next/link'
 import {
   Layers,
@@ -11,9 +12,12 @@ import {
   Star,
   CheckCircle2,
   User,
+  FileText,
+  AlertCircle,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 
 export const dynamic = 'force-dynamic'
 
@@ -25,11 +29,13 @@ export default async function AdminDashboardPage() {
     { data: journey, count: journeyCount },
     { data: projects, count: projectsCount },
     { data: faqs, count: faqsCount },
+    cvInfo,
   ] = await Promise.all([
     supabase.from('skills').select('*', { count: 'exact' }),
     supabase.from('journey_items').select('*', { count: 'exact' }),
     supabase.from('projects').select('*', { count: 'exact' }),
     supabase.from('faqs').select('*', { count: 'exact' }),
+    getCvInfo(),
   ])
 
   const totalSkills = skillsCount || skills?.length || 0
@@ -160,8 +166,58 @@ export default async function AdminDashboardPage() {
         </Card>
       </div>
 
+      {/* Banner di Riepilogo Curriculum */}
+      <Card className="border-border/80 bg-gradient-to-r from-card via-card to-primary/5">
+        <CardContent className="p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-3.5">
+              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0 mt-0.5">
+                <FileText className="h-5 w-5" />
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="font-semibold text-foreground text-base">
+                    Curriculum Vitae (PDF)
+                  </h3>
+                  {cvInfo.exists ? (
+                    <Badge variant="default" className="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] gap-1 py-0.5">
+                      <CheckCircle2 className="h-3 w-3" /> Online
+                    </Badge>
+                  ) : (
+                    <Badge variant="secondary" className="text-[11px] gap-1 py-0.5">
+                      <AlertCircle className="h-3 w-3" /> Non Caricato
+                    </Badge>
+                  )}
+                </div>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  {cvInfo.exists
+                    ? 'Il tuo CV è pubblicato e pronto per essere visionato o scaricato dai recruiter su /curriculum.'
+                    : 'Nessun file PDF è attualmente presente nello storage. Carica il documento per renderlo visibile.'}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
+              {cvInfo.exists && (
+                <Button asChild size="sm" variant="outline">
+                  <Link href="/curriculum" target="_blank" className="text-xs gap-1.5">
+                    <Eye className="h-3.5 w-3.5" /> Anteprima
+                  </Link>
+                </Button>
+              )}
+              <Button asChild size="sm" className="text-xs gap-1.5">
+                <Link href="/admin/curriculum">
+                  <span>Gestisci CV</span>
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Quick Action Sections */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-2">
         <div className="p-6 rounded-2xl border border-border/60 bg-card space-y-3">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-foreground flex items-center gap-2">

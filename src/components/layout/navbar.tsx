@@ -34,6 +34,7 @@ export function Navbar({ dict, nav: explicitNav, locale }: Readonly<NavbarProps>
     { title: nav.about, href: `${prefix}/chi-sono` },
     { title: nav.skills, href: `${prefix}/competenze` },
     { title: nav.projects, href: `${prefix}/progetti` },
+    { title: nav.curriculum, href: "/curriculum" },
     { title: nav.contact, href: `${prefix}/contatti` },
   ];
 
@@ -43,6 +44,7 @@ export function Navbar({ dict, nav: explicitNav, locale }: Readonly<NavbarProps>
     { title: nav.about, href: `${prefix}/chi-sono` },
     { title: nav.skills, href: `${prefix}/competenze` },
     { title: nav.projects, href: `${prefix}/progetti` },
+    { title: nav.curriculum, href: "/curriculum" },
     { title: nav.contact, href: `${prefix}/contatti` },
   ];
 

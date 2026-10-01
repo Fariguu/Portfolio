@@ -55,13 +55,23 @@ export function Footer({ dict, locale }: Readonly<FooterProps>) {
             <p className="text-[11px] sm:text-xs md:text-sm text-muted-foreground whitespace-nowrap">
               © {new Date().getFullYear()} Gabriele Farigu. {dict.footer.creatorTagline}
             </p>
-            <Link
-              href={privacyHref}
-              prefetch={false}
-              className="text-xs text-muted-foreground hover:text-brand-accent transition-colors underline-offset-4 hover:underline"
-            >
-              {dict.footer.privacyPolicy}
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/curriculum"
+                prefetch={false}
+                className="text-xs text-muted-foreground hover:text-brand-accent transition-colors underline-offset-4 hover:underline"
+              >
+                Curriculum Vitae
+              </Link>
+              <span className="text-xs text-border/80" aria-hidden="true">•</span>
+              <Link
+                href={privacyHref}
+                prefetch={false}
+                className="text-xs text-muted-foreground hover:text-brand-accent transition-colors underline-offset-4 hover:underline"
+              >
+                {dict.footer.privacyPolicy}
+              </Link>
+            </div>
           </div>
         </div>
       </div>

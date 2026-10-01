@@ -75,6 +75,7 @@ const content = {
     },
     quote: { it: "Preventivo", en: "Quote" },
     backHome: { it: "Torna alla Home", en: "Back to Home" },
+    curriculum: { it: "Curriculum", en: "Curriculum" },
   },
   hero: {
     badge: {
@@ -1328,6 +1329,79 @@ const content = {
       en: "All projects",
     },
   },
+  curriculum: {
+    badge: {
+      it: "Curriculum Vitae",
+      en: "Curriculum Vitae",
+    },
+    title: {
+      it: "Curriculum Vitae",
+      en: "Curriculum Vitae",
+    },
+    description: {
+      it: "Consulta il mio percorso professionale, la formazione e le competenze tecniche, oppure scarica il documento in formato PDF.",
+      en: "View my professional background, education, and technical skills, or download the PDF document directly.",
+    },
+    downloadButton: {
+      it: "Scarica Curriculum (PDF)",
+      en: "Download Resume (PDF)",
+    },
+    openNewTab: {
+      it: "Apri PDF a Schermo Intero",
+      en: "Open Fullscreen PDF",
+    },
+    fallbackNotice: {
+      it: "Il tuo dispositivo o browser non supporta la visualizzazione diretta dei documenti PDF incorporati.",
+      en: "Your device or browser does not support embedded PDF viewing.",
+    },
+    fallbackDownload: {
+      it: "Clicca qui per visualizzare o scaricare direttamente il PDF.",
+      en: "Click here to view or download the PDF directly.",
+    },
+    noCvNotice: {
+      it: "Il documento del curriculum vitae è attualmente in fase di aggiornamento. Nel frattempo, puoi contattarmi direttamente o esplorare le sezioni del sito.",
+      en: "The resume document is currently being updated. In the meantime, feel free to reach out directly or explore the portfolio.",
+    },
+    contactCta: {
+      it: "Mettiti in Contatto",
+      en: "Get in Touch",
+    },
+    backHome: {
+      it: "Torna alla Home",
+      en: "Back to Home",
+    },
+    meta: {
+      title: {
+        it: "Curriculum Vitae — Gabriele Farigu | Sviluppatore Web & Software",
+        en: "Curriculum Vitae — Gabriele Farigu | Web & Software Developer",
+      },
+      description: {
+        it: "Consulta e scarica il Curriculum Vitae di Gabriele Farigu, sviluppatore web a Bari (Next.js, React, TypeScript, Supabase). Disponibile per assunzioni, stage e collaborazioni.",
+        en: "View and download the CV of Gabriele Farigu, web developer based in Bari, Italy (Next.js, React, TypeScript, Supabase). Open for junior roles, internships, and opportunities.",
+      },
+      keywords: {
+        it: [
+          "curriculum vitae sviluppatore web",
+          "curriculum gabriele farigu",
+          "CV sviluppatore junior bari",
+          "sviluppatore web disponibile bari",
+          "junior full-stack developer cv",
+          "assumere sviluppatore web puglia",
+          "junior developer next.js react",
+          ...SHARED_KEYWORDS,
+        ],
+        en: [
+          "web developer resume",
+          "gabriele farigu cv",
+          "junior developer cv bari italy",
+          "hire web developer italy",
+          "junior full-stack developer resume",
+          "react next.js developer cv",
+          ...SHARED_KEYWORDS,
+        ],
+      },
+    },
+  },
 };
 
 function buildDictionary(locale: Locale): Dictionary {
@@ -1357,6 +1431,7 @@ function buildDictionary(locale: Locale): Dictionary {
       toggleMenu: t(content.nav.toggleMenu, locale),
       quote: t(content.nav.quote, locale),
       backHome: t(content.nav.backHome, locale),
+      curriculum: t(content.nav.curriculum, locale),
     },
     hero: {
       badge: t(content.hero.badge, locale),
@@ -1724,6 +1799,23 @@ function buildDictionary(locale: Locale): Dictionary {
       skills: t(content.explore.skills, locale),
       journey: t(content.explore.journey, locale),
       projects: t(content.explore.projects, locale),
+    },
+    curriculum: {
+      badge: t(content.curriculum.badge, locale),
+      title: t(content.curriculum.title, locale),
+      description: t(content.curriculum.description, locale),
+      downloadButton: t(content.curriculum.downloadButton, locale),
+      openNewTab: t(content.curriculum.openNewTab, locale),
+      fallbackNotice: t(content.curriculum.fallbackNotice, locale),
+      fallbackDownload: t(content.curriculum.fallbackDownload, locale),
+      noCvNotice: t(content.curriculum.noCvNotice, locale),
+      contactCta: t(content.curriculum.contactCta, locale),
+      backHome: t(content.curriculum.backHome, locale),
+      meta: {
+        title: t(content.curriculum.meta.title, locale),
+        description: t(content.curriculum.meta.description, locale),
+        keywords: [...t(content.curriculum.meta.keywords, locale)],
+      },
     },
   };
 }
