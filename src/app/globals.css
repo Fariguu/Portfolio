@@ -225,33 +225,36 @@
 }
 
 /* ==========================================================================
-   Animazione Evidenziatore sul Testo per il Cambio Lingua Dinamico
-   (Agisce esclusivamente sui testi, simulando un vero passaggio con evidenziatore)
+   Animazione Pennellata sul Testo per il Cambio Lingua Dinamico (Stile Pennello Neutro)
+   (Meno invasiva, stile pennello/grafite, scala di grigi adattata al tema chiaro/scuro)
    ========================================================================== */
 
-@keyframes textHighlighterSweep {
+@keyframes textBrushSweep {
   0% {
-    clip-path: inset(0 100% 0 0 round 3px);
-    opacity: 0.8;
+    clip-path: inset(0 100% 0 0 round 4px 8px 5px 7px);
+    opacity: 0.9;
   }
   15% {
     opacity: 1;
   }
   100% {
-    clip-path: inset(0 0 0 0 round 3px);
+    clip-path: inset(0 0 0 0 round 4px 8px 5px 7px);
     opacity: 1;
   }
 }
 
-@keyframes textHighlighterFade {
+@keyframes textBrushFade {
   0% {
     opacity: 1;
+    transform: scaleY(1);
   }
   100% {
     opacity: 0;
+    transform: scaleY(0.97);
   }
 }
 
+[data-lang-transition] header nav a,
 [data-lang-transition] h1,
 [data-lang-transition] h2,
 [data-lang-transition] h3,
@@ -262,11 +265,15 @@
 [data-lang-transition] blockquote,
 [data-lang-transition] [data-slot="card-title"],
 [data-lang-transition] [data-slot="card-description"],
-[data-lang-transition] .lang-highlight {
+[data-lang-transition] [data-slot="badge"],
+[data-lang-transition] main button > span:not(.sr-only),
+[data-lang-transition] main a > span:not(.sr-only),
+[data-lang-transition] .lang-text {
   position: relative !important;
 }
 
-/* Fase 1: L'evidenziatore passa sul testo da sinistra a destra e lo opacizza */
+/* Fase 1: Il pennello passa sul testo coprendolo da sinistra a destra con una tonalità grigio-neutra elegante */
+[data-lang-transition="sweeping"] header nav a::after,
 [data-lang-transition="sweeping"] h1::after,
 [data-lang-transition="sweeping"] h2::after,
 [data-lang-transition="sweeping"] h3::after,
@@ -277,23 +284,28 @@
 [data-lang-transition="sweeping"] blockquote::after,
 [data-lang-transition="sweeping"] [data-slot="card-title"]::after,
 [data-lang-transition="sweeping"] [data-slot="card-description"]::after,
-[data-lang-transition="sweeping"] .lang-highlight::after {
+[data-lang-transition="sweeping"] [data-slot="badge"]::after,
+[data-lang-transition="sweeping"] main button > span:not(.sr-only)::after,
+[data-lang-transition="sweeping"] main a > span:not(.sr-only)::after,
+[data-lang-transition="sweeping"] .lang-text::after {
   content: "";
   position: absolute;
-  inset: -1px -4px;
+  inset: -2px -4px;
   z-index: 30;
   pointer-events: none;
-  border-radius: 3px;
+  border-radius: 4px 8px 5px 7px;
   background: linear-gradient(
     90deg,
-    rgba(5, 150, 105, 0.98) 0%,
-    rgba(16, 185, 129, 0.98) 92%,
-    #a7f3d0 100%
+    rgba(212, 212, 216, 0.98) 0%,
+    rgba(228, 228, 231, 0.98) 85%,
+    rgba(244, 244, 245, 0.95) 100%
   );
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.45);
-  animation: textHighlighterSweep 0.34s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  animation: textBrushSweep 0.32s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
+/* Variante tema scuro: tonalità grigio antracite / zinc con punta morbida satinata */
+.dark[data-lang-transition="sweeping"] header nav a::after,
 .dark[data-lang-transition="sweeping"] h1::after,
 .dark[data-lang-transition="sweeping"] h2::after,
 .dark[data-lang-transition="sweeping"] h3::after,
@@ -304,17 +316,27 @@
 .dark[data-lang-transition="sweeping"] blockquote::after,
 .dark[data-lang-transition="sweeping"] [data-slot="card-title"]::after,
 .dark[data-lang-transition="sweeping"] [data-slot="card-description"]::after,
-.dark[data-lang-transition="sweeping"] .lang-highlight::after {
+.dark[data-lang-transition="sweeping"] [data-slot="badge"]::after,
+.dark[data-lang-transition="sweeping"] main button > span:not(.sr-only)::after,
+.dark[data-lang-transition="sweeping"] main a > span:not(.sr-only)::after,
+.dark[data-lang-transition="sweeping"] .lang-text::after {
   background: linear-gradient(
     90deg,
-    rgba(4, 120, 87, 0.98) 0%,
-    rgba(5, 150, 105, 0.98) 92%,
-    #88fc9d 100%
+    rgba(39, 39, 42, 0.98) 0%,
+    rgba(63, 63, 70, 0.98) 85%,
+    rgba(82, 82, 91, 0.95) 100%
   );
-  box-shadow: 0 0 10px rgba(136, 252, 157, 0.5);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
-/* Fase 2: L'evidenziazione scompare gradualmente rivelando il testo tradotto */
+/* Adattamento dimensioni per i link della navbar per non sbordare dall'header */
+[data-lang-transition] header nav a::after {
+  inset: 2px 4px !important;
+  border-radius: 9999px !important;
+}
+
+/* Fase 2: La pennellata si dissolve con morbidezza rivelando il testo tradotto */
+[data-lang-transition="revealing"] header nav a::after,
 [data-lang-transition="revealing"] h1::after,
 [data-lang-transition="revealing"] h2::after,
 [data-lang-transition="revealing"] h3::after,
@@ -325,23 +347,27 @@
 [data-lang-transition="revealing"] blockquote::after,
 [data-lang-transition="revealing"] [data-slot="card-title"]::after,
 [data-lang-transition="revealing"] [data-slot="card-description"]::after,
-[data-lang-transition="revealing"] .lang-highlight::after {
+[data-lang-transition="revealing"] [data-slot="badge"]::after,
+[data-lang-transition="revealing"] main button > span:not(.sr-only)::after,
+[data-lang-transition="revealing"] main a > span:not(.sr-only)::after,
+[data-lang-transition="revealing"] .lang-text::after {
   content: "";
   position: absolute;
-  inset: -1px -4px;
+  inset: -2px -4px;
   z-index: 30;
   pointer-events: none;
-  border-radius: 3px;
-  clip-path: inset(0 0 0 0 round 3px);
+  border-radius: 4px 8px 5px 7px;
+  clip-path: inset(0 0 0 0 round 4px 8px 5px 7px);
   background: linear-gradient(
     90deg,
-    rgba(5, 150, 105, 0.98) 0%,
-    rgba(16, 185, 129, 0.98) 92%,
-    #a7f3d0 100%
+    rgba(212, 212, 216, 0.98) 0%,
+    rgba(228, 228, 231, 0.98) 85%,
+    rgba(244, 244, 245, 0.95) 100%
   );
-  animation: textHighlighterFade 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: textBrushFade 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+.dark[data-lang-transition="revealing"] header nav a::after,
 .dark[data-lang-transition="revealing"] h1::after,
 .dark[data-lang-transition="revealing"] h2::after,
 .dark[data-lang-transition="revealing"] h3::after,
@@ -352,12 +378,15 @@
 .dark[data-lang-transition="revealing"] blockquote::after,
 .dark[data-lang-transition="revealing"] [data-slot="card-title"]::after,
 .dark[data-lang-transition="revealing"] [data-slot="card-description"]::after,
-.dark[data-lang-transition="revealing"] .lang-highlight::after {
+.dark[data-lang-transition="revealing"] [data-slot="badge"]::after,
+.dark[data-lang-transition="revealing"] main button > span:not(.sr-only)::after,
+.dark[data-lang-transition="revealing"] main a > span:not(.sr-only)::after,
+.dark[data-lang-transition="revealing"] .lang-text::after {
   background: linear-gradient(
     90deg,
-    rgba(4, 120, 87, 0.98) 0%,
-    rgba(5, 150, 105, 0.98) 92%,
-    #88fc9d 100%
+    rgba(39, 39, 42, 0.98) 0%,
+    rgba(63, 63, 70, 0.98) 85%,
+    rgba(82, 82, 91, 0.95) 100%
   );
 }
 
