@@ -127,12 +127,19 @@
   }
   html {
     @apply bg-background text-foreground;
+    scrollbar-gutter: stable;
     -webkit-tap-highlight-color: transparent;
   }
   body {
     @apply bg-background text-foreground;
     overflow-x: clip;
     -webkit-tap-highlight-color: transparent;
+  }
+  /* Previene il layout shift della navbar e della pagina durante l'apertura/chiusura dei menu e dialog */
+  html body[data-scroll-locked] {
+    margin-right: 0px !important;
+    padding-right: 0px !important;
+    overflow: hidden !important;
   }
   button,
   a,
