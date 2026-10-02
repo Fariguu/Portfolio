@@ -127,7 +127,7 @@ export async function Portfolio({
             >
               <Link href={locale === "en" ? "/en/progetti" : "/progetti"}>
                 <span>{dict.explore.projects}</span>
-                <CornerDownRight className="ml-2.5 h-4 w-4 text-brand-accent transition-transform duration-200 group-hover:translate-x-1 group-hover:scale-110" />
+                <CornerDownRight className="ml-2.5 h-4 w-4 text-brand-accent transition-transform duration-200 group-hover:translate-x-1 group-hover:scale-110" aria-hidden="true" />
               </Link>
             </Button>
           )}
@@ -143,7 +143,7 @@ export async function Portfolio({
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Github className="mr-2 h-4 w-4" />
+              <Github className="mr-2 h-4 w-4" aria-hidden="true" />
               {dict.portfolio.exploreAllGithub}
             </a>
           </Button>

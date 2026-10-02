@@ -65,7 +65,7 @@ export function Hero({
               >
                 <a href="#progetti">
                   <span className="truncate">{dict.hero.ctaProjects}</span>
-                  <ArrowRight className="ml-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight className="ml-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </a>
               </Button>
               <Button
@@ -87,7 +87,7 @@ export function Hero({
                 asChild
               >
                 <Link href={locale === "en" ? "/en/curriculum" : "/curriculum"} prefetch={false}>
-                  <FileText className="h-3.5 w-3.5 text-brand-accent transition-transform group-hover:scale-110" />
+                  <FileText className="h-3.5 w-3.5 text-brand-accent transition-transform group-hover:scale-110" aria-hidden="true" />
                   <span>{locale === "en" ? "Curriculum Vitae" : "Vedi il mio Curriculum"}</span>
                 </Link>
               </Button>
@@ -101,7 +101,7 @@ export function Hero({
                 >
                   <Link href={locale === "en" ? "/en/chi-sono" : "/chi-sono"} prefetch={false}>
                     <span>{dict.explore.about}</span>
-                    <CornerDownRight className="h-3.5 w-3.5 text-brand-accent transition-transform group-hover:translate-x-1" />
+                    <CornerDownRight className="h-3.5 w-3.5 text-brand-accent transition-transform group-hover:translate-x-1" aria-hidden="true" />
                   </Link>
                 </Button>
               )}
@@ -120,7 +120,7 @@ export function Hero({
             rel="noopener noreferrer"
             className="hover:text-brand-accent transition-colors"
           >
-            <Github className="h-6 w-6" />
+            <Github className="h-6 w-6" aria-hidden="true" />
             <span className="sr-only">GitHub</span>
           </a>
           <a
@@ -129,14 +129,14 @@ export function Hero({
             rel="noopener noreferrer"
             className="hover:text-brand-accent transition-colors"
           >
-            <Linkedin className="h-6 w-6" />
+            <Linkedin className="h-6 w-6" aria-hidden="true" />
             <span className="sr-only">LinkedIn</span>
           </a>
           <a
             href="mailto:farigugabriele@gmail.com"
             className="hover:text-brand-accent transition-colors"
           >
-            <Mail className="h-6 w-6" />
+            <Mail className="h-6 w-6" aria-hidden="true" />
             <span className="sr-only">Email</span>
           </a>
         </div>

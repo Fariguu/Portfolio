@@ -77,7 +77,7 @@ export function PortfolioCards({
                     className="flex items-center text-xs text-muted-foreground gap-1 shrink-0"
                     title={dict.portfolio.privateRepo}
                   >
-                    <Lock className="h-3.5 w-3.5" /> {dict.portfolio.privateRepo}
+                    <Lock className="h-3.5 w-3.5" aria-hidden="true" /> {dict.portfolio.privateRepo}
                   </span>
                 )}
               </div>
@@ -121,7 +121,7 @@ export function PortfolioCards({
                       }
                     >
                       <span>{dict.portfolio.viewCaseStudy}</span>
-                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-1" />
+                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-1" aria-hidden="true" />
                     </Link>
                   </Button>
                 ) : (
@@ -144,7 +144,7 @@ export function PortfolioCards({
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Github className="mr-2 h-4 w-4 shrink-0" />
+                    <Github className="mr-2 h-4 w-4 shrink-0" aria-hidden="true" />
                     <span className="truncate">
                       {project.githubLabel || dict.portfolio.codeLabel}
                     </span>
@@ -166,7 +166,7 @@ export function PortfolioCards({
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <ExternalLink className="mr-2 h-4 w-4 shrink-0" />
+                    <ExternalLink className="mr-2 h-4 w-4 shrink-0" aria-hidden="true" />
                     <span className="truncate">{dict.portfolio.liveDemo}</span>
                   </a>
                 </Button>
