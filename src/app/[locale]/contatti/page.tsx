@@ -74,7 +74,7 @@ export default async function ContattiPage({
       "@type": "Person",
       name: siteConfig.name,
       email: `mailto:${siteConfig.socials.email}`,
-      telephone: "+39 349 717 6263",
+      telephone: "+39 370 115 7596",
       address: {
         "@type": "PostalAddress",
         addressLocality: "Turi",
