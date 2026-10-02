@@ -377,59 +377,66 @@ footer {
   }
 }
 
-.animate-sheet-overlay-in {
-  animation: sheetOverlayIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+/* Overlay animazione */
+[data-slot="sheet-overlay"][data-state="open"] {
+  animation: sheetOverlayIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   will-change: opacity, backdrop-filter;
 }
 
-.animate-sheet-overlay-out {
-  animation: sheetOverlayOut 0.24s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+[data-slot="sheet-overlay"][data-state="closed"] {
+  animation: sheetOverlayOut 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   will-change: opacity, backdrop-filter;
 }
 
-.animate-sheet-slide-in-right {
-  animation: sheetSlideInRight 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+/* Drawer destro: scorrimento fisico (slide) fluido da destra a sinistra */
+[data-slot="sheet-content"][data-side="right"],
+[data-slot="sheet-content"]:not([data-side]) {
   will-change: transform;
 }
 
-.animate-sheet-slide-out-right {
-  animation: sheetSlideOutRight 0.26s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+[data-slot="sheet-content"][data-side="right"][data-state="open"],
+[data-slot="sheet-content"]:not([data-side])[data-state="open"] {
+  animation: sheetSlideInRight 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-slot="sheet-content"][data-side="right"][data-state="closed"],
+[data-slot="sheet-content"]:not([data-side])[data-state="closed"] {
+  animation: sheetSlideOutRight 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Drawer sinistro (es. pannello admin) */
+[data-slot="sheet-content"][data-side="left"] {
   will-change: transform;
 }
 
-.animate-sheet-slide-in-left {
-  animation: sheetSlideInLeft 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: transform;
+[data-slot="sheet-content"][data-side="left"][data-state="open"] {
+  animation: sheetSlideInLeft 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.animate-sheet-slide-out-left {
-  animation: sheetSlideOutLeft 0.26s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  will-change: transform;
+[data-slot="sheet-content"][data-side="left"][data-state="closed"] {
+  animation: sheetSlideOutLeft 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-.animate-sheet-slide-in-top {
-  animation: sheetSlideInTop 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: transform;
+/* Drawer superiore e inferiore */
+[data-slot="sheet-content"][data-side="top"][data-state="open"] {
+  animation: sheetSlideInTop 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.animate-sheet-slide-out-top {
-  animation: sheetSlideOutTop 0.26s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  will-change: transform;
+[data-slot="sheet-content"][data-side="top"][data-state="closed"] {
+  animation: sheetSlideOutTop 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-.animate-sheet-slide-in-bottom {
-  animation: sheetSlideInBottom 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: transform;
+[data-slot="sheet-content"][data-side="bottom"][data-state="open"] {
+  animation: sheetSlideInBottom 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.animate-sheet-slide-out-bottom {
-  animation: sheetSlideOutBottom 0.26s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  will-change: transform;
+[data-slot="sheet-content"][data-side="bottom"][data-state="closed"] {
+  animation: sheetSlideOutBottom 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* Stagger reveal per gli item del menù a comparsa */
-[data-state="open"] .drawer-stagger-item {
-  animation: drawerItemEnter 0.36s cubic-bezier(0.16, 1, 0.3, 1) both;
+/* Stagger reveal per gli item del menù a comparsa durante lo scorrimento */
+[data-slot="sheet-content"][data-state="open"] .drawer-stagger-item {
+  animation: drawerItemEnter 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {

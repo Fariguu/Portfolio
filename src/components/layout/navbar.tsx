@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { Menu, Code2 } from "lucide-react";
 import { LanguageSwitcher } from "./language-switcher";
@@ -11,10 +10,7 @@ import { cn } from "@/lib/utils";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
 
-const MobileMenu = dynamic(
-  () => import("./mobile-menu").then((mod) => mod.MobileMenu),
-  { ssr: false }
-);
+import { MobileMenu } from "./mobile-menu";
 
 interface NavbarProps {
   readonly dict?: Dictionary;
@@ -49,7 +45,6 @@ export function Navbar({ dict, nav: explicitNav, locale }: Readonly<NavbarProps>
   ];
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [hasMenuMounted, setHasMenuMounted] = React.useState(false);
 
   // Dynamic show/hide on scroll:
   // When scrolling down, hide navbar; when scrolling up, reveal immediately!
@@ -164,13 +159,7 @@ export function Navbar({ dict, nav: explicitNav, locale }: Readonly<NavbarProps>
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => {
-                setHasMenuMounted(true);
-                setIsMenuOpen(true);
-              }}
-              onPointerEnter={() => {
-                setHasMenuMounted(true);
-              }}
+              onClick={() => setIsMenuOpen(true)}
               className="group h-10 w-10 md:w-auto md:h-9 px-0 md:px-3.5 md:rounded-full md:border md:border-border/80 md:bg-background/80 hover:border-brand-accent/50 hover:bg-muted/60 transition-all active:scale-95 text-foreground cursor-pointer select-none"
               aria-label={nav.toggleMenu}
             >
@@ -179,18 +168,16 @@ export function Navbar({ dict, nav: explicitNav, locale }: Readonly<NavbarProps>
               <span className="sr-only md:hidden">{nav.toggleMenu}</span>
             </Button>
 
-            {hasMenuMounted && (
-              <MobileMenu
-                open={isMenuOpen}
-                onOpenChange={setIsMenuOpen}
-                desktopNavigations={desktopNavigations}
-                mobileNavigations={mobileNavigations}
-                contactCta={nav.contactCta}
-                contactHref={`${prefix}/contatti`}
-                toggleMenuLabel={nav.toggleMenu}
-                locale={locale}
-              />
-            )}
+            <MobileMenu
+              open={isMenuOpen}
+              onOpenChange={setIsMenuOpen}
+              desktopNavigations={desktopNavigations}
+              mobileNavigations={mobileNavigations}
+              contactCta={nav.contactCta}
+              contactHref={`${prefix}/contatti`}
+              toggleMenuLabel={nav.toggleMenu}
+              locale={locale}
+            />
           </div>
         </div>
       </header>

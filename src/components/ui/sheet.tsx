@@ -60,16 +60,13 @@ function SheetContent({
       <SheetOverlay />
       <SheetPrimitive.Content
         data-slot="sheet-content"
+        data-side={side}
         className={cn(
           "bg-background/95 backdrop-blur-xl fixed z-50 flex flex-col gap-4 shadow-2xl border-border/60",
-          side === "right" &&
-            "inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm data-[state=open]:animate-sheet-slide-in-right data-[state=closed]:animate-sheet-slide-out-right",
-          side === "left" &&
-            "inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm data-[state=open]:animate-sheet-slide-in-left data-[state=closed]:animate-sheet-slide-out-left",
-          side === "top" &&
-            "inset-x-0 top-0 h-auto border-b data-[state=open]:animate-sheet-slide-in-top data-[state=closed]:animate-sheet-slide-out-top",
-          side === "bottom" &&
-            "inset-x-0 bottom-0 h-auto border-t data-[state=open]:animate-sheet-slide-in-bottom data-[state=closed]:animate-sheet-slide-out-bottom",
+          side === "right" && "inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm",
+          side === "left" && "inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm",
+          side === "top" && "inset-x-0 top-0 h-auto border-b",
+          side === "bottom" && "inset-x-0 bottom-0 h-auto border-t",
           className
         )}
         {...props}
