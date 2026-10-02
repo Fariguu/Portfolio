@@ -209,10 +209,10 @@ export async function Journey({
                             href={item.link.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center text-xs font-semibold text-primary hover:underline"
+                            className="inline-flex items-center text-xs font-semibold text-primary hover:underline py-1.5 -my-1.5"
                           >
                             {item.link.label}
-                            <ExternalLink className="h-3 w-3 ml-1" />
+                            <ExternalLink className="h-3 w-3 ml-1" aria-hidden="true" />
                           </a>
                         </div>
                       )}
@@ -296,10 +296,10 @@ export async function Journey({
                           href={item.link.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center text-xs font-semibold text-primary hover:underline"
+                          className="inline-flex items-center text-xs font-semibold text-primary hover:underline py-1.5 -my-1.5"
                         >
                           {item.link.label}
-                          <ExternalLink className="h-3 w-3 ml-1" />
+                          <ExternalLink className="h-3 w-3 ml-1" aria-hidden="true" />
                         </a>
                       </div>
                     )}
