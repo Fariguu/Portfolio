@@ -1,7 +1,6 @@
 import { getCachedTestimonials } from "@/lib/data/public-queries";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
-import type { Testimonial } from "@/lib/database.types";
 import { Star, Quote, CheckCircle2, ArrowRight, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";

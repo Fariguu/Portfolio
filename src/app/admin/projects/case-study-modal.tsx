@@ -5,7 +5,6 @@ import type { Project } from '@/lib/database.types'
 import {
   saveProjectCaseStudy,
   deleteProjectCaseStudy,
-  translateCaseStudyMarkdownAction,
 } from '@/app/admin/actions/projects'
 import { Button } from '@/components/ui/button'
 import { MarkdownContent } from '@/components/ui/markdown-content'
