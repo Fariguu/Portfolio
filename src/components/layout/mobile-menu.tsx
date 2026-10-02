@@ -86,7 +86,7 @@ export function MobileMenu({
         className="w-[300px] sm:w-[360px] p-6 flex flex-col justify-between"
       >
         <div className="flex flex-col gap-6">
-          <SheetHeader className="p-0 text-left">
+          <SheetHeader className="p-0 text-left drawer-stagger-item" style={{ animationDelay: "60ms" }}>
             <SheetTitle className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
               {locale === "en" ? "Navigation" : "Navigazione"}
             </SheetTitle>
@@ -97,15 +97,16 @@ export function MobileMenu({
             aria-label="Desktop drawer navigation"
             className="hidden md:flex flex-col gap-1.5"
           >
-            {dNavs.map((item) => {
+            {dNavs.map((item, index) => {
               const active = isItemActive(item.href);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={handleNavigate}
+                  style={{ animationDelay: `${index * 35 + 90}ms` }}
                   className={cn(
-                    "flex items-center justify-between py-2.5 px-3.5 rounded-xl text-base font-medium transition-colors group",
+                    "drawer-stagger-item flex items-center justify-between py-2.5 px-3.5 rounded-xl text-base font-medium transition-all duration-200 active:scale-[0.98] group",
                     active
                       ? "bg-brand-accent/10 text-brand-accent font-semibold"
                       : "text-foreground/80 hover:text-foreground hover:bg-muted/60"
@@ -130,15 +131,16 @@ export function MobileMenu({
             aria-label="Mobile drawer navigation"
             className="flex md:hidden flex-col gap-1.5"
           >
-            {mNavs.map((item) => {
+            {mNavs.map((item, index) => {
               const active = isItemActive(item.href);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={handleNavigate}
+                  style={{ animationDelay: `${index * 35 + 90}ms` }}
                   className={cn(
-                    "flex items-center justify-between py-2.5 px-3.5 rounded-xl text-base font-medium transition-colors group",
+                    "drawer-stagger-item flex items-center justify-between py-2.5 px-3.5 rounded-xl text-base font-medium transition-all duration-200 active:scale-[0.98] group",
                     active
                       ? "bg-brand-accent/10 text-brand-accent font-semibold"
                       : "text-foreground/80 hover:text-foreground hover:bg-muted/60"
@@ -160,9 +162,12 @@ export function MobileMenu({
         </div>
 
         {/* Bottom Drawer Actions */}
-        <div className="flex flex-col gap-4 pt-6 border-t border-border/40">
+        <div
+          className="drawer-stagger-item flex flex-col gap-4 pt-6 border-t border-border/40"
+          style={{ animationDelay: `${(Math.max(dNavs.length, mNavs.length) + 1) * 35 + 90}ms` }}
+        >
           <Button
-            className="w-full h-11 rounded-full font-medium shadow-xs"
+            className="w-full h-11 rounded-full font-medium shadow-xs transition-transform active:scale-[0.98]"
             asChild
           >
             <Link href={contactHref} onClick={handleNavigate}>
@@ -173,7 +178,7 @@ export function MobileMenu({
           <div className="flex items-center justify-between px-2 pt-1 text-xs text-muted-foreground">
             <a
               href="mailto:farigugabriele@gmail.com"
-              className="flex items-center gap-1.5 hover:text-brand-accent transition-colors"
+              className="flex items-center gap-1.5 hover:text-brand-accent transition-colors active:scale-95"
             >
               <Mail className="h-3.5 w-3.5" />
               <span>Email</span>
@@ -182,7 +187,7 @@ export function MobileMenu({
               href="https://github.com/Fariguu"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 hover:text-brand-accent transition-colors"
+              className="flex items-center gap-1.5 hover:text-brand-accent transition-colors active:scale-95"
             >
               <Github className="h-3.5 w-3.5" />
               <span>GitHub</span>

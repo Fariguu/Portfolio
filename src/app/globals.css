@@ -266,6 +266,172 @@ footer {
               transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* ==========================================================================
+   Animazioni Menù Laterale / Sheet Drawer (Awwwards / Agency Tier)
+   Elimina completamente gli scatti. Slide inerziale con curva fluida (Apple-grade)
+   e dissolvenza sfumata dell'overlay senza strappi.
+   ========================================================================== */
+
+@keyframes sheetOverlayIn {
+  0% {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
+}
+
+@keyframes sheetOverlayOut {
+  0% {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
+  100% {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+}
+
+@keyframes sheetSlideInRight {
+  0% {
+    transform: translate3d(100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes sheetSlideOutRight {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(100%, 0, 0);
+  }
+}
+
+@keyframes sheetSlideInLeft {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes sheetSlideOutLeft {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+@keyframes sheetSlideInTop {
+  0% {
+    transform: translate3d(0, -100%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes sheetSlideOutTop {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, -100%, 0);
+  }
+}
+
+@keyframes sheetSlideInBottom {
+  0% {
+    transform: translate3d(0, 100%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes sheetSlideOutBottom {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 100%, 0);
+  }
+}
+
+@keyframes drawerItemEnter {
+  0% {
+    opacity: 0;
+    transform: translate3d(14px, 0, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-sheet-overlay-in {
+  animation: sheetOverlayIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, backdrop-filter;
+}
+
+.animate-sheet-overlay-out {
+  animation: sheetOverlayOut 0.24s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: opacity, backdrop-filter;
+}
+
+.animate-sheet-slide-in-right {
+  animation: sheetSlideInRight 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform;
+}
+
+.animate-sheet-slide-out-right {
+  animation: sheetSlideOutRight 0.26s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: transform;
+}
+
+.animate-sheet-slide-in-left {
+  animation: sheetSlideInLeft 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform;
+}
+
+.animate-sheet-slide-out-left {
+  animation: sheetSlideOutLeft 0.26s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: transform;
+}
+
+.animate-sheet-slide-in-top {
+  animation: sheetSlideInTop 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform;
+}
+
+.animate-sheet-slide-out-top {
+  animation: sheetSlideOutTop 0.26s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: transform;
+}
+
+.animate-sheet-slide-in-bottom {
+  animation: sheetSlideInBottom 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform;
+}
+
+.animate-sheet-slide-out-bottom {
+  animation: sheetSlideOutBottom 0.26s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: transform;
+}
+
+/* Stagger reveal per gli item del menù a comparsa */
+[data-state="open"] .drawer-stagger-item {
+  animation: drawerItemEnter 0.36s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,

@@ -49,6 +49,7 @@ export function Navbar({ dict, nav: explicitNav, locale }: Readonly<NavbarProps>
   ];
 
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [hasMenuMounted, setHasMenuMounted] = React.useState(false);
 
   // Dynamic show/hide on scroll:
   // When scrolling down, hide navbar; when scrolling up, reveal immediately!
@@ -163,19 +164,22 @@ export function Navbar({ dict, nav: explicitNav, locale }: Readonly<NavbarProps>
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setIsMenuOpen(true)}
-              onPointerEnter={() => {
-                import("./mobile-menu");
+              onClick={() => {
+                setHasMenuMounted(true);
+                setIsMenuOpen(true);
               }}
-              className="h-10 w-10 md:w-auto md:h-9 px-0 md:px-3.5 md:rounded-full md:border md:border-border/80 md:bg-background/80 hover:border-brand-accent/50 hover:bg-muted/60 transition-all text-foreground cursor-pointer"
+              onPointerEnter={() => {
+                setHasMenuMounted(true);
+              }}
+              className="group h-10 w-10 md:w-auto md:h-9 px-0 md:px-3.5 md:rounded-full md:border md:border-border/80 md:bg-background/80 hover:border-brand-accent/50 hover:bg-muted/60 transition-all active:scale-95 text-foreground cursor-pointer select-none"
               aria-label={nav.toggleMenu}
             >
-              <Menu className="h-5 w-5 md:h-4 md:w-4 text-foreground md:text-brand-accent" aria-hidden="true" />
+              <Menu className="h-5 w-5 md:h-4 md:w-4 text-foreground md:text-brand-accent transition-transform duration-200 group-hover:scale-110" aria-hidden="true" />
               <span className="hidden md:inline-block ml-1.5 text-xs font-medium">Menu</span>
               <span className="sr-only md:hidden">{nav.toggleMenu}</span>
             </Button>
 
-            {isMenuOpen && (
+            {hasMenuMounted && (
               <MobileMenu
                 open={isMenuOpen}
                 onOpenChange={setIsMenuOpen}
