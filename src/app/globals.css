@@ -209,6 +209,21 @@
   animation: toastSlideOut 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Transizione tema con espansione circolare a partire dal pulsante (View Transitions API) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,
@@ -217,5 +232,11 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }
