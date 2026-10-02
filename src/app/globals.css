@@ -224,6 +224,21 @@
   z-index: 9999;
 }
 
+/* Animazione passaggio evidenziatore per il cambio lingua dinamico */
+@keyframes highlighterSweep {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-highlighter-sweep {
+  animation: highlighterSweep 0.36s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,
