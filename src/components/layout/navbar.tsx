@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { Menu, Code2 } from "lucide-react";
 import { LanguageSwitcher } from "./language-switcher";
@@ -11,10 +10,7 @@ import { cn } from "@/lib/utils";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
 
-const MobileMenu = dynamic(
-  () => import("./mobile-menu").then((mod) => mod.MobileMenu),
-  { ssr: false }
-);
+import { MobileMenu } from "./mobile-menu";
 
 interface NavbarProps {
   readonly dict?: Dictionary;
@@ -55,28 +51,42 @@ export function Navbar({ dict, nav: explicitNav, locale }: Readonly<NavbarProps>
   const [isVisible, setIsVisible] = React.useState(true);
 
   React.useEffect(() => {
-    let lastScrollY = 0;
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+    let currentVisible = true;
 
-    const handleScroll = () => {
+    const updateVisibility = () => {
       const currentScrollY = window.scrollY;
 
       // Always visible near top of page (first 60px)
       if (currentScrollY <= 60) {
-        setIsVisible(true);
-        lastScrollY = currentScrollY;
-        return;
-      }
-
-      // If scrolling UP: reveal immediately at any scroll position on the page!
-      if (currentScrollY < lastScrollY) {
-        setIsVisible(true);
-      }
-      // If scrolling DOWN by more than 6px: hide
-      else if (currentScrollY > lastScrollY + 6) {
-        setIsVisible(false);
+        if (!currentVisible) {
+          currentVisible = true;
+          setIsVisible(true);
+        }
+      } else if (currentScrollY < lastScrollY) {
+        // Scrolling UP: reveal immediately
+        if (!currentVisible) {
+          currentVisible = true;
+          setIsVisible(true);
+        }
+      } else if (currentScrollY > lastScrollY + 6) {
+        // Scrolling DOWN by > 6px: hide
+        if (currentVisible) {
+          currentVisible = false;
+          setIsVisible(false);
+        }
       }
 
       lastScrollY = currentScrollY;
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        window.requestAnimationFrame(updateVisibility);
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -95,7 +105,7 @@ export function Navbar({ dict, nav: explicitNav, locale }: Readonly<NavbarProps>
           {/* Left: Brand Logo & Name */}
           <div className="flex items-center gap-2 z-10">
             <Link href={homeHref} prefetch={false} className="flex items-center space-x-2">
-              <Code2 className="h-6 w-6 text-brand-accent transition-colors" />
+              <Code2 className="h-6 w-6 text-brand-accent transition-colors" aria-hidden="true" />
               <span className="font-bold inline-block">Gabriele Farigu</span>
             </Link>
           </div>
@@ -150,29 +160,24 @@ export function Navbar({ dict, nav: explicitNav, locale }: Readonly<NavbarProps>
               variant="ghost"
               size="sm"
               onClick={() => setIsMenuOpen(true)}
-              onPointerEnter={() => {
-                import("./mobile-menu");
-              }}
-              className="h-10 w-10 md:w-auto md:h-9 px-0 md:px-3.5 md:rounded-full md:border md:border-border/80 md:bg-background/80 hover:border-brand-accent/50 hover:bg-muted/60 transition-all text-foreground cursor-pointer"
+              className="group h-10 w-10 md:w-auto md:h-9 px-0 md:px-3.5 md:rounded-full md:border md:border-border/80 md:bg-background/80 hover:border-brand-accent/50 hover:bg-muted/60 transition-all active:scale-95 text-foreground cursor-pointer select-none"
               aria-label={nav.toggleMenu}
             >
-              <Menu className="h-5 w-5 md:h-4 md:w-4 text-foreground md:text-brand-accent" />
+              <Menu className="h-5 w-5 md:h-4 md:w-4 text-foreground md:text-brand-accent transition-transform duration-200 group-hover:scale-110" aria-hidden="true" />
               <span className="hidden md:inline-block ml-1.5 text-xs font-medium">Menu</span>
               <span className="sr-only md:hidden">{nav.toggleMenu}</span>
             </Button>
 
-            {isMenuOpen && (
-              <MobileMenu
-                open={isMenuOpen}
-                onOpenChange={setIsMenuOpen}
-                desktopNavigations={desktopNavigations}
-                mobileNavigations={mobileNavigations}
-                contactCta={nav.contactCta}
-                contactHref={`${prefix}/contatti`}
-                toggleMenuLabel={nav.toggleMenu}
-                locale={locale}
-              />
-            )}
+            <MobileMenu
+              open={isMenuOpen}
+              onOpenChange={setIsMenuOpen}
+              desktopNavigations={desktopNavigations}
+              mobileNavigations={mobileNavigations}
+              contactCta={nav.contactCta}
+              contactHref={`${prefix}/contatti`}
+              toggleMenuLabel={nav.toggleMenu}
+              locale={locale}
+            />
           </div>
         </div>
       </header>

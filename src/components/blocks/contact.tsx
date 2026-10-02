@@ -39,7 +39,7 @@ export function Contact({ dict, locale }: Readonly<ContactProps>) {
           <div className="order-1 lg:order-none space-y-4 lg:col-start-1 lg:row-start-1">
             <div className="flex items-center gap-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-accent/10 dark:bg-brand-accent/15 shrink-0">
-                <Mail className="h-6 w-6 text-brand-accent" />
+                <Mail className="h-6 w-6 text-brand-accent" aria-hidden="true" />
               </div>
               <div>
                 <h3 className="font-semibold text-foreground">
@@ -56,7 +56,7 @@ export function Contact({ dict, locale }: Readonly<ContactProps>) {
 
             <div className="flex items-center gap-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-accent/10 dark:bg-brand-accent/15 shrink-0">
-                <Phone className="h-6 w-6 text-brand-accent" />
+                <Phone className="h-6 w-6 text-brand-accent" aria-hidden="true" />
               </div>
               <div>
                 <h3 className="font-semibold text-foreground">
@@ -73,7 +73,7 @@ export function Contact({ dict, locale }: Readonly<ContactProps>) {
 
             <div className="flex items-center gap-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-accent/10 dark:bg-brand-accent/15 shrink-0">
-                <Linkedin className="h-6 w-6 text-brand-accent" />
+                <Linkedin className="h-6 w-6 text-brand-accent" aria-hidden="true" />
               </div>
               <div>
                 <h3 className="font-semibold text-foreground">LinkedIn</h3>
@@ -90,7 +90,7 @@ export function Contact({ dict, locale }: Readonly<ContactProps>) {
 
             <div className="flex items-center gap-4">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-accent/10 dark:bg-brand-accent/15 shrink-0">
-                <MapPin className="h-6 w-6 text-brand-accent" />
+                <MapPin className="h-6 w-6 text-brand-accent" aria-hidden="true" />
               </div>
               <div>
                 <h3 className="font-semibold text-foreground">
@@ -110,7 +110,7 @@ export function Contact({ dict, locale }: Readonly<ContactProps>) {
           <Card className="order-3 lg:order-none border-border/50 shadow-xs bg-background p-6 space-y-4 lg:col-start-1 lg:row-start-2 lg:self-end">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-foreground shrink-0">
-                <Coins className="h-5 w-5" />
+                <Coins className="h-5 w-5" aria-hidden="true" />
               </div>
               <h3 className="font-semibold text-foreground text-sm sm:text-base leading-snug">
                 {dict.quote.ctaBanner.title}
@@ -126,7 +126,7 @@ export function Contact({ dict, locale }: Readonly<ContactProps>) {
               className="w-full sm:w-auto rounded-full font-medium h-10 px-5 border-border/80 hover:border-foreground/40 transition-colors"
             >
               <Link href={locale === "en" ? "/en/preventivo" : "/preventivo"} prefetch={false}>
-                <Coins className="mr-2 h-4 w-4" />
+                <Coins className="mr-2 h-4 w-4" aria-hidden="true" />
                 <span>{dict.quote.ctaBanner.button}</span>
               </Link>
             </Button>

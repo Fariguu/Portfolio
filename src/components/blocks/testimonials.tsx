@@ -1,7 +1,6 @@
 import { getCachedTestimonials } from "@/lib/data/public-queries";
 import type { Dictionary } from "@/lib/i18n/types";
 import type { Locale } from "@/lib/i18n/config";
-import type { Testimonial } from "@/lib/database.types";
 import { Star, Quote, CheckCircle2, ArrowRight, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -132,7 +131,7 @@ export async function Testimonials({ dict, locale = "it" }: Readonly<Testimonial
 
                   <div>
                     {/* Valutazione a stelle */}
-                    <div className="flex items-center gap-1 mb-4" aria-label={`Valutazione: ${item.rating || 5} su 5 stelle`}>
+                    <div className="flex items-center gap-1 mb-4" role="img" aria-label={`Valutazione: ${item.rating || 5} su 5 stelle`}>
                       {Array.from({ length: 5 }).map((_, i) => (
                         <Star
                           key={i}
@@ -178,11 +177,11 @@ export async function Testimonials({ dict, locale = "it" }: Readonly<Testimonial
                                 href={item.company_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-muted-foreground hover:text-primary transition-colors shrink-0"
+                                className="text-muted-foreground hover:text-primary transition-colors shrink-0 p-2 -m-2 rounded-full inline-flex items-center justify-center"
                                 title="Visita profilo"
                                 aria-label={`Visita profilo di ${item.author_name}`}
                               >
-                                <ExternalLink className="h-3 w-3" />
+                                <ExternalLink className="h-3 w-3" aria-hidden="true" />
                               </a>
                             )}
                           </div>

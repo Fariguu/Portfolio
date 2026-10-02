@@ -18,7 +18,7 @@ export function Footer({ dict, locale }: Readonly<FooterProps>) {
       <div className="container px-4 md:px-6 mx-auto">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center space-x-2">
-            <Code2 className="h-6 w-6 text-brand-accent" />
+            <Code2 className="h-6 w-6 text-brand-accent" aria-hidden="true" />
             <span className="text-xl font-bold tracking-tight">
               Gabriele Farigu
             </span>
@@ -31,7 +31,7 @@ export function Footer({ dict, locale }: Readonly<FooterProps>) {
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-brand-accent transition-colors"
             >
-              <Github className="h-5 w-5" />
+              <Github className="h-5 w-5" aria-hidden="true" />
               <span className="sr-only">GitHub</span>
             </Link>
             <Link
@@ -40,14 +40,14 @@ export function Footer({ dict, locale }: Readonly<FooterProps>) {
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-brand-accent transition-colors"
             >
-              <Linkedin className="h-5 w-5" />
+              <Linkedin className="h-5 w-5" aria-hidden="true" />
               <span className="sr-only">LinkedIn</span>
             </Link>
             <Link
               href="mailto:farigugabriele@gmail.com"
               className="text-muted-foreground hover:text-brand-accent transition-colors"
             >
-              <Mail className="h-5 w-5" />
+              <Mail className="h-5 w-5" aria-hidden="true" />
               <span className="sr-only">Email</span>
             </Link>
           </div>

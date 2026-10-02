@@ -127,12 +127,19 @@
   }
   html {
     @apply bg-background text-foreground;
+    scrollbar-gutter: stable;
     -webkit-tap-highlight-color: transparent;
   }
   body {
     @apply bg-background text-foreground;
     overflow-x: clip;
     -webkit-tap-highlight-color: transparent;
+  }
+  /* Previene il layout shift della navbar e della pagina durante l'apertura/chiusura dei menu e dialog */
+  html body[data-scroll-locked] {
+    margin-right: 0px !important;
+    padding-right: 0px !important;
+    overflow: hidden !important;
   }
   button,
   a,
@@ -209,6 +216,236 @@
   animation: toastSlideOut 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Transizione tema con espansione circolare a partire dal pulsante (View Transitions API) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+}
+
+/* ==========================================================================
+   Transizione Fluida per il Cambio Lingua (Cross-Dissolve Morbido & Non Invasivo)
+   Elimina gli scatti improvvisi durante il cambio lingua ammorbidendo e
+   sfumando dolcemente i contenuti prima dell'aggiornamento e svelandoli
+   con una curva fluida cinematica (Awwwards/Linear-grade).
+   Nessuna barra o evidenziazione invasiva.
+   ========================================================================== */
+
+main,
+header nav a,
+footer {
+  transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, filter, transform;
+}
+
+/* Fase di addolcimento rapido prima dello swap del testo (~140ms) */
+[data-lang-state="switching"] main,
+[data-lang-state="switching"] header nav a,
+[data-lang-state="switching"] footer {
+  opacity: 0.18;
+  filter: blur(2px);
+  transform: translateY(-2px);
+  pointer-events: none;
+  transition: opacity 0.14s cubic-bezier(0.4, 0, 1, 1),
+              filter 0.14s cubic-bezier(0.4, 0, 1, 1),
+              transform 0.14s cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* Fase di ingresso morbido ed elegante del nuovo testo tradotto */
+[data-lang-state="entering"] main,
+[data-lang-state="entering"] header nav a,
+[data-lang-state="entering"] footer {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+  transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   Animazioni Menù Laterale / Sheet Drawer (Awwwards / Agency Tier)
+   Elimina completamente gli scatti. Slide inerziale con curva fluida (Apple-grade)
+   e dissolvenza sfumata dell'overlay senza strappi.
+   ========================================================================== */
+
+@keyframes sheetOverlayIn {
+  0% {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
+}
+
+@keyframes sheetOverlayOut {
+  0% {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
+  100% {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+}
+
+@keyframes sheetSlideInRight {
+  0% {
+    transform: translate3d(100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes sheetSlideOutRight {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(100%, 0, 0);
+  }
+}
+
+@keyframes sheetSlideInLeft {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes sheetSlideOutLeft {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+@keyframes sheetSlideInTop {
+  0% {
+    transform: translate3d(0, -100%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes sheetSlideOutTop {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, -100%, 0);
+  }
+}
+
+@keyframes sheetSlideInBottom {
+  0% {
+    transform: translate3d(0, 100%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes sheetSlideOutBottom {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 100%, 0);
+  }
+}
+
+@keyframes drawerItemEnter {
+  0% {
+    opacity: 0;
+    transform: translate3d(14px, 0, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Overlay animazione */
+[data-slot="sheet-overlay"][data-state="open"] {
+  animation: sheetOverlayIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, backdrop-filter;
+}
+
+[data-slot="sheet-overlay"][data-state="closed"] {
+  animation: sheetOverlayOut 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: opacity, backdrop-filter;
+}
+
+/* Drawer destro: scorrimento fisico (slide) fluido da destra a sinistra */
+[data-slot="sheet-content"][data-side="right"],
+[data-slot="sheet-content"]:not([data-side]) {
+  will-change: transform;
+}
+
+[data-slot="sheet-content"][data-side="right"][data-state="open"],
+[data-slot="sheet-content"]:not([data-side])[data-state="open"] {
+  animation: sheetSlideInRight 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-slot="sheet-content"][data-side="right"][data-state="closed"],
+[data-slot="sheet-content"]:not([data-side])[data-state="closed"] {
+  animation: sheetSlideOutRight 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Drawer sinistro (es. pannello admin) */
+[data-slot="sheet-content"][data-side="left"] {
+  will-change: transform;
+}
+
+[data-slot="sheet-content"][data-side="left"][data-state="open"] {
+  animation: sheetSlideInLeft 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-slot="sheet-content"][data-side="left"][data-state="closed"] {
+  animation: sheetSlideOutLeft 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Drawer superiore e inferiore */
+[data-slot="sheet-content"][data-side="top"][data-state="open"] {
+  animation: sheetSlideInTop 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-slot="sheet-content"][data-side="top"][data-state="closed"] {
+  animation: sheetSlideOutTop 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+[data-slot="sheet-content"][data-side="bottom"][data-state="open"] {
+  animation: sheetSlideInBottom 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-slot="sheet-content"][data-side="bottom"][data-state="closed"] {
+  animation: sheetSlideOutBottom 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Stagger reveal per gli item del menù a comparsa durante lo scorrimento */
+[data-slot="sheet-content"][data-state="open"] .drawer-stagger-item {
+  animation: drawerItemEnter 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,
@@ -217,5 +454,11 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }

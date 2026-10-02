@@ -158,6 +158,8 @@ export function ContactForm({
                 </label>
                 <input
                   id="first-name"
+                  name="firstName"
+                  autoComplete="given-name"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   disabled={isSubmitting}
@@ -175,6 +177,8 @@ export function ContactForm({
                 </label>
                 <input
                   id="last-name"
+                  name="lastName"
+                  autoComplete="family-name"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   disabled={isSubmitting}
@@ -193,7 +197,10 @@ export function ContactForm({
               </label>
               <input
                 id="email"
+                name="email"
                 type="email"
+                autoComplete="email"
+                spellCheck={false}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isSubmitting}
@@ -211,6 +218,8 @@ export function ContactForm({
               </label>
               <textarea
                 id="message"
+                name="message"
+                autoComplete="off"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 disabled={isSubmitting}

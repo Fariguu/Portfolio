@@ -36,11 +36,16 @@ export function Hero({
 
           {/* Il Pianeta / Contenuto Centrale: Server Component puro al 100% */}
           <div className="relative z-50 flex flex-col items-center justify-center max-w-2xl text-center pointer-events-auto w-full space-y-3.5 sm:space-y-6">
-            {/* Badge disponibilità: protetto da overflow su schermi piccoli */}
-            <div className="inline-flex items-center justify-center min-w-0 sm:min-w-[245px] max-w-full rounded-full border border-primary/20 bg-primary/10 dark:border-emerald-500/30 dark:bg-emerald-500/10 px-3.5 py-1 text-xs sm:text-sm font-medium text-primary dark:text-[#88fc9d] transition-colors hover:bg-primary/20 dark:hover:bg-emerald-500/20 backdrop-blur-sm cursor-pointer">
+            {/* Badge disponibilità: link interattivo verso la sezione contatti */}
+            <a
+              href="#contatti"
+              className="inline-flex items-center justify-center min-w-0 sm:min-w-[245px] max-w-full rounded-full border border-primary/20 bg-primary/10 dark:border-emerald-500/30 dark:bg-emerald-500/10 px-3.5 py-1 text-xs sm:text-sm font-medium text-primary dark:text-[#88fc9d] transition-all hover:bg-primary/20 dark:hover:bg-emerald-500/20 hover:scale-[1.02] active:scale-[0.98] backdrop-blur-sm cursor-pointer select-none group"
+              title={dict.hero.badge}
+              aria-label={`${dict.hero.badge} — ${dict.hero.ctaContact}`}
+            >
               <span className="flex h-2 w-2 rounded-full bg-emerald-500 dark:bg-[#88fc9d] mr-2 shrink-0 animate-pulse"></span>
               <span className="truncate">{dict.hero.badge}</span>
-            </div>
+            </a>
 
             <div className="space-y-2 sm:space-y-4 max-w-4xl px-2">
               <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl/none font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-500 dark:from-gray-100 dark:to-gray-500 pb-1 sm:pb-2">
@@ -60,7 +65,7 @@ export function Hero({
               >
                 <a href="#progetti">
                   <span className="truncate">{dict.hero.ctaProjects}</span>
-                  <ArrowRight className="ml-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight className="ml-1.5 h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </a>
               </Button>
               <Button
@@ -82,7 +87,7 @@ export function Hero({
                 asChild
               >
                 <Link href={locale === "en" ? "/en/curriculum" : "/curriculum"} prefetch={false}>
-                  <FileText className="h-3.5 w-3.5 text-brand-accent transition-transform group-hover:scale-110" />
+                  <FileText className="h-3.5 w-3.5 text-brand-accent transition-transform group-hover:scale-110" aria-hidden="true" />
                   <span>{locale === "en" ? "Curriculum Vitae" : "Vedi il mio Curriculum"}</span>
                 </Link>
               </Button>
@@ -96,7 +101,7 @@ export function Hero({
                 >
                   <Link href={locale === "en" ? "/en/chi-sono" : "/chi-sono"} prefetch={false}>
                     <span>{dict.explore.about}</span>
-                    <CornerDownRight className="h-3.5 w-3.5 text-brand-accent transition-transform group-hover:translate-x-1" />
+                    <CornerDownRight className="h-3.5 w-3.5 text-brand-accent transition-transform group-hover:translate-x-1" aria-hidden="true" />
                   </Link>
                 </Button>
               )}
@@ -115,7 +120,7 @@ export function Hero({
             rel="noopener noreferrer"
             className="hover:text-brand-accent transition-colors"
           >
-            <Github className="h-6 w-6" />
+            <Github className="h-6 w-6" aria-hidden="true" />
             <span className="sr-only">GitHub</span>
           </a>
           <a
@@ -124,14 +129,14 @@ export function Hero({
             rel="noopener noreferrer"
             className="hover:text-brand-accent transition-colors"
           >
-            <Linkedin className="h-6 w-6" />
+            <Linkedin className="h-6 w-6" aria-hidden="true" />
             <span className="sr-only">LinkedIn</span>
           </a>
           <a
             href="mailto:farigugabriele@gmail.com"
             className="hover:text-brand-accent transition-colors"
           >
-            <Mail className="h-6 w-6" />
+            <Mail className="h-6 w-6" aria-hidden="true" />
             <span className="sr-only">Email</span>
           </a>
         </div>

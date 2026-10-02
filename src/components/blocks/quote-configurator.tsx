@@ -415,7 +415,7 @@ export function QuoteConfigurator({
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4" role="radiogroup" aria-label={dict.quote.step1.title}>
             {projectTypesList.map((item) => {
               const Icon = item.icon;
               const isSelected = projectType === item.id;
@@ -423,6 +423,8 @@ export function QuoteConfigurator({
               return (
                 <button
                   type="button"
+                  role="radio"
+                  aria-checked={isSelected}
                   key={item.id}
                   onClick={() => setProjectType(item.id)}
                   className={`text-left p-4 sm:p-5 rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between active:scale-[0.99] min-h-[140px] ${
@@ -478,7 +480,7 @@ export function QuoteConfigurator({
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4" role="group" aria-label={dict.quote.step2.title}>
             {featuresList.map((item) => {
               const Icon = item.icon;
               const isSelected = features.includes(item.id);
@@ -486,6 +488,8 @@ export function QuoteConfigurator({
               return (
                 <button
                   type="button"
+                  role="checkbox"
+                  aria-checked={isSelected}
                   key={item.id}
                   onClick={() => toggleFeature(item.id)}
                   className={`text-left p-4 rounded-2xl border transition-all duration-200 cursor-pointer flex items-start gap-3.5 active:scale-[0.99] ${
@@ -547,12 +551,14 @@ export function QuoteConfigurator({
               <Clock className="w-4 h-4 text-brand-accent" />
               <span>{dict.quote.step3.timelineLabel}</span>
             </label>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5" role="radiogroup" aria-label={dict.quote.step3.timelineLabel}>
               {timelineList.map((item) => {
                 const isSelected = timeline === item.id;
                 return (
                   <button
                     type="button"
+                    role="radio"
+                    aria-checked={isSelected}
                     key={item.id}
                     onClick={() => setTimeline(item.id)}
                     className={`text-left p-3.5 rounded-xl border transition-all duration-200 cursor-pointer ${
@@ -579,12 +585,14 @@ export function QuoteConfigurator({
               <FileCheck2 className="w-4 h-4 text-brand-accent" />
               <span>{dict.quote.step3.materialsLabel}</span>
             </label>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5" role="radiogroup" aria-label={dict.quote.step3.materialsLabel}>
               {materialsList.map((item) => {
                 const isSelected = materials === item.id;
                 return (
                   <button
                     type="button"
+                    role="radio"
+                    aria-checked={isSelected}
                     key={item.id}
                     onClick={() => setMaterials(item.id)}
                     className={`text-left p-3.5 rounded-xl border transition-all duration-200 cursor-pointer ${
@@ -611,12 +619,14 @@ export function QuoteConfigurator({
               <Coins className="w-4 h-4 text-brand-accent" />
               <span>{dict.quote.step3.budgetLabel}</span>
             </label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5" role="radiogroup" aria-label={dict.quote.step3.budgetLabel}>
               {budgetList.map((item) => {
                 const isSelected = budget === item.id;
                 return (
                   <button
                     type="button"
+                    role="radio"
+                    aria-checked={isSelected}
                     key={item.id}
                     onClick={() => setBudget(item.id)}
                     className={`text-center py-3 px-3 rounded-xl border transition-all duration-200 cursor-pointer flex items-center justify-center min-h-[48px] active:scale-[0.98] ${
@@ -653,6 +663,8 @@ export function QuoteConfigurator({
               </label>
               <input
                 id="quote-fn"
+                name="firstName"
+                autoComplete="given-name"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 disabled={isSubmitting}
@@ -671,6 +683,8 @@ export function QuoteConfigurator({
               </label>
               <input
                 id="quote-ln"
+                name="lastName"
+                autoComplete="family-name"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 disabled={isSubmitting}
@@ -691,7 +705,10 @@ export function QuoteConfigurator({
               </label>
               <input
                 id="quote-email"
+                name="email"
                 type="email"
+                autoComplete="email"
+                spellCheck={false}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isSubmitting}
@@ -710,7 +727,10 @@ export function QuoteConfigurator({
               </label>
               <input
                 id="quote-phone"
+                name="phone"
                 type="tel"
+                inputMode="tel"
+                autoComplete="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 disabled={isSubmitting}
@@ -726,6 +746,8 @@ export function QuoteConfigurator({
             </label>
             <textarea
               id="quote-notes"
+              name="notes"
+              autoComplete="off"
               rows={3}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}

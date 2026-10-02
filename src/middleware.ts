@@ -87,9 +87,10 @@ function handleI18nRouting(request: NextRequest, pathname: string) {
     return NextResponse.redirect(url, { status: 301 });
   }
 
-  // C. Verifica preferenza salvata nei cookie (solo su richieste GET)
+  // C. Verifica preferenza salvata nei cookie per accessi diretti al sito (esclude richieste interne RSC / navigazioni client)
+  const isRscRequest = request.headers.get("rsc") === "1";
   const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
-  if (request.method === "GET" && cookieLocale === "en" && pathname === "/") {
+  if (!isRscRequest && request.method === "GET" && cookieLocale === "en" && pathname === "/") {
     const url = request.nextUrl.clone();
     url.pathname = "/en";
     return NextResponse.redirect(url, { status: 307 });

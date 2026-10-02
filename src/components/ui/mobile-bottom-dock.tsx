@@ -98,7 +98,7 @@ export function MobileBottomDock({ dict }: Readonly<MobileBottomDockProps>) {
               type="button"
               onClick={() => handleClick(item.id)}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-medium transition-all duration-200 active:scale-95 select-none",
+                "flex items-center gap-1.5 px-3.5 py-2.5 min-h-[40px] rounded-full text-xs font-medium transition-all duration-200 active:scale-95 select-none",
                 isActive
                   ? "bg-primary text-primary-foreground shadow-xs font-semibold"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted/50"

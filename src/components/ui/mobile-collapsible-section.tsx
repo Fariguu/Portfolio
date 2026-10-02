@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 interface MobileCollapsibleSectionProps {
   readonly id: string;
   readonly title: string;
-  readonly badge?: string;
   readonly icon?: React.ReactNode;
   readonly defaultOpen?: boolean;
   readonly children: React.ReactNode;
@@ -16,7 +15,6 @@ interface MobileCollapsibleSectionProps {
 export function MobileCollapsibleSection({
   id,
   title,
-  badge,
   icon,
   defaultOpen = false,
   children,

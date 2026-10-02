@@ -17,56 +17,130 @@ export function LanguageSwitcher({
   const pathname = usePathname();
   const router = useRouter();
 
-  // Stato ottimistico locale per far scorrere la pillola istantaneamente a 0ms
-  const [activeLocale, setActiveLocale] = React.useState<Locale>(currentLocale);
+  // Calcolo deterministico della lingua corrente direttamente dal pathname della rotta attiva
+  const derivedLocale: Locale =
+    pathname === "/en" || pathname.startsWith("/en/") ? "en" : "it";
 
-  // Sincronizza se il server o la rotta cambiano
-  React.useEffect(() => {
-    setActiveLocale(currentLocale);
-  }, [currentLocale]);
-
-  // Calcolo deterministico del percorso senza accedere a window durante il rendering
-  const getTargetUrl = React.useCallback(
-    (targetLocale: Locale) => {
-      const cleanPath = pathname.replace(/^\/(it|en)(\/|$)/, "/") || "/";
-      if (targetLocale === "en") {
-        return cleanPath === "/" ? "/en" : `/en${cleanPath}`;
-      }
-      return cleanPath;
-    },
-    [pathname]
+  // Stato visivo locale reattivo per far scorrere la pillola istantaneamente
+  const [activeLocale, setActiveLocale] = React.useState<Locale>(
+    derivedLocale || currentLocale
   );
+  const [isPending, startTransition] = React.useTransition();
+  const isSwitchingRef = React.useRef(false);
+  const finishTimerRef = React.useRef<number | null>(null);
+  const safetyTimerRef = React.useRef<number | null>(null);
 
-  const nextLocale: Locale = currentLocale === "it" ? "en" : "it";
-  const targetUrl = getTargetUrl(nextLocale);
+  // Sincronizzazione automatica al cambio di rotta/pathname
+  React.useEffect(() => {
+    setActiveLocale(derivedLocale);
+
+    if (typeof document !== "undefined") {
+      if (document.documentElement.dataset.langState === "switching") {
+        // La nuova rotta è montata: avvia la transizione d'ingresso morbida
+        document.documentElement.dataset.langState = "entering";
+
+        if (finishTimerRef.current) window.clearTimeout(finishTimerRef.current);
+        finishTimerRef.current = window.setTimeout(() => {
+          if (typeof document !== "undefined") {
+            delete document.documentElement.dataset.langState;
+          }
+          isSwitchingRef.current = false;
+        }, 300);
+      }
+    }
+  }, [pathname, derivedLocale]);
+
+  // Pulizia dei timer e dei dataset allo smontaggio del componente
+  React.useEffect(() => {
+    return () => {
+      if (finishTimerRef.current) window.clearTimeout(finishTimerRef.current);
+      if (safetyTimerRef.current) window.clearTimeout(safetyTimerRef.current);
+      if (typeof document !== "undefined") {
+        delete document.documentElement.dataset.langState;
+      }
+    };
+  }, []);
 
   const handleToggle = () => {
-    // 1. Aggiornamento ottimistico dell'indicatore visivo
-    setActiveLocale(nextLocale);
+    if (isSwitchingRef.current || isPending) return;
 
-    // 2. Persistenza preferenza cookie e sincronizzazione lang HTML
+    // Determina la lingua target invertendo quella attualmente attiva
+    const nextLocale: Locale = activeLocale === "it" ? "en" : "it";
+
+    // 1. Scorrimento immediato della pillola grafica (feedback tattile a 0ms)
+    setActiveLocale(nextLocale);
+    isSwitchingRef.current = true;
+
+    // 2. Aggiornamento sincrono immediato dei cookie e dell'attributo lang del documento
     document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000; SameSite=Lax`;
     if (typeof document !== "undefined") {
       document.documentElement.lang = nextLocale;
     }
 
-    // 3. Recupera l'hash solo a runtime nell'event handler
-    const hash = typeof window !== "undefined" ? window.location.hash : "";
-    const finalUrl = hash ? `${targetUrl}${hash}` : targetUrl;
+    // 3. Calcolo deterministico dell'URL target preservando query string e hash
+    const cleanPath = pathname.replace(/^\/(it|en)(\/|$)/, "/") || "/";
+    const targetPath =
+      nextLocale === "en"
+        ? cleanPath === "/"
+          ? "/en"
+          : `/en${cleanPath}`
+        : cleanPath;
 
-    // 4. Navigazione immediata fluida senza sfarfallio
-    React.startTransition(() => {
-      router.push(finalUrl);
-    });
+    const search = typeof window !== "undefined" ? window.location.search : "";
+    const hash = typeof window !== "undefined" ? window.location.hash : "";
+    const finalUrl = `${targetPath}${search}${hash}`;
+
+    const isReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Se l'utente ha impostato preferenze di movimento ridotto, naviga senza animazione
+    if (isReducedMotion) {
+      startTransition(() => {
+        router.push(finalUrl);
+        router.refresh();
+      });
+      isSwitchingRef.current = false;
+      return;
+    }
+
+    // 4. Avvio transizione fluida (softening / cross-dissolve senza scatti o evidenziazioni)
+    if (typeof document !== "undefined") {
+      document.documentElement.dataset.langState = "switching";
+    }
+
+    // Breve pausa (120ms) per permettere al blur/opacità morbida di ammorbidire il testo
+    window.setTimeout(() => {
+      startTransition(() => {
+        router.push(finalUrl);
+        router.refresh();
+      });
+    }, 120);
+
+    // Timer di sicurezza (1200ms) nel caso di lentezza o se il pathname non subisce variazioni
+    if (safetyTimerRef.current) window.clearTimeout(safetyTimerRef.current);
+    safetyTimerRef.current = window.setTimeout(() => {
+      if (typeof document !== "undefined") {
+        if (document.documentElement.dataset.langState === "switching") {
+          document.documentElement.dataset.langState = "entering";
+          window.setTimeout(() => {
+            if (typeof document !== "undefined") {
+              delete document.documentElement.dataset.langState;
+            }
+          }, 300);
+        }
+      }
+      isSwitchingRef.current = false;
+    }, 1200);
   };
 
   const ariaLabel =
-    currentLocale === "it"
+    activeLocale === "it"
       ? "Lingua corrente Italiano. Clicca per passare all'Inglese"
       : "Current language English. Click to switch to Italian";
 
   const titleTooltip =
-    currentLocale === "it"
+    activeLocale === "it"
       ? "Clicca per passare all'Inglese (EN)"
       : "Click to switch to Italian (IT)";
 
@@ -74,11 +148,10 @@ export function LanguageSwitcher({
     <button
       type="button"
       onClick={handleToggle}
-      onMouseEnter={() => router.prefetch(targetUrl)}
-      onTouchStart={() => router.prefetch(targetUrl)}
+      disabled={isPending}
       aria-label={ariaLabel}
       title={titleTooltip}
-      className={`group relative inline-flex items-center justify-between w-[86px] rounded-full border border-border/60 bg-muted/40 p-1 text-xs font-medium backdrop-blur-sm transition-all duration-200 hover:border-primary/50 hover:bg-muted/70 active:scale-95 cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${className}`}
+      className={`group relative inline-flex items-center justify-between w-[86px] rounded-full border border-border/60 bg-muted/40 p-1 text-xs font-medium backdrop-blur-sm transition-all duration-200 hover:border-primary/50 hover:bg-muted/70 active:scale-95 cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-80 disabled:cursor-wait ${className}`}
     >
       <div
         className="flex items-center pl-1 text-muted-foreground group-hover:text-primary transition-colors"
