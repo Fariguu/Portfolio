@@ -25,7 +25,7 @@ interface CurriculumPageProps {
   readonly params: Promise<{ locale: string }>;
 }
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -157,7 +157,11 @@ export default async function CurriculumPage({ params }: CurriculumPageProps) {
 
           {/* PDF Viewer Container: Fogli bianchi puliti senza barre nere o tema scuro del browser */}
           {cvInfo.exists ? (
-            <CvPdfViewer />
+            <CvPdfViewer
+              key={cvInfo.updatedAt ?? "cv-public-viewer"}
+              pdfUrl={cvInfo.updatedAt ? `/api/cv/view?v=${new Date(cvInfo.updatedAt).getTime()}` : "/api/cv/view"}
+              downloadUrl="/api/cv/download"
+            />
           ) : (
             <div className="p-8 md:p-12 rounded-2xl border border-dashed border-border bg-card text-center space-y-4">
               <div className="h-14 w-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto">

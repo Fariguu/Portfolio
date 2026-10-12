@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function GET() {
   try {
@@ -23,7 +24,9 @@ export async function GET() {
         "Content-Disposition": 'inline; filename="CV_Gabriele_Farigu.pdf"',
         "Content-Length": buffer.length.toString(),
         "Accept-Ranges": "bytes",
-        "Cache-Control": "public, max-age=3600, s-maxage=3600",
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+        "Pragma": "no-cache",
+        "Expires": "0",
       },
     });
   } catch (err) {

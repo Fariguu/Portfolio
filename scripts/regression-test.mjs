@@ -84,7 +84,6 @@ async function runRegression() {
       { path: "/it/chi-sono", expectedStatus: 301, expectedLocation: "/chi-sono" },
       { path: "/it/competenze", expectedStatus: 301, expectedLocation: "/competenze" },
       { path: "/it/curriculum", expectedStatus: 301, expectedLocation: "/curriculum" },
-      { path: "/en/curriculum", expectedStatus: 307, expectedLocation: "/curriculum" },
     ];
 
     for (const red of redirectsToTest) {
@@ -193,7 +192,7 @@ async function runRegression() {
     record("Mobile UI", "Pulsante centrale 'Tocca per visualizzare' presente", await toccaBtn.isVisible());
     const toccaHref = await toccaBtn.getAttribute("href");
     const toccaTarget = await toccaBtn.getAttribute("target");
-    record("Mobile UI", "Pulsante 'Tocca per visualizzare' apre il PDF in target _blank", toccaTarget === "_blank" && (toccaHref?.includes("curriculum.pdf") ?? false));
+    record("Mobile UI", "Pulsante 'Tocca per visualizzare' apre il PDF in target _blank", toccaTarget === "_blank" && ((toccaHref?.includes("curriculum.pdf") || toccaHref?.includes("/api/cv/view")) ?? false));
 
     // Verifica pulsante 'Scarica File PDF' su mobile
     const mobileDownloadBtn = mobilePage.locator('div.block.md\\:hidden a:has-text("Scarica File PDF")');

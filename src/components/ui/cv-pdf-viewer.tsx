@@ -14,9 +14,13 @@ import { Button } from "@/components/ui/button";
 
 interface CvPdfViewerProps {
   readonly pdfUrl?: string;
+  readonly downloadUrl?: string;
 }
 
-export function CvPdfViewer({ pdfUrl = "/api/cv/view" }: Readonly<CvPdfViewerProps>) {
+export function CvPdfViewer({
+  pdfUrl = "/api/cv/view",
+  downloadUrl = "/api/cv/download",
+}: Readonly<CvPdfViewerProps>) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [numPages, setNumPages] = React.useState<number>(0);
   const [scale, setScale] = React.useState<number>(1.1);
@@ -171,7 +175,7 @@ export function CvPdfViewer({ pdfUrl = "/api/cv/view" }: Readonly<CvPdfViewerPro
 
             {/* Overlay interattivo cliccabile con pillola morbida ben distanziata dai bordi */}
             <a
-              href="/api/cv/view"
+              href={pdfUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="absolute inset-0 bg-slate-900/5 active:bg-slate-900/15 transition-colors flex items-center justify-center cursor-pointer p-2"
@@ -189,7 +193,7 @@ export function CvPdfViewer({ pdfUrl = "/api/cv/view" }: Readonly<CvPdfViewerPro
               size="lg"
               className="w-full h-11 rounded-xl text-xs sm:text-sm font-semibold gap-2 shadow-xs cursor-pointer"
             >
-              <a href="/api/cv/download" download="CV_Gabriele_Farigu.pdf">
+              <a href={downloadUrl} download="CV_Gabriele_Farigu.pdf">
                 <Download className="h-4 w-4" />
                 <span>Scarica File PDF</span>
               </a>
@@ -245,14 +249,14 @@ export function CvPdfViewer({ pdfUrl = "/api/cv/view" }: Readonly<CvPdfViewerPro
             <div className="h-4 w-[1px] bg-border mx-1" aria-hidden="true" />
 
             <Button asChild variant="ghost" size="sm" className="h-8 px-2 text-xs text-muted-foreground hover:text-foreground gap-1">
-              <a href="/api/cv/view" target="_blank" rel="noopener noreferrer">
+              <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">Schermo Intero</span>
               </a>
             </Button>
 
             <Button asChild size="sm" variant="outline" className="h-8 px-2.5 text-xs gap-1.5 rounded-lg border-border/80 hover:border-brand-accent/50 hover:text-brand-accent">
-              <a href="/api/cv/download" download="CV_Gabriele_Farigu.pdf">
+              <a href={downloadUrl} download="CV_Gabriele_Farigu.pdf">
                 <Download className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">Scarica</span>
               </a>
@@ -275,7 +279,7 @@ export function CvPdfViewer({ pdfUrl = "/api/cv/view" }: Readonly<CvPdfViewerPro
               <AlertCircle className="h-8 w-8 text-destructive mx-auto" />
               <p className="text-sm text-destructive">{error}</p>
               <Button asChild size="sm" variant="outline">
-                <a href="/api/cv/download" download="CV_Gabriele_Farigu.pdf">
+                <a href={downloadUrl} download="CV_Gabriele_Farigu.pdf">
                   <Download className="h-4 w-4 mr-1.5" />
                   Scarica il PDF direttamente
                 </a>

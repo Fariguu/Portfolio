@@ -52,8 +52,29 @@ export const getCvInfo = unstable_cache(
     }
   },
   ["cv-info"],
-  { revalidate: 3600, tags: ["cv"] }
+  { revalidate: 60, tags: ["cv"] }
 );
+
+function purgeCvCache() {
+  try {
+    updateTag("cv");
+  } catch {
+    // Ignore in non-action context
+  }
+  try {
+    revalidateTag("cv", "max");
+  } catch {
+    // Ignore
+  }
+
+  revalidatePath("/curriculum");
+  revalidatePath("/it/curriculum");
+  revalidatePath("/en/curriculum");
+  revalidatePath("/admin/curriculum");
+  revalidatePath("/admin");
+  revalidatePath("/api/cv/view");
+  revalidatePath("/api/cv/download");
+}
 
 export async function uploadCvAction(formData: FormData) {
   try {
@@ -84,6 +105,7 @@ export async function uploadCvAction(formData: FormData) {
       .upload(CV_FILE_PATH, buffer, {
         contentType: "application/pdf",
         upsert: true,
+        cacheControl: "0",
       });
 
     if (uploadError) {
@@ -94,23 +116,16 @@ export async function uploadCvAction(formData: FormData) {
       .from(BUCKET_NAME)
       .getPublicUrl(CV_FILE_PATH);
 
-    // Invalida cache
-    try {
-      updateTag("cv");
-    } catch {
-      // Ignore in non-action context
-    }
-    try {
-      revalidateTag("cv", "default");
-    } catch {
-      // Ignore
-    }
+    // Invalida cache Next.js su tutte le route interessate
+    purgeCvCache();
 
-    revalidatePath("/curriculum");
-    revalidatePath("/admin/curriculum");
-    revalidatePath("/admin");
-
-    return { success: true, url: publicUrlData.publicUrl };
+    const updatedAt = new Date().toISOString();
+    return {
+      success: true,
+      url: publicUrlData.publicUrl,
+      updatedAt,
+      size: file.size,
+    };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Errore sconosciuto";
     return { error: `Impossibile completare l'upload: ${message}` };
@@ -133,20 +148,8 @@ export async function deleteCvAction() {
       return { error: `Errore rimozione file: ${error.message}` };
     }
 
-    try {
-      updateTag("cv");
-    } catch {
-      // Ignore
-    }
-    try {
-      revalidateTag("cv", "default");
-    } catch {
-      // Ignore
-    }
-
-    revalidatePath("/curriculum");
-    revalidatePath("/admin/curriculum");
-    revalidatePath("/admin");
+    // Invalida cache Next.js su tutte le route interessate
+    purgeCvCache();
 
     return { success: true };
   } catch (err) {

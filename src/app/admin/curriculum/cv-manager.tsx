@@ -94,12 +94,13 @@ export function CvManager({ initialCvInfo }: Readonly<CvManagerProps>) {
       if (result.error) {
         setErrorMsg(result.error);
       } else {
+        const updatedAt = result.updatedAt || new Date().toISOString();
         setSuccessMsg("Curriculum caricato con successo su Supabase Storage!");
         setCvInfo({
           exists: true,
-          url: `${result.url}?v=${Date.now()}`,
-          updatedAt: new Date().toISOString(),
-          size: selectedFile.size,
+          url: result.url ? `${result.url}?v=${Date.now()}` : null,
+          updatedAt,
+          size: result.size || selectedFile.size,
         });
         setSelectedFile(null);
         if (fileInputRef.current) {
@@ -250,7 +251,12 @@ export function CvManager({ initialCvInfo }: Readonly<CvManagerProps>) {
                 </Button>
                 {cvInfo.exists && (
                   <Button asChild size="sm" variant="secondary">
-                    <a href="/api/cv/view" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5">
+                    <a
+                      href={cvInfo.updatedAt ? `/api/cv/view?v=${new Date(cvInfo.updatedAt).getTime()}` : "/api/cv/view"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1.5"
+                    >
                       <FileText className="h-4 w-4" />
                       <span>Apri PDF Diretto</span>
                     </a>
@@ -371,7 +377,11 @@ export function CvManager({ initialCvInfo }: Readonly<CvManagerProps>) {
             </CardDescription>
           </CardHeader>
           <CardContent className="p-2 sm:p-6 bg-muted/10 rounded-b-xl">
-            <CvPdfViewer />
+            <CvPdfViewer
+              key={cvInfo.updatedAt ?? "cv-manager-viewer"}
+              pdfUrl={cvInfo.updatedAt ? `/api/cv/view?v=${new Date(cvInfo.updatedAt).getTime()}` : "/api/cv/view"}
+              downloadUrl={cvInfo.updatedAt ? `/api/cv/download?v=${new Date(cvInfo.updatedAt).getTime()}` : "/api/cv/download"}
+            />
           </CardContent>
         </Card>
       )}
